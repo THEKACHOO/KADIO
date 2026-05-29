@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>KADIO | Studio & Visual Project</title>
+    <!-- Google Fonts: Outfit only -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html, div, span, h1, h2, h3, h4, h5, h6, p, a, button, input, textarea, li, span, label {
+            font-family: 'Outfit', sans-serif !important;
+        }
+
+        i, .fas, .far, .fab, [class*="fa-"] {
+            font-family: "Font Awesome 6 Free" !important;
+        }
+
+        :root {
+            --primary-black: #000000;
+            --primary-white: #FFFFFF;
+            --text-gray: #6E6E73;
+        }
+
+        body {
+            background-color: var(--primary-white);
+            color: var(--primary-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 32px;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 20px;
+            }
+        }
+
+        /* ========== HEADER: KADIO DI TENGAH, LOGO KIRI ========== */
+        header {
+            background: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(16px);
+            padding: 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            position: relative;
+        }
+
+        /* Logo kiri */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
+        }
+
+        /* Tulisan KADIO di tengah */
+        .center-logo-text {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: white;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+            .center-logo-text {
+                font-size: 18px;
+            }
+            .logo-img {
+                height: 34px;
+            }
+        }
+
+        /* Desktop Navigation */
+        .desktop-nav-container {
+            position: relative;
+            display: block;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-nav-container {
+                display: none;
+            }
+        }
+
+        .desktop-nav-trigger {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(4px);
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 600;
+            font-size: 14px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .desktop-nav-trigger:hover {
+            background: rgba(255,255,255,0.25);
+            transform: translateY(-2px);
+        }
+
+        .desktop-nav-dropdown {
+            position: absolute;
+            top: calc(100% + 12px);
+            right: 0;
+            width: 260px;
+            background: rgba(0,0,0,0.96);
+            backdrop-filter: blur(20px);
+            border-radius: 28px;
+            padding: 12px 8px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .desktop-nav-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .desktop-nav-dropdown .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            width: 100%;
+            padding: 12px 18px;
+            background: transparent;
+            border: none;
+            border-radius: 22px;
+            font-weight: 500;
+            font-size: 14px;
+            color: rgba(255,255,255,0.9);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .desktop-nav-dropdown .nav-button:hover {
+            background: rgba(255,255,255,0.12);
+            color: white;
+            transform: translateX(6px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu-btn {
+            display: none;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 20px;
+            color: white;
+            width: 42px;
+            height: 42px;
+            border-radius: 60px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 85%;
+            max-width: 320px;
+            height: 100vh;
+            background: rgba(0,0,0,0.98);
+            backdrop-filter: blur(28px);
+            padding: 110px 28px 40px;
+            transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 999;
+            border-left: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 998;
+        }
+
+        .mobile-menu-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 40px;
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .mobile-menu-link {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 60px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            margin-bottom: 14px;
+            transition: 0.25s;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .mobile-menu-link:hover {
+            background: rgba(255,255,255,0.15);
+            transform: translateX(8px);
+        }
+
+        /* Hero */
+        .hero {
+            padding: 160px 0 100px;
+            background: #000000;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 130px 0 70px;
+            }
+        }
+
+        .hero-content {
+            max-width: 950px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero-tag {
+            display: inline-block;
+            padding: 6px 20px;
+            background: rgba(255,255,255,0.08);
+            backdrop-filter: blur(8px);
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 24px;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 7vw, 4.2rem);
+            font-weight: 900;
+            line-height: 1.2;
+            letter-spacing: -1.5px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.95rem, 3.5vw, 1.2rem);
+            color: rgba(255,255,255,0.7);
+            max-width: 550px;
+            margin: 0 auto;
+        }
+
+        /* Studio Section */
+        .studio-section {
+            padding: 80px 0;
+            background: #FFFFFF;
+        }
+
+        .promo-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .promo-title {
+            color: #000000;
+            font-size: clamp(1.6rem, 5vw, 2.4rem);
+            font-weight: 800;
+            margin-bottom: 36px;
+            text-align: center;
+        }
+
+        /* Carousel */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 36px;
+            box-shadow: 0 25px 45px -18px rgba(0,0,0,0.3);
+            background: #0a0a0a;
+        }
+
+        .carousel-track {
+            display: flex;
+            transition: transform 0.55s cubic-bezier(0.25, 0.95, 0.45, 1);
+        }
+
+        .carousel-slide {
+            flex: 0 0 100%;
+        }
+
+        .carousel-slide img {
+            width: 100%;
+            display: block;
+            object-fit: cover;
+            max-height: 550px;
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            width: 48px;
+            height: 48px;
+            border-radius: 60px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: 0.2s;
+        }
+
+        .carousel-btn:hover {
+            background: black;
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .carousel-btn-left { left: 20px; }
+        .carousel-btn-right { right: 20px; }
+
+        @media (max-width: 640px) {
+            .carousel-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 14px;
+            }
+            .carousel-btn-left { left: 12px; }
+            .carousel-btn-right { right: 12px; }
+        }
+
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 20px;
+            background: #aaa;
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+
+        .dot.active {
+            width: 28px;
+            background: #000;
+        }
+
+        /* ========== GRID 2 KOLOM DIPERKECIL / DIPERSEMPIT ========== */
+        .collab-section {
+            padding: 80px 0;
+            background: #F8F8FA;
+        }
+
+        .collab-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 28px;
+            margin-top: 48px;
+            max-width: 860px;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .collab-grid {
+                gap: 20px;
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .collab-grid {
+                gap: 16px;
+            }
+        }
+
+        /* Card lebih kecil/ramping */
+        .collab-card {
+            background: white;
+            border-radius: 32px;
+            padding: 32px 16px;
+            text-align: center;
+            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            text-decoration: none;
+            color: inherit;
+            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 10px 24px -10px rgba(0,0,0,0.06);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @media (max-width: 640px) {
+            .collab-card {
+                padding: 24px 12px;
+                border-radius: 28px;
+            }
+        }
+
+        .collab-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0,0,0,0.15);
+            box-shadow: 0 20px 35px -14px rgba(0,0,0,0.15);
+        }
+
+        .collab-logo-img {
+            height: 65px;
+            width: auto;
+            margin-bottom: 18px;
+            max-width: 100%;
+            object-fit: contain;
+        }
+
+        .booth-icon {
+            font-size: 54px;
+            color: #000;
+            margin-bottom: 16px;
+        }
+
+        .collab-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            color: #000;
+        }
+
+        @media (max-width: 560px) {
+            .collab-title {
+                font-size: 1.3rem;
+            }
+            .booth-icon {
+                font-size: 46px;
+            }
+            .collab-logo-img {
+                height: 55px;
+            }
+        }
+
+        .collab-description {
+            font-size: 0.85rem;
+            color: #555;
+            margin-bottom: 22px;
+            padding: 0 6px;
+        }
+
+        .collab-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #000;
+            color: white;
+            padding: 10px 24px;
+            border-radius: 100px;
+            font-weight: 700;
+            font-size: 13px;
+            transition: 0.3s;
+            border: 1px solid transparent;
+        }
+
+        .collab-card:hover .collab-cta {
+            gap: 14px;
+            background: transparent;
+            color: black;
+            border-color: black;
+        }
+
+        /* Footer */
+        footer {
+            background: #000000;
+            color: #ddd;
+            padding: 70px 0 40px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 48px;
+            margin-bottom: 55px;
+        }
+
+        @media (max-width: 768px) {
+            .footer-content {
+                gap: 36px;
+            }
+        }
+
+        .footer-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            color: white;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: rgba(255,255,255,0.65);
+            text-decoration: none;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 26px;
+        }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 60px;
+            color: white;
+            text-decoration: none;
+            transition: 0.25s;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .social-link:hover {
+            background: white;
+            color: black;
+            transform: translateY(-4px);
+        }
+
+        .x-logo {
+            font-weight: 900;
+            font-size: 16px;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(255,255,255,0.07);
+            color: rgba(255,255,255,0.5);
+            font-size: 13px;
+        }
+
+        @keyframes riseGlow {
+            0% { opacity: 0; transform: translateY(30px);}
+            100% { opacity: 1; transform: translateY(0);}
+        }
+
+        .hero-content, .promo-container, .collab-grid {
+            animation: riseGlow 0.7s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <!-- Logo kiri -->
+            <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+                <img src="logo-thekachoo.png" alt="KADIO Logo" class="logo-img">
+            </div>
+            
+            <!-- Tulisan KADIO di tengah -->
+            <div class="center-logo-text">KADIO</div>
+
+            <!-- Menu kanan -->
+            <div class="desktop-nav-container">
+                <button class="desktop-nav-trigger" id="desktopNavTrigger">
+                    <span>Menu</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="desktop-nav-dropdown" id="desktopNavDropdown">
+                    <a href="https://thekachoo.github.io/Home" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a>
+                    <a href="https://x.com/0nedisplay" class="nav-button" target="_blank"><i class="fas fa-star"></i> Studio 35°</a>
+                    <a href="https://x.com/TheKachoo" class="nav-button" target="_blank"><i class="fas fa-bolt"></i> FLEQ</a>
+                </div>
+            </div>
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <button class="mobile-menu-close" id="mobileMenuClose">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul class="mobile-menu-list">
+            <li class="mobile-menu-item"><a href="https://thekachoo.github.io/Home" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-home"></i> The Kachoo</a></li>
+            <li class="mobile-menu-item"><a href="https://x.com/0nedisplay" class="mobile-menu-link" target="_blank" onclick="closeMobileMenu()"><i class="fas fa-star"></i> Studio 35°</a></li>
+            <li class="mobile-menu-item"><a href="https://x.com/TheKachoo" class="mobile-menu-link" target="_blank" onclick="closeMobileMenu()"><i class="fas fa-bolt"></i> FLEQ</a></li>
+        </ul>
+    </div>
+
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-tag">Welcome to Kadio</div>
+            <h1>WE CAPTURE VISUAL INTO SPOTLIGHT</h1>
+            <p class="hero-subtitle">For visual studio project by The Kachoo.</p>
+        </div>
+    </section>
+
+    <section class="studio-section">
+        <div class="container promo-container">
+            <h2 class="promo-title">THE KADIO INDONESIA</h2>
+            <div class="carousel-container">
+                <div class="carousel-track" id="carouselTrack">
+                    <div class="carousel-slide"><img src="Kadio1.png" alt="Kadio 1" onerror="this.src='https://placehold.co/1200x600?text=Kadio1.png'"></div>
+                    <div class="carousel-slide"><img src="Kadio2.png" alt="Kadio 2" onerror="this.src='https://placehold.co/1200x600?text=Kadio2.png'"></div>
+                    <div class="carousel-slide"><img src="Kadio3.png" alt="Kadio 3" onerror="this.src='https://placehold.co/1200x600?text=Kadio3.png'"></div>
+                    <div class="carousel-slide"><img src="Kadio4.png" alt="Kadio 4" onerror="this.src='https://placehold.co/1200x600?text=Kadio4.png'"></div>
+                    <div class="carousel-slide"><img src="Kadio5.png" alt="Kadio 5" onerror="this.src='https://placehold.co/1200x600?text=Kadio5.png'"></div>
+                </div>
+                <button class="carousel-btn carousel-btn-left" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-btn carousel-btn-right" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="carousel-dots" id="carouselDots"></div>
+        </div>
+    </section>
+
+    <section class="collab-section">
+        <div class="container">
+            <h2 style="text-align: center; font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 800; margin-bottom: 10px; color: #000;">KADIO PROJECT</h2>
+            <p style="text-align: center; color: var(--text-gray); max-width: 550px; margin: 0 auto 28px;">Project by Kadio</p>
+            <div class="collab-grid">
+                <a href="#" id="boothLink" class="collab-card">
+                    <i class="fas fa-camera-retro booth-icon"></i>
+                    <h3 class="collab-title">BOOTH</h3>
+                    <p class="collab-description">Collaboration with Studio 35°</p>
+                    <span class="collab-cta">Shoot Now<i class="fas fa-arrow-right"></i></span>
+                </a>
+                <a href="#" id="fleqLink" class="collab-card">
+                    <img src="FLEQ.png" alt="FLEQ Logo" class="collab-logo-img" onerror="this.src='https://placehold.co/140x70?text=FLEQ.png'">
+                    <h3 class="collab-title">FLEQ</h3>
+                    <p class="collab-description">Collaboration with FLEQ</p>
+                    <span class="collab-cta">Stream Now<i class="fas fa-arrow-right"></i></span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>KADIO</h3>
+                    <p style="color: rgba(255,255,255,0.7); margin-top: 14px; max-width: 280px;">Digital visual studio and collaboration projects by The Kachoo.</p>
+                    <div class="social-links">
+                        <a href="mailto:ohkachoo@gmail.com" class="social-link"><i class="fas fa-envelope"></i></a>
+                        <a href="https://twitter.com/thekachoo" target="_blank" class="social-link"><span class="x-logo">𝕏</span></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><span class="x-logo" style="color: #000000; background: white; border-radius: 6px; padding: 2px 8px; font-size: 12px; margin-right: 8px;">𝕏</span><a href="https://twitter.com/TheKachoo" target="_blank">@TheKachoo (Official)</a></li>
+                        <li><span class="x-logo" style="color: #000000; background: white; border-radius: 6px; padding: 2px 8px; font-size: 12px; margin-right: 8px;">𝕏</span><a href="https://twitter.com/HaiKachoo" target="_blank">@HaiKachoo (Contact Person)</a></li>
+                        <li><i class="fas fa-envelope" style="color: rgba(255,255,255,0.7);"></i><a href="mailto:ohkachoo@gmail.com">ohkachoo@gmail.com</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Address</h3>
+                    <ul class="footer-links">
+                        <li style="color: rgba(255,255,255,0.7);"><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i>Jenderal Sudirman Avenue, Lots 61–62,<br>South Jakarta, Indonesia</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">&copy; 2026 KADIO. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        function openMobileMenu() { mobileMenu.classList.add('active'); mobileMenuOverlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeMobileMenu() { mobileMenu.classList.remove('active'); mobileMenuOverlay.classList.remove('active'); document.body.style.overflow = ''; }
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+        if(mobileMenuClose) mobileMenuClose.addEventListener('click', closeMobileMenu);
+        if(mobileMenuOverlay) mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+        document.querySelectorAll('.mobile-menu-link').forEach(link => { link.addEventListener('click', closeMobileMenu); });
+        window.closeMobileMenu = closeMobileMenu;
+
+        const desktopNavTrigger = document.getElementById('desktopNavTrigger');
+        const desktopNavDropdown = document.getElementById('desktopNavDropdown');
+        if (desktopNavTrigger && desktopNavDropdown) {
+            desktopNavTrigger.addEventListener('click', function(e) { 
+                e.stopPropagation(); 
+                this.classList.toggle('active'); 
+                desktopNavDropdown.classList.toggle('active'); 
+            });
+            document.addEventListener('click', function(e) { 
+                if (!desktopNavTrigger.contains(e.target) && !desktopNavDropdown.contains(e.target)) { 
+                    desktopNavTrigger.classList.remove('active'); 
+                    desktopNavDropdown.classList.remove('active'); 
+                } 
+            });
+        }
+
+        const track = document.getElementById('carouselTrack');
+        const slides = Array.from(document.querySelectorAll('.carousel-slide'));
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const dotsContainer = document.getElementById('carouselDots');
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        function updateCarousel() {
+            const slideWidth = slides[0]?.clientWidth || 0;
+            track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+            document.querySelectorAll('.dot').forEach((dot, idx) => {
+                if (idx === currentIndex) dot.classList.add('active');
+                else dot.classList.remove('active');
+            });
+        }
+
+        function goToSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+            currentIndex = index;
+            updateCarousel();
+        }
+
+        function nextSlide() { if (currentIndex < totalSlides - 1) { currentIndex++; updateCarousel(); } }
+        function prevSlide() { if (currentIndex > 0) { currentIndex--; updateCarousel(); } }
+
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        }
+
+        prevBtn.addEventListener('click', prevSlide);
+        nextBtn.addEventListener('click', nextSlide);
+        window.addEventListener('resize', () => updateCarousel());
+        setTimeout(() => updateCarousel(), 100);
+
+        const boothCardLink = document.getElementById('boothLink');
+        const fleqCardLink = document.getElementById('fleqLink');
+        if(boothCardLink) boothCardLink.addEventListener('click', (e) => { if(boothCardLink.getAttribute('href') === '#') e.preventDefault(); });
+        if(fleqCardLink) fleqCardLink.addEventListener('click', (e) => { if(fleqCardLink.getAttribute('href') === '#') e.preventDefault(); });
+    </script>
+</body>
+</html>
