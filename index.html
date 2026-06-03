@@ -70,37 +70,47 @@
             position: relative;
         }
 
-        /* Logo kiri */
+        /* Logo kiri - kasih margin-left biar tidak terlalu mepet */
         .logo-container {
             display: flex;
             align-items: center;
             gap: 12px;
             cursor: pointer;
             flex-shrink: 0;
+            margin-left: 8px;
         }
 
         .logo-img {
-            height: 40px;
+            height: 44px;
             width: auto;
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
         }
 
-        /* Tulisan KADIO di tengah diganti gambar Kadio2.0.png */
+        /* Tulisan KADIO di tengah diganti gambar Kadio2.0.png - DIPERBESAR! */
         .center-logo-img {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            height: 40px;
+            height: 56px;
             width: auto;
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
         }
 
         @media (max-width: 640px) {
             .center-logo-img {
-                height: 32px;
+                height: 48px;
             }
             .logo-img {
-                height: 34px;
+                height: 38px;
+            }
+            .logo-container {
+                margin-left: 4px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .center-logo-img {
+                height: 42px;
             }
         }
 
@@ -558,13 +568,13 @@
 <body>
     <header>
         <div class="container header-content">
-            <!-- Logo kiri: Kadio2.1.png -->
+            <!-- Logo kiri: Kadio2.1.png (dikasih margin kiri biar tidak mepet) -->
             <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <img src="Kadio2.1.png" alt="KADIO Logo" class="logo-img" onerror="this.src='https://placehold.co/100x40?text=Kadio2.1.png'">
+                <img src="Kadio2.1.png" alt="KADIO Logo" class="logo-img" onerror="this.src='https://placehold.co/100x44?text=Kadio2.1.png'">
             </div>
             
-            <!-- Tengah: Kadio2.0.png (ganti teks) -->
-            <img src="Kadio2.0.png" alt="KADIO" class="center-logo-img" onerror="this.src='https://placehold.co/120x40?text=Kadio2.0.png'">
+            <!-- Tengah: Kadio2.0.png DIPERBESAR (height 56px) -->
+            <img src="Kadio2.0.png" alt="KADIO" class="center-logo-img" onerror="this.src='https://placehold.co/160x56?text=KADIO'">
 
             <!-- Menu kanan -->
             <div class="desktop-nav-container">
@@ -618,7 +628,7 @@
                     <span class="collab-cta">Shoot Now<i class="fas fa-arrow-right"></i></span>
                 </a>
                 <a href="#" id="fleqLink" class="collab-card">
-                    <img src="FLEQ.png" alt="FLEQ Logo" class="collab-logo-img" onerror="this.src='https://placehold.co/140x70?text=FLEQ.png'">
+                    <img src="FREQ.png" alt="FLEQ Logo" class="collab-logo-img" onerror="this.src='https://placehold.co/140x70?text=FLEQ.png'">
                     <h3 class="collab-title">FLEQ</h3>
                     <p class="collab-description">Collaboration with FLEQ</p>
                     <span class="collab-cta">Stream Now<i class="fas fa-arrow-right"></i></span>
