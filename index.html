@@ -70,47 +70,59 @@
             position: relative;
         }
 
-        /* Logo kiri - kasih margin-left biar tidak terlalu mepet */
+        /* Logo kiri - DIPERKECIL */
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 12px;
             cursor: pointer;
             flex-shrink: 0;
-            margin-left: 15px;
+            margin-left: 8px;
         }
 
         .logo-img {
-            height: 10px;
+            height: 32px;
             width: auto;
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
         }
 
-        /* Tulisan KADIO di tengah diganti gambar Kadio2.0.png - DIPERBESAR! */
+        /* Tulisan KADIO di tengah digambar Kadio2.0.png - DIPERBESAR BANGET */
         .center-logo-img {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            height: 100px;
+            height: 110px;
             width: auto;
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .center-logo-img {
-                height: 80px;
+                height: 85px;
             }
             .logo-img {
-                height: 38px;
+                height: 28px;
             }
             .logo-container {
                 margin-left: 4px;
             }
         }
 
+        @media (max-width: 640px) {
+            .center-logo-img {
+                height: 70px;
+            }
+            .logo-img {
+                height: 26px;
+            }
+        }
+
         @media (max-width: 480px) {
             .center-logo-img {
-                height: 42px;
+                height: 55px;
+            }
+            .logo-img {
+                height: 24px;
             }
         }
 
@@ -568,13 +580,13 @@
 <body>
     <header>
         <div class="container header-content">
-            <!-- Logo kiri: Kadio2.1.png (dikasih margin kiri biar tidak mepet) -->
+            <!-- Logo kiri: Kadio2.1.png (DIPERKECIL, height 32px di CSS) -->
             <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <img src="Kadio2.1.png" alt="KADIO Logo" class="logo-img" onerror="this.src='https://placehold.co/100x44?text=Kadio2.1.png'">
+                <img src="Kadio2.1.png" alt="KADIO Logo" class="logo-img" onerror="this.src='https://placehold.co/80x32?text=Kadio2.1.png'">
             </div>
             
-            <!-- Tengah: Kadio2.0.png DIPERBESAR (height 56px) -->
-            <img src="Kadio2.0.png" alt="KADIO" class="center-logo-img" onerror="this.src='https://placehold.co/160x56?text=KADIO'">
+            <!-- Tengah: Kadio2.0.png DIPERBESAR (height 110px di desktop) -->
+            <img src="Kadio2.0.png" alt="KADIO" class="center-logo-img" onerror="this.src='https://placehold.co/200x110?text=KADIO'">
 
             <!-- Menu kanan -->
             <div class="desktop-nav-container">
@@ -583,9 +595,8 @@
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="desktop-nav-dropdown" id="desktopNavDropdown">
-                    <a href="https://thekachoo.github.io/Home" class="nav-button"><i class="fas fa-home"></i> The Kachoo</a>
-                    <a href="https://x.com/0nedisplay" class="nav-button" target="_blank"><i class="fas fa-star"></i> Studio 35°</a>
-                    <a href="https://x.com/TheKachoo" class="nav-button" target="_blank"><i class="fas fa-bolt"></i> FLEQ</a>
+                    <!-- The Kachoo tanpa icon -->
+                    <a href="https://thekachoo.github.io/Home" class="nav-button">The Kachoo</a>
                 </div>
             </div>
             <button class="mobile-menu-btn" id="mobileMenuBtn">
@@ -600,9 +611,8 @@
             <i class="fas fa-times"></i>
         </button>
         <ul class="mobile-menu-list">
-            <li class="mobile-menu-item"><a href="https://thekachoo.github.io/Home" class="mobile-menu-link" onclick="closeMobileMenu()"><i class="fas fa-home"></i> The Kachoo</a></li>
-            <li class="mobile-menu-item"><a href="https://x.com/0nedisplay" class="mobile-menu-link" target="_blank" onclick="closeMobileMenu()"><i class="fas fa-star"></i> Studio 35°</a></li>
-            <li class="mobile-menu-item"><a href="https://x.com/TheKachoo" class="mobile-menu-link" target="_blank" onclick="closeMobileMenu()"><i class="fas fa-bolt"></i> FLEQ</a></li>
+            <!-- The Kachoo tanpa icon di mobile -->
+            <li class="mobile-menu-item"><a href="https://thekachoo.github.io/Home" class="mobile-menu-link" onclick="closeMobileMenu()">The Kachoo</a></li>
         </ul>
     </div>
 
@@ -705,4 +715,4 @@
         if(fleqCardLink) fleqCardLink.addEventListener('click', (e) => { if(fleqCardLink.getAttribute('href') === '#') e.preventDefault(); });
     </script>
 </body>
-    </html>
+</html>
