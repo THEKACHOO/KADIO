@@ -85,21 +85,19 @@
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
         }
 
-        /* Tulisan KADIO di tengah */
-        .center-logo-text {
+        /* Tulisan KADIO di tengah diganti gambar Kadio2.0.png */
+        .center-logo-img {
             position: absolute;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: white;
-            white-space: nowrap;
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
         }
 
         @media (max-width: 640px) {
-            .center-logo-text {
-                font-size: 18px;
+            .center-logo-img {
+                height: 32px;
             }
             .logo-img {
                 height: 34px;
@@ -326,111 +324,9 @@
             margin: 0 auto;
         }
 
-        /* Studio Section */
-        .studio-section {
-            padding: 80px 0;
-            background: #FFFFFF;
-        }
-
-        .promo-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            width: 100%;
-            overflow: hidden;
-        }
-
-        .promo-title {
-            color: #000000;
-            font-size: clamp(1.6rem, 5vw, 2.4rem);
-            font-weight: 800;
-            margin-bottom: 36px;
-            text-align: center;
-        }
-
-        /* Carousel */
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            border-radius: 36px;
-            box-shadow: 0 25px 45px -18px rgba(0,0,0,0.3);
-            background: #0a0a0a;
-        }
-
-        .carousel-track {
-            display: flex;
-            transition: transform 0.55s cubic-bezier(0.25, 0.95, 0.45, 1);
-        }
-
-        .carousel-slide {
-            flex: 0 0 100%;
-        }
-
-        .carousel-slide img {
-            width: 100%;
-            display: block;
-            object-fit: cover;
-            max-height: 550px;
-        }
-
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.7);
-            backdrop-filter: blur(8px);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.3);
-            width: 48px;
-            height: 48px;
-            border-radius: 60px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: 0.2s;
-        }
-
-        .carousel-btn:hover {
-            background: black;
-            transform: translateY(-50%) scale(1.05);
-        }
-
-        .carousel-btn-left { left: 20px; }
-        .carousel-btn-right { right: 20px; }
-
-        @media (max-width: 640px) {
-            .carousel-btn {
-                width: 38px;
-                height: 38px;
-                font-size: 14px;
-            }
-            .carousel-btn-left { left: 12px; }
-            .carousel-btn-right { right: 12px; }
-        }
-
-        .carousel-dots {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-top: 28px;
-        }
-
-        .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 20px;
-            background: #aaa;
-            transition: all 0.25s;
-            cursor: pointer;
-        }
-
-        .dot.active {
-            width: 28px;
-            background: #000;
-        }
-
-        /* ========== GRID 2 KOLOM DIPERKECIL / DIPERSEMPIT ========== */
+        /* ========== GRID 2 KOLOM (BOOTH + FLEQ) dengan penyesuaian mobile lebih kecil ========== */
         .collab-section {
-            padding: 80px 0;
+            padding: 100px 0;
             background: #F8F8FA;
         }
 
@@ -451,18 +347,19 @@
                 max-width: 100%;
             }
         }
-
-        @media (max-width: 560px) {
+        
+        /* Ukuran grid card lebih kecil di mobile */
+        @media (max-width: 640px) {
             .collab-grid {
-                gap: 16px;
+                gap: 14px;
             }
         }
 
         /* Card lebih kecil/ramping */
         .collab-card {
             background: white;
-            border-radius: 32px;
-            padding: 32px 16px;
+            border-radius: 28px;
+            padding: 28px 12px;
             text-align: center;
             transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
             text-decoration: none;
@@ -477,8 +374,15 @@
 
         @media (max-width: 640px) {
             .collab-card {
-                padding: 24px 12px;
-                border-radius: 28px;
+                padding: 20px 10px;
+                border-radius: 24px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .collab-card {
+                padding: 16px 8px;
+                border-radius: 20px;
             }
         }
 
@@ -495,11 +399,13 @@
             max-width: 100%;
             object-fit: contain;
         }
-
-        .booth-icon {
-            font-size: 54px;
-            color: #000;
+        
+        /* khusus untuk icon gambar Chromatic */
+        .chromatic-icon-img {
+            height: 60px;
+            width: auto;
             margin-bottom: 16px;
+            object-fit: contain;
         }
 
         .collab-title {
@@ -511,21 +417,21 @@
 
         @media (max-width: 560px) {
             .collab-title {
-                font-size: 1.3rem;
-            }
-            .booth-icon {
-                font-size: 46px;
+                font-size: 1.2rem;
             }
             .collab-logo-img {
-                height: 55px;
+                height: 48px;
+            }
+            .chromatic-icon-img {
+                height: 48px;
             }
         }
 
         .collab-description {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #555;
-            margin-bottom: 22px;
-            padding: 0 6px;
+            margin-bottom: 18px;
+            padding: 0 4px;
         }
 
         .collab-cta {
@@ -534,10 +440,10 @@
             gap: 8px;
             background: #000;
             color: white;
-            padding: 10px 24px;
+            padding: 8px 20px;
             border-radius: 100px;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 12px;
             transition: 0.3s;
             border: 1px solid transparent;
         }
@@ -549,7 +455,7 @@
             border-color: black;
         }
 
-        /* Footer */
+        /* Footer tetap */
         footer {
             background: #000000;
             color: #ddd;
@@ -644,7 +550,7 @@
             100% { opacity: 1; transform: translateY(0);}
         }
 
-        .hero-content, .promo-container, .collab-grid {
+        .hero-content, .collab-grid {
             animation: riseGlow 0.7s ease forwards;
         }
     </style>
@@ -652,13 +558,13 @@
 <body>
     <header>
         <div class="container header-content">
-            <!-- Logo kiri -->
+            <!-- Logo kiri: Kadio2.1.png -->
             <div class="logo-container" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
-                <img src="logo-thekachoo.png" alt="KADIO Logo" class="logo-img">
+                <img src="Kadio2.1.png" alt="KADIO Logo" class="logo-img" onerror="this.src='https://placehold.co/100x40?text=Kadio2.1.png'">
             </div>
             
-            <!-- Tulisan KADIO di tengah -->
-            <div class="center-logo-text">KADIO</div>
+            <!-- Tengah: Kadio2.0.png (ganti teks) -->
+            <img src="Kadio2.0.png" alt="KADIO" class="center-logo-img" onerror="this.src='https://placehold.co/120x40?text=Kadio2.0.png'">
 
             <!-- Menu kanan -->
             <div class="desktop-nav-container">
@@ -698,33 +604,17 @@
         </div>
     </section>
 
-    <section class="studio-section">
-        <div class="container promo-container">
-            <h2 class="promo-title">THE KADIO INDONESIA</h2>
-            <div class="carousel-container">
-                <div class="carousel-track" id="carouselTrack">
-                    <div class="carousel-slide"><img src="Kadio1.png" alt="Kadio 1" onerror="this.src='https://placehold.co/1200x600?text=Kadio1.png'"></div>
-                    <div class="carousel-slide"><img src="Kadio2.png" alt="Kadio 2" onerror="this.src='https://placehold.co/1200x600?text=Kadio2.png'"></div>
-                    <div class="carousel-slide"><img src="Kadio3.png" alt="Kadio 3" onerror="this.src='https://placehold.co/1200x600?text=Kadio3.png'"></div>
-                    <div class="carousel-slide"><img src="Kadio4.png" alt="Kadio 4" onerror="this.src='https://placehold.co/1200x600?text=Kadio4.png'"></div>
-                    <div class="carousel-slide"><img src="Kadio5.png" alt="Kadio 5" onerror="this.src='https://placehold.co/1200x600?text=Kadio5.png'"></div>
-                </div>
-                <button class="carousel-btn carousel-btn-left" id="prevBtn"><i class="fas fa-chevron-left"></i></button>
-                <button class="carousel-btn carousel-btn-right" id="nextBtn"><i class="fas fa-chevron-right"></i></button>
-            </div>
-            <div class="carousel-dots" id="carouselDots"></div>
-        </div>
-    </section>
-
+    <!-- Section KADIO PROJECT (BOOTH + FLEQ) dengan Chromatic° icon Chromatic.png -->
     <section class="collab-section">
         <div class="container">
             <h2 style="text-align: center; font-size: clamp(1.5rem, 5vw, 2rem); font-weight: 800; margin-bottom: 10px; color: #000;">KADIO PROJECT</h2>
             <p style="text-align: center; color: var(--text-gray); max-width: 550px; margin: 0 auto 28px;">Project by Kadio</p>
             <div class="collab-grid">
+                <!-- BOOTH card: CHROMATIC° dengan icon Chromatic.png -->
                 <a href="#" id="boothLink" class="collab-card">
-                    <i class="fas fa-camera-retro booth-icon"></i>
-                    <h3 class="collab-title">BOOTH</h3>
-                    <p class="collab-description">Collaboration with Studio 35°</p>
+                    <img src="Chromatic.png" alt="Chromatic Icon" class="chromatic-icon-img" onerror="this.src='https://placehold.co/80x80?text=CHROMATIC'">
+                    <h3 class="collab-title">CHROMATIC°</h3>
+                    <p class="collab-description">Studio Booth and Twibbon, collaboration with Studio35°</p>
                     <span class="collab-cta">Shoot Now<i class="fas fa-arrow-right"></i></span>
                 </a>
                 <a href="#" id="fleqLink" class="collab-card">
@@ -768,6 +658,7 @@
     </footer>
 
     <script>
+        // mobile menu handler
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -780,6 +671,7 @@
         document.querySelectorAll('.mobile-menu-link').forEach(link => { link.addEventListener('click', closeMobileMenu); });
         window.closeMobileMenu = closeMobileMenu;
 
+        // Desktop nav dropdown
         const desktopNavTrigger = document.getElementById('desktopNavTrigger');
         const desktopNavDropdown = document.getElementById('desktopNavDropdown');
         if (desktopNavTrigger && desktopNavDropdown) {
@@ -796,50 +688,11 @@
             });
         }
 
-        const track = document.getElementById('carouselTrack');
-        const slides = Array.from(document.querySelectorAll('.carousel-slide'));
-        const prevBtn = document.getElementById('prevBtn');
-        const nextBtn = document.getElementById('nextBtn');
-        const dotsContainer = document.getElementById('carouselDots');
-        let currentIndex = 0;
-        const totalSlides = slides.length;
-
-        function updateCarousel() {
-            const slideWidth = slides[0]?.clientWidth || 0;
-            track.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
-            document.querySelectorAll('.dot').forEach((dot, idx) => {
-                if (idx === currentIndex) dot.classList.add('active');
-                else dot.classList.remove('active');
-            });
-        }
-
-        function goToSlide(index) {
-            if (index < 0) index = 0;
-            if (index >= totalSlides) index = totalSlides - 1;
-            currentIndex = index;
-            updateCarousel();
-        }
-
-        function nextSlide() { if (currentIndex < totalSlides - 1) { currentIndex++; updateCarousel(); } }
-        function prevSlide() { if (currentIndex > 0) { currentIndex--; updateCarousel(); } }
-
-        for (let i = 0; i < totalSlides; i++) {
-            const dot = document.createElement('div');
-            dot.classList.add('dot');
-            if (i === 0) dot.classList.add('active');
-            dot.addEventListener('click', () => goToSlide(i));
-            dotsContainer.appendChild(dot);
-        }
-
-        prevBtn.addEventListener('click', prevSlide);
-        nextBtn.addEventListener('click', nextSlide);
-        window.addEventListener('resize', () => updateCarousel());
-        setTimeout(() => updateCarousel(), 100);
-
+        // Booth & FLEQ link prevent default jika masih '#'
         const boothCardLink = document.getElementById('boothLink');
         const fleqCardLink = document.getElementById('fleqLink');
         if(boothCardLink) boothCardLink.addEventListener('click', (e) => { if(boothCardLink.getAttribute('href') === '#') e.preventDefault(); });
         if(fleqCardLink) fleqCardLink.addEventListener('click', (e) => { if(fleqCardLink.getAttribute('href') === '#') e.preventDefault(); });
     </script>
 </body>
-</html>
+    </html>
