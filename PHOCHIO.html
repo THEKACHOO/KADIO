@@ -76,12 +76,12 @@
             transform: translateX(-50%);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
         }
 
-        /* !!! DIPERBESAR !!! - Logo header ukuran lebih besar */
+        /* !!! DIPERBESAR LAGI !!! - Logo header ukuran SANGAT BESAR */
         .logo-kachoo, .logo-studio {
-            height: 48px;   /* dari 32px -> 48px (lebih besar 50%) */
+            height: 64px;   /* dari 32px -> 64px (2x lipat) */
             width: auto;
             object-fit: contain;
             transition: transform 0.3s ease;
@@ -99,7 +99,7 @@
         }
 
         .logo-separator {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: 500;
             color: #aaa;
             margin: 0 4px;
@@ -292,19 +292,19 @@
         /* Hero Section: Logo Chromatic + teks "One Click Away from Iconic" */
         .hero-section {
             text-align: center;
-            padding: 130px 24px 50px;
+            padding: 140px 24px 50px;
             background: #FFFFFF;
         }
 
         .hero-logo {
-            margin-bottom: 24px;
+            margin-bottom: 28px;
         }
 
-        /* !!! DIPERBESAR !!! - Hero logo title lebih besar */
+        /* !!! DIPERBESAR SANGAT BESAR !!! - Hero logo title UKURAN EKSTREM */
         .hero-logo-img {
-            height: 95px;   /* dari 70px -> 95px (lebih besar ~35%) */
+            height: 160px;   /* dari 70px -> 160px (lebih dari 2x lipat) */
             width: auto;
-            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));
+            filter: drop-shadow(0 6px 16px rgba(0,0,0,0.06));
         }
 
         .hero-title {
@@ -550,20 +550,23 @@
                 max-width: 100%;
             }
             .hero-section {
-                padding: 120px 20px 40px;
+                padding: 130px 20px 40px;
             }
             /* Responsif: logo header tetap besar di mobile */
             .logo-kachoo, .logo-studio {
-                height: 40px;
+                height: 52px;
             }
             .hero-logo-img {
-                height: 75px;
+                height: 110px;
             }
             .hero-title {
                 font-size: 1.8rem;
             }
             .center-logos {
-                gap: 6px;
+                gap: 10px;
+            }
+            .logo-separator {
+                font-size: 1.2rem;
             }
         }
     </style>
@@ -576,9 +579,9 @@
         <div style="width: 44px;"></div>
 
         <div class="center-logos">
-            <img src="Kadio1.0.png" alt="Kachoo" class="logo-kachoo" onerror="this.src='https://placehold.co/100x48/000/white?text=KACHOO';">
+            <img src="Kadio1.0.png" alt="Kachoo" class="logo-kachoo" onerror="this.src='https://placehold.co/120x64/000/white?text=KACHOO';">
             <span class="logo-separator">×</span>
-            <img src="Studio35.png" alt="Studio 35°" class="logo-studio" onerror="this.src='https://placehold.co/100x48/000/white?text=STUDIO35';">
+            <img src="Studio35.png" alt="Studio 35°" class="logo-studio" onerror="this.src='https://placehold.co/120x64/000/white?text=STUDIO35';">
         </div>
 
         <div class="desktop-nav-container">
@@ -611,7 +614,7 @@
 
 <section class="hero-section">
     <div class="hero-logo">
-        <img src="Phochio.png" alt="PHOCHIO" class="hero-logo-img" onerror="this.src='https://placehold.co/200x95/cccccc/000000?text=PHOCHIO';">
+        <img src="Phochio.png" alt="PHOCHIO" class="hero-logo-img" onerror="this.src='https://placehold.co/400x160/cccccc/000000?text=PHOCHIO';">
     </div>
     <h1 class="hero-title">One Click Away from Iconic</h1>
 </section>
@@ -1073,4 +1076,4 @@
     })();
 </script>
 </body>
-    </html>
+                </html>
