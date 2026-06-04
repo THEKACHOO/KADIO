@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>CHROMATIC° | Studio Booth & Twibbon</title>
+    <title>PHOCHIO° | Studio Booth & Twibbon</title>
     <!-- Google Fonts: Outfit & Inter -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -79,8 +79,9 @@
             gap: 12px;
         }
 
+        /* !!! DIPERBESAR !!! - Logo header ukuran lebih besar */
         .logo-kachoo, .logo-studio {
-            height: 32px;
+            height: 48px;   /* dari 32px -> 48px (lebih besar 50%) */
             width: auto;
             object-fit: contain;
             transition: transform 0.3s ease;
@@ -299,8 +300,9 @@
             margin-bottom: 24px;
         }
 
+        /* !!! DIPERBESAR !!! - Hero logo title lebih besar */
         .hero-logo-img {
-            height: 70px;
+            height: 95px;   /* dari 70px -> 95px (lebih besar ~35%) */
             width: auto;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.05));
         }
@@ -550,17 +552,18 @@
             .hero-section {
                 padding: 120px 20px 40px;
             }
+            /* Responsif: logo header tetap besar di mobile */
+            .logo-kachoo, .logo-studio {
+                height: 40px;
+            }
             .hero-logo-img {
-                height: 50px;
+                height: 75px;
             }
             .hero-title {
                 font-size: 1.8rem;
             }
             .center-logos {
                 gap: 6px;
-            }
-            .logo-kachoo, .logo-studio {
-                height: 24px;
             }
         }
     </style>
@@ -570,17 +573,14 @@
 <!-- HEADER: logo Kachoo dan Studio35° di tengah dengan animasi -->
 <header>
     <div class="container header-content">
-        <!-- Spacer kiri kosong agar logo tengah simetris -->
         <div style="width: 44px;"></div>
 
-        <!-- Logo tengah: Kachoo1.0.png dan Studio35.png -->
         <div class="center-logos">
-            <img src="Kadio1.0.png" alt="Kachoo" class="logo-kachoo" onerror="this.src='https://placehold.co/100x32/000/white?text=KACHOO';">
+            <img src="Kadio1.0.png" alt="Kachoo" class="logo-kachoo" onerror="this.src='https://placehold.co/100x48/000/white?text=KACHOO';">
             <span class="logo-separator">×</span>
-            <img src="Studio35.png" alt="Studio 35°" class="logo-studio" onerror="this.src='https://placehold.co/100x32/000/white?text=STUDIO35';">
+            <img src="Studio35.png" alt="Studio 35°" class="logo-studio" onerror="this.src='https://placehold.co/100x48/000/white?text=STUDIO35';">
         </div>
 
-        <!-- Menu kanan: tombol titik tiga transparan -->
         <div class="desktop-nav-container">
             <button class="desktop-nav-trigger" id="desktopNavTrigger">
                 <i class="fas fa-ellipsis-h"></i>
@@ -611,7 +611,7 @@
 
 <section class="hero-section">
     <div class="hero-logo">
-        <img src="Phochio.png" alt="PHOCHIO" class="hero-logo-img" onerror="this.src='https://placehold.co/200x70/cccccc/000000?text=PHOCHIO';">
+        <img src="Phochio.png" alt="PHOCHIO" class="hero-logo-img" onerror="this.src='https://placehold.co/200x95/cccccc/000000?text=PHOCHIO';">
     </div>
     <h1 class="hero-title">One Click Away from Iconic</h1>
 </section>
@@ -622,7 +622,6 @@
     </div>
 
     <div class="frames-wrapper">
-        <!-- FRAME POTRAIT: hanya 2 frame (Frame 1 & 2) -->
         <div class="frame-card">
             <div class="frame-title">Booth Frame 1</div>
             <div class="canvas-container">
@@ -649,7 +648,6 @@
             <div class="adjust-note">Adjust your photo before downloading — you can drag or pinch to zoom</div>
         </div>
 
-        <!-- FRAME LANDSCAPE: Frame 3 & 4 (menggunakan aslinya Campaign5 & Campaign6) -->
         <div class="frame-card special-landscape">
             <div class="frame-title">Booth Frame 3 (Landscape)</div>
             <div class="canvas-container">
@@ -677,14 +675,12 @@
         </div>
     </div>
 
-    <!-- DISCLAIMER -->
     <div class="kadio-description">
         <h3>DISCLAIMER</h3>
         <p>All of these features are created solely for roleplay purposes and do not provide any real-world benefits or advantages. Nothing within them is real, and every element is entirely fictional. Please use these features responsibly and refrain from any misuse.</p>
     </div>
 </main>
 
-<!-- FOOTER -->
 <footer>
     <div class="container">
         <div class="footer-content">
@@ -721,11 +717,10 @@
         const CANVAS_W_LANDSCAPE = 1000;
         const CANVAS_H_LANDSCAPE = 800;
 
-        // Frame assets: Campaign1, Campaign2 untuk portrait; Campaign5, Campaign6 untuk landscape (Frame 3 & 4)
         const frameImgSrc1 = 'Campaign1.png';
         const frameImgSrc2 = 'Campaign2.png';
-        const frameImgSrcLandscape3 = 'Campaign7.png';  // aslinya Campaign5
-        const frameImgSrcLandscape4 = 'Campaign8.png';  // aslinya Campaign6
+        const frameImgSrcLandscape3 = 'Campaign7.png';
+        const frameImgSrcLandscape4 = 'Campaign8.png';
 
         class FrameEditor {
             constructor(canvasId, uploadInputId, saveBtnId, frameImage, canvasWidth, canvasHeight) {
@@ -1015,10 +1010,8 @@
             frameImg.src = imgSrc;
         }
         
-        // Portrait frames (Frame 1 & 2)
         setupCampaign(0, 'twibbonCanvas1', 'uploadInput1', 'saveBtn1', frameImgSrc1, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
         setupCampaign(1, 'twibbonCanvas2', 'uploadInput2', 'saveBtn2', frameImgSrc2, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
-        // Landscape frames (Frame 3 & 4)
         setupCampaign(2, 'twibbonCanvas3', 'uploadInput3', 'saveBtn3', frameImgSrcLandscape3, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
         setupCampaign(3, 'twibbonCanvas4', 'uploadInput4', 'saveBtn4', frameImgSrcLandscape4, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
         
@@ -1080,4 +1073,4 @@
     })();
 </script>
 </body>
-</html>
+    </html>
