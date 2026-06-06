@@ -79,23 +79,22 @@
             gap: 16px;
         }
 
-        /* Logo header ukuran PERTAHANKAN (sudah pas) */
+        /* MOTION HANYA DI AWAL UNTUK HEADER LOGO */
         .logo-kachoo, .logo-studio {
             height: 64px;
             width: auto;
             object-fit: contain;
             transition: transform 0.3s ease;
-            animation: subtleFloat 3s ease-in-out infinite;
+            animation: headerLogoInitial 0.8s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
         }
 
         .logo-kachoo:hover, .logo-studio:hover {
             transform: scale(1.02);
         }
 
-        @keyframes subtleFloat {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-2px); }
-            100% { transform: translateY(0px); }
+        @keyframes headerLogoInitial {
+            0% { transform: translateY(-20px) scale(0.9); opacity: 0; }
+            100% { transform: translateY(0px) scale(1); opacity: 1; }
         }
 
         .logo-separator {
@@ -103,6 +102,13 @@
             font-weight: 500;
             color: #aaa;
             margin: 0 4px;
+            animation: separatorInitial 0.6s ease-out forwards;
+            opacity: 0;
+        }
+
+        @keyframes separatorInitial {
+            0% { opacity: 0; transform: scale(0.5); }
+            100% { opacity: 1; transform: scale(1); }
         }
 
         .desktop-nav-container {
@@ -287,7 +293,7 @@
             transform: translateX(8px);
         }
 
-        /* Hero Section */
+        /* Hero Section - PASTIKAN LOGO PHOCHIO DI TENGAH */
         .hero-section {
             text-align: center;
             padding: 140px 24px 20px;
@@ -296,16 +302,41 @@
 
         .hero-logo {
             margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
         }
 
-        /* LOGO PHOCHIO DIPERBESAR LAGI */
+        /* LOGO PHOCHIO SANGAT BESAR - MOTION HANYA DI AWAL */
         .hero-logo-img {
-            height: 220px;
+            height: 280px;
             width: auto;
-            filter: drop-shadow(0 8px 20px rgba(0,0,0,0.08));
+            filter: drop-shadow(0 8px 24px rgba(0,0,0,0.12));
+            animation: phochioInitial 0.9s cubic-bezier(0.34, 1.3, 0.55, 1) forwards;
+            transform-origin: center center;
         }
 
-        /* Title baru: Welcome to Phocio° */
+        @keyframes phochioInitial {
+            0% {
+                transform: scale(0.7) rotate(-5deg);
+                opacity: 0;
+                filter: drop-shadow(0 0px 0px rgba(0,0,0,0));
+            }
+            40% {
+                transform: scale(1.08) rotate(2deg);
+                opacity: 1;
+                filter: drop-shadow(0 12px 28px rgba(0,0,0,0.15));
+            }
+            70% {
+                transform: scale(0.98) rotate(-1deg);
+            }
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 1;
+                filter: drop-shadow(0 8px 24px rgba(0,0,0,0.12));
+            }
+        }
+
         .hero-title {
             font-size: clamp(2.2rem, 7vw, 4.2rem);
             font-weight: 800;
@@ -313,9 +344,16 @@
             color: #000000;
             margin-bottom: 8px;
             font-family: 'Outfit', sans-serif;
+            animation: titleInitial 0.6s ease-out forwards;
+            opacity: 0;
         }
 
-        /* MAIN CONTAINER - jarak didekatkan */
+        @keyframes titleInitial {
+            0% { opacity: 0; transform: translateY(15px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* MAIN CONTAINER */
         .main-container {
             max-width: 1400px;
             margin: 0 auto;
@@ -567,7 +605,7 @@
                 height: 52px;
             }
             .hero-logo-img {
-                height: 150px;
+                height: 180px;
             }
             .hero-title {
                 font-size: 2rem;
@@ -626,7 +664,7 @@
 
 <section class="hero-section">
     <div class="hero-logo">
-        <img src="Phochio.png" alt="PHOCHIO" class="hero-logo-img" onerror="this.src='https://placehold.co/500x220/cccccc/000000?text=PHOCHIO°';">
+        <img src="Phochio.png" alt="PHOCHIO" class="hero-logo-img" onerror="this.src='https://placehold.co/600x280/cccccc/000000?text=PHOCHIO°';">
     </div>
     <h1 class="hero-title">Welcome to Phocio°</h1>
 </section>
