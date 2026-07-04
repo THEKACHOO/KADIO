@@ -439,7 +439,7 @@
 
 <main class="main-container">
     <div class="instruction-text">
-        <p>Select a frame, upload your photo, adjust & save it</p>
+        <p>Select a frame, upload your photo, adjust & save</p>
     </div>
 
     <!-- SLIDER FRAMES -->
@@ -479,7 +479,7 @@
                 <div class="frame-card">
                     <div class="frame-title">Booth Frame 3</div>
                     <div class="canvas-container">
-                        <canvas id="twibbonCanvas3" class="twibbon-canvas" width="1000" height="800" style="width:100%; height:auto; aspect-ratio:1000/800"></canvas>
+                        <canvas id="twibbonCanvas3" class="twibbon-canvas" width="800" height="1000" style="width:100%; height:auto; aspect-ratio:800/1000"></canvas>
                     </div>
                     <div class="button-group">
                         <input type="file" id="uploadInput3" accept="image/jpeg, image/png, image/jpg" style="display:none" />
@@ -494,7 +494,7 @@
                 <div class="frame-card">
                     <div class="frame-title">Booth Frame 4</div>
                     <div class="canvas-container">
-                        <canvas id="twibbonCanvas4" class="twibbon-canvas" width="1000" height="800" style="width:100%; height:auto; aspect-ratio:1000/800"></canvas>
+                        <canvas id="twibbonCanvas4" class="twibbon-canvas" width="800" height="1000" style="width:100%; height:auto; aspect-ratio:800/1000"></canvas>
                     </div>
                     <div class="button-group">
                         <input type="file" id="uploadInput4" accept="image/jpeg, image/png, image/jpg" style="display:none" />
@@ -615,15 +615,14 @@
         updateButtons();
 
         // CANVAS EDITOR CODE
-        const CANVAS_W_PORTRAIT = 800;
-        const CANVAS_H_PORTRAIT = 1000;
-        const CANVAS_W_LANDSCAPE = 1000;
-        const CANVAS_H_LANDSCAPE = 800;
+        const CANVAS_W = 800;
+        const CANVAS_H = 1000;
 
+        // Frame image sources
         const frameImgSrc1 = 'Campaign1.png';
         const frameImgSrc2 = 'Campaign2.png';
-        const frameImgSrcLandscape3 = 'Campaign7.png';
-        const frameImgSrcLandscape4 = 'Campaign8.png';
+        const frameImgSrc3 = 'Campaign3.png';
+        const frameImgSrc4 = 'Campaign4.png';
 
         class FrameEditor {
             constructor(canvasId, uploadInputId, saveBtnId, frameImage, canvasWidth, canvasHeight) {
@@ -913,10 +912,10 @@
             frameImg.src = imgSrc;
         }
         
-        setupCampaign(0, 'twibbonCanvas1', 'uploadInput1', 'saveBtn1', frameImgSrc1, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
-        setupCampaign(1, 'twibbonCanvas2', 'uploadInput2', 'saveBtn2', frameImgSrc2, CANVAS_W_PORTRAIT, CANVAS_H_PORTRAIT);
-        setupCampaign(2, 'twibbonCanvas3', 'uploadInput3', 'saveBtn3', frameImgSrcLandscape3, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
-        setupCampaign(3, 'twibbonCanvas4', 'uploadInput4', 'saveBtn4', frameImgSrcLandscape4, CANVAS_W_LANDSCAPE, CANVAS_H_LANDSCAPE);
+        setupCampaign(0, 'twibbonCanvas1', 'uploadInput1', 'saveBtn1', frameImgSrc1, CANVAS_W, CANVAS_H);
+        setupCampaign(1, 'twibbonCanvas2', 'uploadInput2', 'saveBtn2', frameImgSrc2, CANVAS_W, CANVAS_H);
+        setupCampaign(2, 'twibbonCanvas3', 'uploadInput3', 'saveBtn3', frameImgSrc3, CANVAS_W, CANVAS_H);
+        setupCampaign(3, 'twibbonCanvas4', 'uploadInput4', 'saveBtn4', frameImgSrc4, CANVAS_W, CANVAS_H);
         
         document.getElementById('uploadBtn1')?.addEventListener('click', () => document.getElementById('uploadInput1').click());
         document.getElementById('uploadBtn2')?.addEventListener('click', () => document.getElementById('uploadInput2').click());
@@ -927,4 +926,4 @@
     })();
 </script>
 </body>
-    </html>
+                    </html>
