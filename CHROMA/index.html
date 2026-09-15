@@ -176,14 +176,28 @@
     footer.bottom-bar { display: none; }
   }
 
-  /* ---------- HERO ---------- */
+  /* ---------- HERO / POPULAR SLIDER ---------- */
   .hero {
     position: relative;
-    min-height: 420px;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 70vh;
+    overflow: hidden;
+    background: #101014;
+  }
+  .hero-slides {
+    display: flex;
+    transition: transform .45s cubic-bezier(.4,0,.2,1);
+    height: 100%;
+    width: 100%;
+  }
+  .hero-slide {
+    position: relative;
+    flex: 0 0 100%;
+    height: 100%;
     display: flex;
     align-items: flex-end;
     overflow: hidden;
-    background: linear-gradient(100deg, #3a2f1c 0%, #1c1c22 55%, #101014 100%);
   }
   .hero-media {
     position: absolute; inset: 0;
@@ -194,7 +208,6 @@
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 100%; height: 100%;
-    min-width: 100%; min-height: 100%;
     object-fit: cover;
     border: 0;
     pointer-events: none;
@@ -231,6 +244,7 @@
     box-shadow: 0 12px 30px rgba(0,0,0,0.55);
     display: flex; align-items: center; justify-content: center;
     position: relative; overflow: hidden;
+    cursor: pointer;
   }
   .hero-poster img { width: 100%; height: 100%; object-fit: cover; }
   .hero-poster .fallback-text {
@@ -242,31 +256,55 @@
     transform: rotate(-90deg);
     white-space: nowrap;
   }
-  .hero-play {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    border: 2px solid #f5f5f2;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
-    background: rgba(0,0,0,0.3);
-    transition: background .2s;
-  }
-  .hero-play:hover { background: rgba(242,201,76,0.2); }
-  .hero-play svg { width: 16px; height: 16px; margin-left: 2px; }
   .hero-meta { flex: 1; min-width: 0; }
   .hero-time { font-size: 12px; color: #9a9a95; margin-bottom: 2px; }
   .hero-title { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
   .hero-sub { font-size: 12px; color: #9a9a95; }
 
+  .hero-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    border: 1px solid #2a2a2a;
+    background: rgba(10,10,10,0.55);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s, border-color .2s, left .3s ease, right .3s ease;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .hero-arrow:hover { background: rgba(242,201,76,0.25); border-color: #f2c94c; }
+  .hero-arrow svg { width: 16px; height: 16px; fill: none; stroke: #f5f5f2; stroke-width: 2.5; }
+  .hero-arrow.pos-right { right: 12px; left: auto; }
+  .hero-arrow.pos-left { left: 12px; right: auto; }
+
+  .hero-dots {
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    gap: 6px;
+  }
+  .hero-dots span {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+    transition: background .2s, width .2s;
+  }
+  .hero-dots span.active { background: #f2c94c; width: 18px; border-radius: 3px; }
+
   @media (min-width: 720px) {
-    .hero { min-height: 520px; }
     .hero-poster { width: 120px; height: 170px; }
     .hero-title { font-size: 28px; }
-    .hero-play { width: 56px; height: 56px; }
-    .hero-play svg { width: 20px; height: 20px; }
+    .hero-arrow { width: 44px; height: 44px; }
+    .hero-arrow svg { width: 18px; height: 18px; }
   }
 
-  /* ---------- CHIPS ---------- */
+  /* ---------- CHIPS (EVENT SLIDER) ---------- */
   .chip-row {
     display: flex; gap: 8px;
     overflow-x: auto;
@@ -274,6 +312,7 @@
     border-bottom: 1px solid #2a2a2a;
     max-width: 1180px;
     margin: 0 auto;
+    scroll-snap-type: x mandatory;
   }
   .chip {
     flex-shrink: 0;
@@ -286,6 +325,7 @@
     color: #f5f5f2; white-space: nowrap;
     background: #141414;
     transition: border-color .18s ease, background .18s ease;
+    scroll-snap-align: start;
   }
   .chip:active, .chip:hover { border-color: #f2c94c; background: #1b1b1b; }
   .chip svg { width: 10px; height: 10px; }
@@ -335,6 +375,7 @@
     z-index: 2;
   }
   .poster .save svg { width: 11px; height: 11px; }
+  .poster .save.saved svg { fill: #f2c94c; stroke: #f2c94c; }
   .poster .new-badge {
     position: absolute; top: 8px; right: 8px;
     background: #f2c94c; color: #0a0a0a;
@@ -427,7 +468,7 @@
   .rank-score .star-filled { fill: #f2c94c; stroke: #f2c94c; }
 
   /* ---------- SEARCH ---------- */
-  .search-results { padding: 4px 16px 20px; max-width: 1180px; margin: 0 auto; }
+  .search-results { padding: 4px 16px 90px; max-width: 1180px; margin: 0 auto; }
   .search-hint { font-size: 12px; color: #9a9a95; padding: 4px 16px 16px; }
   .search-grid {
     display: grid;
@@ -451,6 +492,66 @@
     .card { width: 160px; }
     .poster { width: 160px; height: 230px; }
     .section-head h2 { font-size: 20px; }
+    .search-results { padding-bottom: 48px; }
+  }
+
+  /* ---------- SEE ALL VIEW ---------- */
+  #seeAllView { padding-bottom: 90px; }
+  @media (min-width: 720px) {
+    #seeAllView { padding-bottom: 48px; }
+  }
+  .seeall-topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .back-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid #2a2a2a;
+    background: #141414;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: border-color .2s, background .2s;
+  }
+  .back-btn:hover { border-color: #f2c94c; background: #1b1b1b; }
+  .back-btn svg { width: 16px; height: 16px; fill: none; stroke: #f5f5f2; stroke-width: 2.5; }
+  .seeall-title {
+    font-size: 20px; font-weight: 800;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .seeall-title .bar {
+    width: 4px; height: 18px;
+    background: #f2c94c; border-radius: 2px;
+  }
+  .seeall-count {
+    font-size: 12px; color: #9a9a95;
+    padding: 0 16px 16px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  #seeAllGrid {
+    padding: 0 16px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 14px;
+    padding: 0 16px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+  .profile-grid .profile-card { width: auto; }
+  .profile-grid .profile-photo { width: 80px; height: 80px; font-size: 20px; }
+
+  @media (min-width: 720px) {
+    .profile-grid { grid-template-columns: repeat(5, 1fr); }
   }
 
   /* ---------- PROMO ---------- */
@@ -542,10 +643,7 @@
     .header-inner { gap: 6px; padding: 8px 8px; }
     .search-pill { padding: 5px 10px; font-size: 12px; }
     .search-pill input { font-size: 12px; }
-    .hero { min-height: 300px; }
     .hero-poster { width: 72px; height: 104px; }
-    .hero-play { width: 40px; height: 40px; }
-    .hero-play svg { width: 13px; height: 13px; }
     .hero-title { font-size: 16px; }
     .card { width: 118px; }
     .poster { width: 118px; height: 168px; }
@@ -559,6 +657,7 @@
     .rank-score svg { width: 13px; height: 13px; }
     .logo-text { font-size: 18px; }
     .session-title { font-size: 20px; }
+    .seeall-title { font-size: 17px; }
   }
 </style>
 </head>
@@ -582,6 +681,10 @@
   <div class="menu-panel">
     <button class="menu-close" id="menuCloseBtn">&times;</button>
     <div class="menu-brand">CHROMA</div>
+    <div class="menu-section">
+      <h4>CATEGORIES</h4>
+      <div class="menu-list" id="categoryMenuList"></div>
+    </div>
     <div class="menu-section">
       <h4>GENRES</h4>
       <div class="menu-list" id="genreMenuList"></div>
@@ -616,27 +719,53 @@
 
 <!-- ========== HOME VIEW ========== -->
 <div id="homeView">
-  <div class="hero">
-    <div class="hero-media" id="heroMedia"></div>
-    <div class="hero-shade"></div>
-    <div class="hero-content">
-      <span class="hero-tag">NEW TRAILER</span>
-      <div class="hero-row">
-        <div class="hero-poster" onclick="window.location.href='example.html'">
-          <img src="Example.png" alt="Example poster" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-          <span class="fallback-text" style="display:none;">EXAMPLE</span>
+
+  <div class="hero" id="heroSlider">
+    <div class="hero-slides" id="heroSlides">
+      <div class="hero-slide">
+        <div class="hero-media" data-video="https://res.cloudinary.com/dt5yn0xqh/video/upload/v1781524860/samples/sea-turtle.mp4" data-poster="poster1.png"></div>
+        <div class="hero-shade"></div>
+        <div class="hero-content">
+          <span class="hero-tag">POPULAR</span>
+          <div class="hero-row">
+            <div class="hero-poster" onclick="goToDetail('Example 1')">
+              <img src="poster1.png" alt="Example 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span class="fallback-text" style="display:none;">EXAMPLE 1</span>
+            </div>
+            <div class="hero-meta">
+              <div class="hero-time">2:14</div>
+              <div class="hero-title">'Example 1'</div>
+              <div class="hero-sub">Watch the Official Trailer</div>
+            </div>
+          </div>
         </div>
-        <button class="hero-play" aria-label="Play trailer" onclick="window.location.href='example.html'"><svg viewBox="0 0 24 24" fill="white"><path d="M8 5v14l11-7z"/></svg></button>
-        <div class="hero-meta">
-          <div class="hero-time">2:14</div>
-          <div class="hero-title">'Example'</div>
-          <div class="hero-sub">Watch the Official Trailer</div>
+      </div>
+      <div class="hero-slide">
+        <div class="hero-media" data-video="https://res.cloudinary.com/dt5yn0xqh/video/upload/v1781524860/samples/sea-turtle.mp4" data-poster="poster2.png"></div>
+        <div class="hero-shade"></div>
+        <div class="hero-content">
+          <span class="hero-tag">POPULAR</span>
+          <div class="hero-row">
+            <div class="hero-poster" onclick="goToDetail('Example 2')">
+              <img src="poster2.png" alt="Example 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+              <span class="fallback-text" style="display:none;">EXAMPLE 2</span>
+            </div>
+            <div class="hero-meta">
+              <div class="hero-time">1:48</div>
+              <div class="hero-title">'Example 2'</div>
+              <div class="hero-sub">Watch the Official Trailer</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    <button class="hero-arrow pos-right" id="heroArrow" aria-label="Next">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="hero-dots" id="heroDots"></div>
   </div>
 
-  <div class="chip-row">
+  <div class="chip-row" id="eventChipRow">
     <button class="chip" data-session="ciff">CIFF 2026 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
     <button class="chip" data-session="jff">Jakarta Film Festival <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
     <button class="chip" data-session="week">Releasing This Week <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
@@ -644,112 +773,34 @@
   </div>
 
   <section class="block">
-    <div class="section-head"><h2><span class="bar"></span>New &amp; Now Showing</h2></div>
-    <div class="card-scroll">
-      <div class="card" onclick="window.location.href='example.html'">
-        <div class="poster">
-          <img src="poster1.png" alt="Example 1" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(150deg,#4a3a1e,#141414 70%)';">
-          <div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>
-          <div class="new-badge">NEW</div>
-          <div class="label">EXAMPLE 1</div>
-        </div>
-        <div class="card-meta">
-          <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>7.6</div>
-          <div class="card-title">Example 1</div>
-          <div class="card-sub">New Season · Mon, Sep 14</div>
-        </div>
-      </div>
-      <div class="card" onclick="window.location.href='example.html'">
-        <div class="poster">
-          <img src="poster2.png" alt="Example 2" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(150deg,#7a1f1f,#141414 70%)';">
-          <div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>
-          <div class="new-badge">NEW</div>
-          <div class="label">EXAMPLE 2</div>
-        </div>
-        <div class="card-meta">
-          <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>8.1</div>
-          <div class="card-title">Example 2</div>
-          <div class="card-sub">S2.E8 · Thu, Sep 10</div>
-        </div>
-      </div>
-      <div class="card" onclick="window.location.href='example.html'">
-        <div class="poster">
-          <img src="poster3.png" alt="Example 3" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(150deg,#1f2e4a,#141414 70%)';">
-          <div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>
-          <div class="new-badge">NOW SHOWING</div>
-          <div class="label">EXAMPLE 3</div>
-        </div>
-        <div class="card-meta">
-          <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>8.4</div>
-          <div class="card-title">Example 3</div>
-          <div class="card-sub">In Theaters · Sep 2026</div>
-        </div>
-      </div>
-      <div class="card" onclick="window.location.href='example.html'">
-        <div class="poster">
-          <img src="poster4.png" alt="Example 4" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(150deg,#3a1f4a,#141414 70%)';">
-          <div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>
-          <div class="new-badge">NEW</div>
-          <div class="label">EXAMPLE 4</div>
-        </div>
-        <div class="card-meta">
-          <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>6.9</div>
-          <div class="card-title">Example 4</div>
-          <div class="card-sub">Film · Sep 2026</div>
-        </div>
-      </div>
+    <div class="section-head">
+      <h2><span class="bar"></span>New &amp; Now Showing</h2>
+      <a class="see-all" href="#" data-seeall="newNow">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
     </div>
+    <div class="card-scroll" id="newNowShowing"></div>
   </section>
 
   <section class="block">
     <div class="section-head">
       <h2><span class="bar"></span>Trending This Week</h2>
-      <a class="see-all" href="#" onclick="return false;">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
+      <a class="see-all" href="#" data-seeall="trending">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
     </div>
-    <div class="card-scroll">
-      <div class="card" onclick="window.location.href='example.html'">
-        <div class="poster">
-          <img src="poster5.png" alt="Example 5" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(150deg,#1f4a2e,#141414 70%)';">
-          <div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>
-          <div class="label">EXAMPLE 5</div>
-        </div>
-        <div class="card-meta">
-          <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>8.4</div>
-          <div class="card-title">Example 5</div>
-          <div class="card-sub">Film · 2026</div>
-        </div>
-      </div>
-      <div class="card" onclick="window.location.href='example.html'">
-        <div class="poster">
-          <img src="poster6.png" alt="Example 6" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(150deg,#4a2e1f,#141414 70%)';">
-          <div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>
-          <div class="label">EXAMPLE 6</div>
-        </div>
-        <div class="card-meta">
-          <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>7.8</div>
-          <div class="card-title">Example 6</div>
-          <div class="card-sub">S1.E4 · Tue, Sep 15</div>
-        </div>
-      </div>
-      <div class="card" onclick="window.location.href='example.html'">
-        <div class="poster">
-          <img src="poster7.png" alt="Example 7" onerror="this.style.display='none'; this.parentElement.style.background='linear-gradient(150deg,#2e2e2e,#141414 70%)';">
-          <div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>
-          <div class="label">EXAMPLE 7</div>
-        </div>
-        <div class="card-meta">
-          <div class="rating"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>7.0</div>
-          <div class="card-title">Example 7</div>
-          <div class="card-sub">Film · 2025</div>
-        </div>
-      </div>
+    <div class="card-scroll" id="trendingWeek"></div>
+  </section>
+
+  <section class="block" id="savedSection">
+    <div class="section-head">
+      <h2><span class="bar"></span>Your List</h2>
+      <a class="see-all" href="#" data-seeall="saved">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
     </div>
+    <div class="card-scroll" id="savedList"></div>
+    <p class="search-hint" id="savedEmpty" style="padding:0 16px 12px;">No saved titles yet. Tap the bookmark icon on any poster to add it here.</p>
   </section>
 
   <section class="block">
     <div class="section-head">
       <h2><span class="bar"></span>Popular Profiles</h2>
-      <a class="see-all" href="#" onclick="return false;">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
+      <a class="see-all" href="#" data-seeall="profiles">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
     </div>
     <div class="profile-scroll" id="popularProfiles"></div>
   </section>
@@ -781,6 +832,20 @@
     <p class="search-hint" style="padding-top:0;">Ranked from highest to lowest rated.</p>
     <div class="rank-list" id="rankList"></div>
   </section>
+</div>
+
+<!-- ========== SEE ALL VIEW ========== -->
+<div id="seeAllView" class="hidden">
+  <div class="seeall-topbar">
+    <button class="back-btn" id="seeAllBack" aria-label="Back">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <h2 class="seeall-title"><span class="bar"></span><span id="seeAllTitle">Section</span></h2>
+  </div>
+  <p class="seeall-count" id="seeAllCount"></p>
+  <div class="search-grid" id="seeAllGrid"></div>
+  <div class="profile-grid hidden" id="seeAllProfileGrid"></div>
+  <div class="empty-state hidden" id="seeAllEmpty"></div>
 </div>
 
 <!-- ========== SESSION / FESTIVAL OVERLAY ========== -->
@@ -825,49 +890,118 @@
   </a>
 </footer>
 
+<!-- Supabase JS Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+  const SUPABASE_URL = 'https://YOUR-PROJECT.supabase.co';
+  const SUPABASE_ANON_KEY = 'YOUR-ANON-KEY';
+  let supabaseClient = null;
+  try {
+    if (window.supabase && SUPABASE_URL.indexOf('YOUR-PROJECT') === -1) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+  } catch (e) { console.warn('Supabase init skipped:', e); }
 
-  const CLOUDINARY_VIDEO_URL = 'https://res.cloudinary.com/dt5yn0xqh/video/upload/v1781524860/samples/sea-turtle.mp4';
+  function getLocalUserId() {
+    let uid = null;
+    try { uid = localStorage.getItem('chroma_user_id'); } catch(e) {}
+    if (!uid) {
+      uid = 'u_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+      try { localStorage.setItem('chroma_user_id', uid); } catch(e) {}
+    }
+    return uid;
+  }
+  const USER_ID = getLocalUserId();
 
-  (function initHeroVideo() {
-    const media = document.getElementById('heroMedia');
-    if (!media) return;
+  (function initHeroSlider() {
+    const slidesEl = document.getElementById('heroSlides');
+    const dotsEl = document.getElementById('heroDots');
+    const arrowBtn = document.getElementById('heroArrow');
+    if (!slidesEl) return;
 
-    if (!CLOUDINARY_VIDEO_URL || CLOUDINARY_VIDEO_URL.indexOf('dxxxxx') !== -1) {
-      // Placeholder — belum diganti
-      media.innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#666;font-size:12px;text-align:center;padding:20px;">Set CLOUDINARY_VIDEO_URL di script</div>';
-      return;
+    const mediaSlides = slidesEl.querySelectorAll('.hero-media');
+    let current = 0;
+    const total = mediaSlides.length;
+
+    mediaSlides.forEach(function(media) {
+      const url = media.dataset.video;
+      if (!url) return;
+      const video = document.createElement('video');
+      video.src = url;
+      video.poster = media.dataset.poster || '';
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.setAttribute('playsinline', '');
+      video.setAttribute('muted', '');
+      video.setAttribute('preload', 'auto');
+      media.appendChild(video);
+      const p = video.play();
+      if (p && p.catch) p.catch(function(){});
+    });
+
+    if (dotsEl) {
+      for (let i = 0; i < total; i++) {
+        const d = document.createElement('span');
+        if (i === 0) d.classList.add('active');
+        dotsEl.appendChild(d);
+      }
     }
 
-    const video = document.createElement('video');
-    video.src = CLOUDINARY_VIDEO_URL;
-    video.poster = 'Example.png';
-    video.autoplay = true;
-    video.muted = true;          // WAJIB untuk autoplay di browser modern
-    video.loop = true;
-    video.playsInline = true;
-    video.setAttribute('playsinline', '');
-    video.setAttribute('muted', '');
-    video.setAttribute('preload', 'auto');
-    media.appendChild(video);
+    function updateArrow() {
+      if (!arrowBtn) return;
+      const isLast = current === total - 1;
+      if (isLast) {
+        arrowBtn.classList.remove('pos-right');
+        arrowBtn.classList.add('pos-left');
+        arrowBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>';
+        arrowBtn.setAttribute('aria-label', 'Previous');
+      } else {
+        arrowBtn.classList.remove('pos-left');
+        arrowBtn.classList.add('pos-right');
+        arrowBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
+        arrowBtn.setAttribute('aria-label', 'Next');
+      }
+    }
 
-    // Paksa play; kalau diblokir, coba lagi setelah interaksi pertama
-    const playPromise = video.play();
-    if (playPromise && playPromise.catch) {
-      playPromise.catch(function () {
-        const resume = function () {
-          video.play().catch(function () {});
-          document.removeEventListener('click', resume);
-          document.removeEventListener('touchstart', resume);
-        };
-        document.addEventListener('click', resume, { once: true });
-        document.addEventListener('touchstart', resume, { once: true });
+    function goTo(index) {
+      if (index < 0) index = 0;
+      if (index >= total) index = total - 1;
+      current = index;
+      slidesEl.style.transform = 'translateX(-' + (current * 100) + '%)';
+      if (dotsEl) {
+        dotsEl.querySelectorAll('span').forEach(function(s, i) {
+          s.classList.toggle('active', i === current);
+        });
+      }
+      updateArrow();
+    }
+
+    if (arrowBtn) {
+      arrowBtn.addEventListener('click', function() {
+        if (current === total - 1) goTo(current - 1);
+        else goTo(current + 1);
       });
     }
+
+    let startX = 0, isDown = false;
+    slidesEl.addEventListener('touchstart', function(e) {
+      startX = e.touches[0].clientX; isDown = true;
+    }, { passive: true });
+    slidesEl.addEventListener('touchend', function(e) {
+      if (!isDown) return; isDown = false;
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) {
+        if (dx < 0 && current < total - 1) goTo(current + 1);
+        else if (dx > 0 && current > 0) goTo(current - 1);
+      }
+    });
+
+    updateArrow();
   })();
 
   (function(){
-    /* ---------- DATA ---------- */
     const titles = [
       { title:"Example 1", genre:"Drama",     type:"Series", year:2026, rating:7.6, poster:1, cls:"g1" },
       { title:"Example 2", genre:"Crime",     type:"Series", year:2026, rating:8.1, poster:2, cls:"g2" },
@@ -887,6 +1021,13 @@
       { name:"Example",             role:"Screenwriter",     initials:"EX", cls:"p5" },
       { name:"Example",             role:"Director",         initials:"EX", cls:"p1" }
     ];
+
+    const SECTIONS = {
+      newNow:   [0, 1, 2, 3],
+      trending: [4, 5, 6, 7]
+    };
+
+    const CATEGORIES = ["Film", "Movie", "Series", "Theater", "Short Movie"];
 
     const SESSIONS = {
       ciff: {
@@ -930,7 +1071,7 @@
       return '<div class="card" onclick="goToDetail(\'' + t.title.replace(/'/g, "\\'") + '\')">' +
         '<div class="poster ' + t.cls + '">' +
           '<img src="poster' + t.poster + '.png" alt="' + t.title + '" onerror="this.style.display=\'none\';">' +
-          '<div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>' +
+          '<div class="save" data-title="' + t.title + '" onclick="event.stopPropagation(); toggleSave(this);"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>' +
           '<div class="label">' + t.title.toUpperCase() + '</div>' +
         '</div>' +
         '<div class="card-meta">' +
@@ -956,14 +1097,92 @@
 
     renderProfiles(document.getElementById('popularProfiles'), profiles);
 
-    /* ---------- NAVIGATE TO DETAIL ---------- */
+    function renderCardScroll(container, idxs) {
+      if (!container) return;
+      container.innerHTML = idxs.map(function(i) { return filmCardHTML(titles[i]); }).join('');
+    }
+    renderCardScroll(document.getElementById('newNowShowing'), SECTIONS.newNow);
+    renderCardScroll(document.getElementById('trendingWeek'), SECTIONS.trending);
+
     function goToDetail(title) {
-      try {
-        sessionStorage.setItem('chroma_selected', JSON.stringify(title));
-      } catch(e) {}
+      try { sessionStorage.setItem('chroma_selected', JSON.stringify(title)); } catch(e) {}
       window.location.href = 'example.html';
     }
     window.goToDetail = goToDetail;
+
+    /* ---------- SAVE / YOUR LIST ---------- */
+    let savedTitles = [];
+
+    function findTitleObj(name) {
+      return titles.find(function(t) { return t.title === name; });
+    }
+
+    function renderSavedList() {
+      const container = document.getElementById('savedList');
+      const emptyMsg = document.getElementById('savedEmpty');
+      if (!container) return;
+      if (savedTitles.length === 0) {
+        container.innerHTML = '';
+        if (emptyMsg) emptyMsg.classList.remove('hidden');
+        return;
+      }
+      if (emptyMsg) emptyMsg.classList.add('hidden');
+      container.innerHTML = savedTitles
+        .map(function(name) { return findTitleObj(name); })
+        .filter(Boolean)
+        .map(function(t) { return filmCardHTML(t); })
+        .join('');
+      hydrateSavedStates();
+    }
+
+    async function toggleSave(el) {
+      const title = el.dataset.title;
+      if (!title) return;
+      const isSaved = el.classList.contains('saved');
+
+      if (isSaved) {
+        savedTitles = savedTitles.filter(function(t) { return t !== title; });
+      } else {
+        if (savedTitles.indexOf(title) === -1) savedTitles.push(title);
+      }
+      renderSavedList();
+
+      if (!supabaseClient) {
+        try { localStorage.setItem('chroma_saved', JSON.stringify(savedTitles)); } catch(e) {}
+        return;
+      }
+
+      try {
+        if (isSaved) {
+          await supabaseClient.from('saves').delete()
+            .eq('user_id', USER_ID).eq('film_title', title);
+        } else {
+          await supabaseClient.from('saves').upsert(
+            { user_id: USER_ID, film_title: title },
+            { onConflict: 'user_id,film_title' }
+          );
+        }
+      } catch (e) {
+        console.warn('Save to Supabase failed:', e);
+      }
+    }
+    window.toggleSave = toggleSave;
+
+    async function hydrateSavedStates() {
+      if (supabaseClient) {
+        try {
+          const { data } = await supabaseClient.from('saves').select('film_title').eq('user_id', USER_ID);
+          if (data) savedTitles = data.map(function(r) { return r.film_title; });
+        } catch(e) {}
+      } else {
+        try { savedTitles = JSON.parse(localStorage.getItem('chroma_saved') || '[]'); } catch(e) {}
+      }
+      document.querySelectorAll('.poster .save').forEach(function(el) {
+        el.classList.toggle('saved', savedTitles.indexOf(el.dataset.title) !== -1);
+      });
+    }
+
+    hydrateSavedStates().then(renderSavedList);
 
     /* ---------- MENU ---------- */
     const menuOverlay = document.getElementById('menuOverlay');
@@ -977,21 +1196,38 @@
       });
     }
 
-    /* ---------- GENRE MENU ---------- */
-    const genres = [...new Set(titles.map(t => t.genre))].sort();
-    const genreMenuList = document.getElementById('genreMenuList');
+    const categoryMenuList = document.getElementById('categoryMenuList');
     const searchInput = document.getElementById('searchInput');
     const searchClear = document.getElementById('searchClear');
     const searchGrid = document.getElementById('searchGrid');
     const searchHint = document.getElementById('searchHint');
 
-    if (genreMenuList) {
-      genres.forEach(function(g) {
-        const count = titles.filter(t => t.genre === g).length;
+    if (categoryMenuList) {
+      CATEGORIES.forEach(function(c) {
+        const count = titles.filter(function(t) {
+          return t.type.toLowerCase() === c.toLowerCase();
+        }).length;
         const item = document.createElement('button');
         item.className = 'menu-item';
-        item.style.width = '100%';
-        item.style.textAlign = 'left';
+        item.innerHTML = '<span>'+c+'</span><span class="count">'+count+' titles</span>';
+        item.addEventListener('click', function() {
+          menuOverlay.classList.remove('open');
+          goToView('search');
+          if (searchInput) { searchInput.value = ''; }
+          runCategorySearch(c);
+        });
+        categoryMenuList.appendChild(item);
+      });
+    }
+
+    const genres = [...new Set(titles.map(function(t){ return t.genre; }))].sort();
+    const genreMenuList = document.getElementById('genreMenuList');
+
+    if (genreMenuList) {
+      genres.forEach(function(g) {
+        const count = titles.filter(function(t){ return t.genre === g; }).length;
+        const item = document.createElement('button');
+        item.className = 'menu-item';
         item.innerHTML = '<span>'+g+'</span><span class="count">'+count+' titles</span>';
         item.addEventListener('click', function() {
           menuOverlay.classList.remove('open');
@@ -1006,13 +1242,17 @@
     const homeView = document.getElementById('homeView');
     const searchView = document.getElementById('searchView');
     const ratingsView = document.getElementById('ratingsView');
+    const seeAllView = document.getElementById('seeAllView');
     const tabs = document.querySelectorAll('.tab[data-view]');
 
     function goToView(name) {
       if (homeView) homeView.classList.toggle('hidden', name !== 'home');
       if (searchView) searchView.classList.toggle('hidden', name !== 'search');
       if (ratingsView) ratingsView.classList.toggle('hidden', name !== 'ratings');
-      tabs.forEach(function(t) { t.classList.toggle('active', t.dataset.view === name); });
+      if (seeAllView) seeAllView.classList.toggle('hidden', name !== 'seeall');
+      tabs.forEach(function(t) {
+        t.classList.toggle('active', t.dataset.view === name || (name === 'seeall' && t.dataset.view === 'home'));
+      });
       window.scrollTo({ top: 0, behavior: 'instant' });
       if (name === 'ratings') renderRatings();
     }
@@ -1023,6 +1263,79 @@
         goToView(t.dataset.view);
       });
     });
+
+    /* ---------- SEE ALL ---------- */
+    const seeAllTitle = document.getElementById('seeAllTitle');
+    const seeAllCount = document.getElementById('seeAllCount');
+    const seeAllGrid = document.getElementById('seeAllGrid');
+    const seeAllProfileGrid = document.getElementById('seeAllProfileGrid');
+    const seeAllEmpty = document.getElementById('seeAllEmpty');
+    const seeAllBack = document.getElementById('seeAllBack');
+
+    const SEEALL_META = {
+      newNow:   { title: "New & Now Showing" },
+      trending: { title: "Trending This Week" },
+      saved:    { title: "Your List" },
+      profiles: { title: "Popular Profiles" }
+    };
+
+    function openSeeAll(key) {
+      const meta = SEEALL_META[key];
+      if (!meta) return;
+
+      seeAllTitle.textContent = meta.title;
+      seeAllGrid.innerHTML = '';
+      seeAllProfileGrid.innerHTML = '';
+      seeAllEmpty.classList.add('hidden');
+      seeAllGrid.classList.remove('hidden');
+      seeAllProfileGrid.classList.add('hidden');
+
+      if (key === 'profiles') {
+        seeAllGrid.classList.add('hidden');
+        seeAllProfileGrid.classList.remove('hidden');
+        seeAllCount.textContent = profiles.length + ' profiles';
+        seeAllProfileGrid.innerHTML = profiles.map(profileCardHTML).join('');
+      } else if (key === 'saved') {
+        if (savedTitles.length === 0) {
+          seeAllCount.textContent = '';
+          seeAllGrid.classList.add('hidden');
+          seeAllEmpty.classList.remove('hidden');
+          seeAllEmpty.textContent = 'No saved titles yet. Tap the bookmark icon on any poster to add it here.';
+        } else {
+          const list = savedTitles.map(findTitleObj).filter(Boolean);
+          seeAllCount.textContent = list.length + ' saved title' + (list.length === 1 ? '' : 's');
+          seeAllGrid.innerHTML = list.map(filmCardHTML).join('');
+        }
+      } else {
+        const idxs = SECTIONS[key] || [];
+        seeAllCount.textContent = idxs.length + ' titles';
+        if (idxs.length === 0) {
+          seeAllGrid.classList.add('hidden');
+          seeAllEmpty.classList.remove('hidden');
+          seeAllEmpty.textContent = 'No titles in this section yet.';
+        } else {
+          seeAllGrid.innerHTML = idxs.map(function(i) { return filmCardHTML(titles[i]); }).join('');
+        }
+      }
+
+      goToView('seeall');
+      hydrateSavedStates();
+    }
+
+    document.querySelectorAll('[data-seeall]').forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        e.preventDefault();
+        openSeeAll(el.dataset.seeall);
+      });
+    });
+
+    if (seeAllBack) {
+      seeAllBack.addEventListener('click', function() {
+        goToView('home');
+      });
+    }
+
+    window.openSeeAll = openSeeAll;
 
     /* ---------- SEARCH ---------- */
     function runSearch(query) {
@@ -1047,7 +1360,7 @@
         return '<div class="card" onclick="goToDetail(\'' + t.title.replace(/'/g, "\\'") + '\')">' +
           '<div class="poster ' + t.cls + '">' +
             '<img src="poster' + t.poster + '.png" alt="' + t.title + '" onerror="this.style.display=\'none\';">' +
-            '<div class="save" onclick="event.stopPropagation();"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>' +
+            '<div class="save" data-title="' + t.title + '" onclick="event.stopPropagation(); toggleSave(this);"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>' +
             '<div class="label">' + t.title.toUpperCase() + '</div>' +
           '</div>' +
           '<div class="card-meta">' +
@@ -1057,6 +1370,33 @@
             '<span class="genre-tag">' + t.genre + '</span>' +
           '</div></div>';
       }).join('');
+      hydrateSavedStates();
+    }
+
+    function runCategorySearch(cat) {
+      const results = titles.filter(function(t) {
+        return t.type.toLowerCase() === cat.toLowerCase();
+      });
+      if (searchHint) searchHint.textContent = results.length + ' ' + cat + ' title' + (results.length === 1 ? '' : 's');
+      if (!searchGrid) return;
+      if (results.length === 0) {
+        searchGrid.innerHTML = '<div class="empty-state">No titles in this category yet.</div>';
+        return;
+      }
+      searchGrid.innerHTML = results.map(function(t) {
+        return '<div class="card" onclick="goToDetail(\'' + t.title.replace(/'/g, "\\'") + '\')">' +
+          '<div class="poster ' + t.cls + '">' +
+            '<img src="poster' + t.poster + '.png" alt="' + t.title + '" onerror="this.style.display=\'none\';">' +
+            '<div class="save" data-title="' + t.title + '" onclick="event.stopPropagation(); toggleSave(this);"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>' +
+            '<div class="label">' + t.title.toUpperCase() + '</div>' +
+          '</div>' +
+          '<div class="card-meta">' +
+            '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
+            '<div class="card-title">' + t.title + '</div>' +
+            '<div class="card-sub">' + t.type + ' · ' + t.year + '</div>' +
+          '</div></div>';
+      }).join('');
+      hydrateSavedStates();
     }
 
     if (searchInput) {
@@ -1112,6 +1452,7 @@
       sessionOverlay.classList.add('open');
       sessionOverlay.scrollTop = 0;
       document.body.style.overflow = 'hidden';
+      hydrateSavedStates();
     }
 
     function closeSession() {
@@ -1140,9 +1481,10 @@
     renderRatings();
     window.goToView = goToView;
     window.runSearch = runSearch;
+    window.runCategorySearch = runCategorySearch;
     window.openSession = openSession;
   })();
 </script>
 
 </body>
-</html>
+                                                                                  </html>
