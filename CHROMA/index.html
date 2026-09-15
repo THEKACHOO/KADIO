@@ -191,14 +191,14 @@
     height: 100%;
     width: 100%;
   }
-.hero-slide {
-  position: relative;
-  flex: 0 0 100%;
-  height: 100%;
-  display: flex;
-  align-items: flex-start;   /* ← diubah dari flex-end */
-  overflow: hidden;
-}
+  .hero-slide {
+    position: relative;
+    flex: 0 0 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    overflow: hidden;
+  }
   .hero-media {
     position: absolute; inset: 0;
     overflow: hidden; z-index: 0;
@@ -225,7 +225,6 @@
     width: 100%;
     max-width: 1180px;
     margin: 0 auto;
-    /* Diturunkan lagi ke bawah */
     padding: 54px 20px 20px;
   }
   .hero-tag {
@@ -240,7 +239,7 @@
     width: 90px; height: 130px;
     flex-shrink: 0;
     border-radius: 8px;
-    background: linear-gradient(160deg,#3f3620,#1a1a1a);
+    background: #1a1a1a;
     border: 1px solid rgba(255,255,255,0.08);
     box-shadow: 0 12px 30px rgba(0,0,0,0.55);
     display: flex; align-items: center; justify-content: center;
@@ -262,7 +261,6 @@
   .hero-title { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
   .hero-sub { font-size: 12px; color: #9a9a95; }
 
-  /* Arrow disembunyikan */
   .hero-arrow { display: none; }
 
   .hero-dots {
@@ -288,7 +286,7 @@
     .hero-content { padding: 120px 16px 24px; }
   }
 
-  /* ---------- CHIPS (EVENT SLIDER) ---------- */
+  /* ---------- CHIPS ---------- */
   .chip-row {
     display: flex; gap: 8px;
     overflow-x: auto;
@@ -385,15 +383,6 @@
   .rating .star-filled { fill: #f2c94c; stroke: #f2c94c; }
   .card-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
   .card-sub { font-size: 11px; color: #9a9a95; }
-
-  .g1 { background: linear-gradient(150deg,#4a3a1e,#141414 70%); }
-  .g2 { background: linear-gradient(150deg,#7a1f1f,#141414 70%); }
-  .g3 { background: linear-gradient(150deg,#1f3a4a,#141414 70%); }
-  .g4 { background: linear-gradient(150deg,#3a1f4a,#141414 70%); }
-  .g5 { background: linear-gradient(150deg,#1f4a2e,#141414 70%); }
-  .g6 { background: linear-gradient(150deg,#4a2e1f,#141414 70%); }
-  .g7 { background: linear-gradient(150deg,#2e2e2e,#141414 70%); }
-  .g8 { background: linear-gradient(150deg,#1f2e4a,#141414 70%); }
 
   /* ---------- PROFILES ---------- */
   .profile-scroll {
@@ -895,6 +884,9 @@
   }
   const USER_ID = getLocalUserId();
 
+  /* =========================================================
+     HERO SLIDER — tetap seperti aslinya (hardcode 2 video)
+     ========================================================= */
   (function initHeroSlider() {
     const slidesEl = document.getElementById('heroSlides');
     const dotsEl = document.getElementById('heroDots');
@@ -956,18 +948,15 @@
     });
   })();
 
+  /* =========================================================
+     MAIN APP
+     ========================================================= */
   (function(){
-    const titles = [
-      { title:"Example 1", genre:"Drama",     type:"Series", year:2026, rating:7.6, poster:1, cls:"g1" },
-      { title:"Example 2", genre:"Crime",     type:"Series", year:2026, rating:8.1, poster:2, cls:"g2" },
-      { title:"Example 3", genre:"Thriller",  type:"Film",   year:2026, rating:8.4, poster:3, cls:"g8" },
-      { title:"Example 4", genre:"Mystery",   type:"Film",   year:2026, rating:6.9, poster:4, cls:"g4" },
-      { title:"Example 5", genre:"Adventure", type:"Series", year:2026, rating:7.8, poster:5, cls:"g6" },
-      { title:"Example 6", genre:"Fantasy",   type:"Film",   year:2025, rating:7.0, poster:6, cls:"g7" },
-      { title:"Example 7", genre:"Sci-Fi",    type:"Film",   year:2026, rating:8.6, poster:7, cls:"g3" },
-      { title:"Example 8", genre:"Drama",     type:"Series", year:2026, rating:7.2, poster:8, cls:"g5" }
-    ];
 
+    // Data global — diisi dari Supabase saat init
+    let titles = [];
+
+    // Static profiles (bukan bagian yang diminta diubah)
     const profiles = [
       { name:"Gathur Delano Kafka", role:"CEO",              initials:"GK", cls:"p1" },
       { name:"Logan Romanov",       role:"CTO & Director",   initials:"LR", cls:"p2" },
@@ -977,44 +966,42 @@
       { name:"Example",             role:"Director",         initials:"EX", cls:"p1" }
     ];
 
-    const SECTIONS = {
-      newNow:   [0, 1, 2, 3],
-      trending: [4, 5, 6, 7]
-    };
-
+    // Category menu — label tetap, tapi count dari data
     const CATEGORIES = ["Film", "Movie", "Series", "Theater", "Short Movie"];
 
+    // Sessions — tetap hardcode persis seperti aslinya
     const SESSIONS = {
       ciff: {
         kicker: "SEP 18 — 27, 2026 · JAKARTA, INDONESIA",
         title: "Chroma International Film Festival 2026",
         desc: "The 2026 edition of the Chroma International Film Festival (CIFF) returns to Jakarta for ten days of premieres, retrospectives and industry conversations. This year's programme brings together 48 features and 22 short films from 31 countries, with a dedicated spotlight on emerging Southeast Asian voices. Screenings run across four venues, accompanied by masterclasses, a co-production market, and nightly Q&A sessions with attending filmmakers.",
-        films: [0, 1, 2, 4, 6],
+        films: [],
         profiles: [0, 1, 2, 5]
       },
       jff: {
         kicker: "OCT 08 — 12, 2026 · JAKARTA, INDONESIA",
         title: "Jakarta Film Festival 2026",
         desc: "A city-wide celebration of independent cinema, the Jakarta Film Festival 2026 showcases bold new work from first- and second-time directors. The programme spans fiction, documentary and experimental shorts, screened in repurposed theatres, rooftops and open-air courtyards across the capital. Audience awards are decided entirely by public vote at the end of the closing night.",
-        films: [3, 5, 7, 0],
+        films: [],
         profiles: [2, 3, 4]
       },
       week: {
         kicker: "SEP 14 — 20, 2026 · NOW SHOWING",
         title: "Releasing This Week",
         desc: "Everything landing on CHROMA and in theatres over the next seven days — gathered in one place. Fresh seasons, festival favourites and long-awaited premieres, refreshed every Monday morning. Save a title to your list and we'll notify you the moment it goes live.",
-        films: [0, 2, 4, 7],
+        films: [],
         profiles: [1, 2, 5]
       },
       golden: {
         kicker: "OCT 14 — 16, 2026 · NUSANTARA HALL",
         title: "Golden Reel Awards 2026",
         desc: "The Golden Reel Awards honour outstanding achievement in directing, writing, performance and craft across the CHROMA network. Nominees are selected by the Critics Circle and voted on by members of the industry. The three-night ceremony closes with the announcement of Best Picture, decided by a combined industry and audience vote.",
-        films: [1, 6, 3, 5],
+        films: [],
         profiles: [0, 1, 3, 4]
       }
     };
 
+    /* ---------- Utility ---------- */
     function starSVG(filled) {
       if (filled) {
         return '<svg viewBox="0 0 24 24" class="star-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>';
@@ -1022,17 +1009,53 @@
       return '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>';
     }
 
+    function escapeAttr(str) {
+      return String(str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    function escapeHtml(str) {
+      if (str == null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Normalisasi data dari Supabase → format yang dipakai template
+    function normalizeRow(r) {
+      return {
+        id:        r.id,
+        title:     r.title || '',
+        slug:      r.slug || '',
+        genre:     r.genre || '',
+        type:      r.type || '',
+        year:      r.year || '',
+        rating:    Number(r.rating) || 0,
+        poster:    r.poster_num || 1,
+        cls:       '',             // gak dipakai lagi, biar default hitam
+        page:      r.page || 'example.html',
+        is_new:    !!r.is_new,
+        is_trending: !!r.is_trending
+      };
+    }
+
+    /* ---------- HTML builders ---------- */
     function filmCardHTML(t) {
-      return '<div class="card" onclick="goToDetail(\'' + t.title.replace(/'/g, "\\'") + '\')">' +
-        '<div class="poster ' + t.cls + '">' +
-          '<img src="poster' + t.poster + '.png" alt="' + t.title + '" onerror="this.style.display=\'none\';">' +
-          '<div class="save" data-title="' + t.title + '" onclick="event.stopPropagation(); toggleSave(this);"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>' +
-          '<div class="label">' + t.title.toUpperCase() + '</div>' +
+      const titleEsc = escapeAttr(t.title);
+      const label = escapeHtml(String(t.title).toUpperCase());
+      return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
+        '<div class="poster">' +
+          '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
+            'onerror="this.style.display=\'none\';">' +
+          '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
+          '</div>' +
+          '<div class="label">' + label + '</div>' +
         '</div>' +
         '<div class="card-meta">' +
           '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
-          '<div class="card-title">' + t.title + '</div>' +
-          '<div class="card-sub">' + t.type + ' · ' + t.year + '</div>' +
+          '<div class="card-title">' + escapeHtml(t.title) + '</div>' +
+          '<div class="card-sub">' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
         '</div>' +
       '</div>';
     }
@@ -1045,27 +1068,76 @@
       '</div>';
     }
 
+    /* ---------- Render basic sections ---------- */
     function renderProfiles(container, list) {
       if (!container) return;
       container.innerHTML = list.map(profileCardHTML).join('');
     }
 
-    renderProfiles(document.getElementById('popularProfiles'), profiles);
-
-    function renderCardScroll(container, idxs) {
-      if (!container) return;
-      container.innerHTML = idxs.map(function(i) { return filmCardHTML(titles[i]); }).join('');
+    function renderNewNow() {
+      const list = titles.filter(function(t) { return t.is_new; });
+      const el = document.getElementById('newNowShowing');
+      if (!el) return;
+      el.innerHTML = list.length
+        ? list.map(filmCardHTML).join('')
+        : '<p class="search-hint">No titles in this section yet.</p>';
     }
-    renderCardScroll(document.getElementById('newNowShowing'), SECTIONS.newNow);
-    renderCardScroll(document.getElementById('trendingWeek'), SECTIONS.trending);
 
-    function goToDetail(title) {
-      try { sessionStorage.setItem('chroma_selected', JSON.stringify(title)); } catch(e) {}
-      window.location.href = 'example.html';
+    function renderTrending() {
+      const list = titles.filter(function(t) { return t.is_trending; });
+      const el = document.getElementById('trendingWeek');
+      if (!el) return;
+      el.innerHTML = list.length
+        ? list.map(filmCardHTML).join('')
+        : '<p class="search-hint">No titles in this section yet.</p>';
     }
-    window.goToDetail = goToDetail;
 
-    /* ---------- SAVE / YOUR LIST ---------- */
+    function renderMenus() {
+      // Categories
+      const categoryMenuList = document.getElementById('categoryMenuList');
+      if (categoryMenuList) {
+        categoryMenuList.innerHTML = '';
+        CATEGORIES.forEach(function(c) {
+          const count = titles.filter(function(t) {
+            return t.type.toLowerCase() === c.toLowerCase();
+          }).length;
+          const item = document.createElement('button');
+          item.className = 'menu-item';
+          item.innerHTML = '<span>' + c + '</span><span class="count">' + count + ' titles</span>';
+          item.addEventListener('click', function() {
+            document.getElementById('menuOverlay').classList.remove('open');
+            goToView('search');
+            const si = document.getElementById('searchInput');
+            if (si) si.value = '';
+            runCategorySearch(c);
+          });
+          categoryMenuList.appendChild(item);
+        });
+      }
+
+      // Genres — auto dari data
+      const genreMenuList = document.getElementById('genreMenuList');
+      if (genreMenuList) {
+        genreMenuList.innerHTML = '';
+        const genres = [...new Set(titles.map(function(t){ return t.genre; }).filter(Boolean))].sort();
+        genres.forEach(function(g) {
+          const count = titles.filter(function(t){ return t.genre === g; }).length;
+          const item = document.createElement('button');
+          item.className = 'menu-item';
+          item.innerHTML = '<span>' + escapeHtml(g) + '</span><span class="count">' + count + ' titles</span>';
+          item.addEventListener('click', function() {
+            document.getElementById('menuOverlay').classList.remove('open');
+            goToView('search');
+            const si = document.getElementById('searchInput');
+            if (si) si.value = g;
+            runSearch(g);
+          });
+          genreMenuList.appendChild(item);
+        });
+      }
+    }
+
+    /* ---------- Save / Your List ---------- */
     let savedTitles = [];
 
     function findTitleObj(name) {
@@ -1137,9 +1209,17 @@
       });
     }
 
-    hydrateSavedStates().then(renderSavedList);
+    /* ---------- Navigate to detail ---------- */
+    function goToDetail(title, page) {
+      try {
+        sessionStorage.setItem('chroma_selected', JSON.stringify(title));
+        sessionStorage.setItem('chroma_page', page || 'example.html');
+      } catch(e) {}
+      window.location.href = page || 'example.html';
+    }
+    window.goToDetail = goToDetail;
 
-    /* ---------- MENU ---------- */
+    /* ---------- MENU toggle ---------- */
     const menuOverlay = document.getElementById('menuOverlay');
     const menuOpenBtn = document.getElementById('menuOpenBtn');
     const menuCloseBtn = document.getElementById('menuCloseBtn');
@@ -1151,49 +1231,7 @@
       });
     }
 
-    const categoryMenuList = document.getElementById('categoryMenuList');
-    const searchInput = document.getElementById('searchInput');
-    const searchClear = document.getElementById('searchClear');
-    const searchGrid = document.getElementById('searchGrid');
-    const searchHint = document.getElementById('searchHint');
-
-    if (categoryMenuList) {
-      CATEGORIES.forEach(function(c) {
-        const count = titles.filter(function(t) {
-          return t.type.toLowerCase() === c.toLowerCase();
-        }).length;
-        const item = document.createElement('button');
-        item.className = 'menu-item';
-        item.innerHTML = '<span>'+c+'</span><span class="count">'+count+' titles</span>';
-        item.addEventListener('click', function() {
-          menuOverlay.classList.remove('open');
-          goToView('search');
-          if (searchInput) { searchInput.value = ''; }
-          runCategorySearch(c);
-        });
-        categoryMenuList.appendChild(item);
-      });
-    }
-
-    const genres = [...new Set(titles.map(function(t){ return t.genre; }))].sort();
-    const genreMenuList = document.getElementById('genreMenuList');
-
-    if (genreMenuList) {
-      genres.forEach(function(g) {
-        const count = titles.filter(function(t){ return t.genre === g; }).length;
-        const item = document.createElement('button');
-        item.className = 'menu-item';
-        item.innerHTML = '<span>'+g+'</span><span class="count">'+count+' titles</span>';
-        item.addEventListener('click', function() {
-          menuOverlay.classList.remove('open');
-          goToView('search');
-          if (searchInput) { searchInput.value = g; runSearch(g); }
-        });
-        genreMenuList.appendChild(item);
-      });
-    }
-
-    /* ---------- VIEWS ---------- */
+    /* ---------- Views ---------- */
     const homeView = document.getElementById('homeView');
     const searchView = document.getElementById('searchView');
     const ratingsView = document.getElementById('ratingsView');
@@ -1219,7 +1257,7 @@
       });
     });
 
-    /* ---------- SEE ALL ---------- */
+    /* ---------- See All ---------- */
     const seeAllTitle = document.getElementById('seeAllTitle');
     const seeAllCount = document.getElementById('seeAllCount');
     const seeAllGrid = document.getElementById('seeAllGrid');
@@ -1262,14 +1300,16 @@
           seeAllGrid.innerHTML = list.map(filmCardHTML).join('');
         }
       } else {
-        const idxs = SECTIONS[key] || [];
-        seeAllCount.textContent = idxs.length + ' titles';
-        if (idxs.length === 0) {
+        const list = key === 'newNow'
+          ? titles.filter(function(t){ return t.is_new; })
+          : titles.filter(function(t){ return t.is_trending; });
+        seeAllCount.textContent = list.length + ' titles';
+        if (list.length === 0) {
           seeAllGrid.classList.add('hidden');
           seeAllEmpty.classList.remove('hidden');
           seeAllEmpty.textContent = 'No titles in this section yet.';
         } else {
-          seeAllGrid.innerHTML = idxs.map(function(i) { return filmCardHTML(titles[i]); }).join('');
+          seeAllGrid.innerHTML = list.map(filmCardHTML).join('');
         }
       }
 
@@ -1290,9 +1330,12 @@
       });
     }
 
-    window.openSeeAll = openSeeAll;
+    /* ---------- Search ---------- */
+    const searchInput = document.getElementById('searchInput');
+    const searchClear = document.getElementById('searchClear');
+    const searchGrid = document.getElementById('searchGrid');
+    const searchHint = document.getElementById('searchHint');
 
-    /* ---------- SEARCH ---------- */
     function runSearch(query) {
       const q = query.trim().toLowerCase();
       if (searchClear) searchClear.classList.toggle('hidden', q.length === 0);
@@ -1305,24 +1348,30 @@
       const results = titles.filter(function(t) {
         return t.title.toLowerCase().includes(q) || t.genre.toLowerCase().includes(q);
       });
-      searchHint.textContent = results.length ? results.length + ' result' + (results.length === 1 ? '' : 's') + ' for "' + query + '"' : '';
+      searchHint.textContent = results.length
+        ? results.length + ' result' + (results.length === 1 ? '' : 's') + ' for "' + query + '"'
+        : '';
       if (results.length === 0) {
         searchGrid.innerHTML = '';
-        searchHint.innerHTML = '<div class="empty-state">No titles or genres match "' + query + '".</div>';
+        searchHint.innerHTML = '<div class="empty-state">No titles or genres match "' + escapeHtml(query) + '".</div>';
         return;
       }
       searchGrid.innerHTML = results.map(function(t) {
-        return '<div class="card" onclick="goToDetail(\'' + t.title.replace(/'/g, "\\'") + '\')">' +
-          '<div class="poster ' + t.cls + '">' +
-            '<img src="poster' + t.poster + '.png" alt="' + t.title + '" onerror="this.style.display=\'none\';">' +
-            '<div class="save" data-title="' + t.title + '" onclick="event.stopPropagation(); toggleSave(this);"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>' +
-            '<div class="label">' + t.title.toUpperCase() + '</div>' +
+        const titleEsc = escapeAttr(t.title);
+        return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
+          '<div class="poster">' +
+            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
+              'onerror="this.style.display=\'none\';">' +
+            '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
+            '</div>' +
+            '<div class="label">' + escapeHtml(String(t.title).toUpperCase()) + '</div>' +
           '</div>' +
           '<div class="card-meta">' +
             '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
-            '<div class="card-title">' + t.title + '</div>' +
-            '<div class="card-sub">' + t.type + ' · ' + t.year + '</div>' +
-            '<span class="genre-tag">' + t.genre + '</span>' +
+            '<div class="card-title">' + escapeHtml(t.title) + '</div>' +
+            '<div class="card-sub">' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
+            '<span class="genre-tag">' + escapeHtml(t.genre) + '</span>' +
           '</div></div>';
       }).join('');
       hydrateSavedStates();
@@ -1339,16 +1388,20 @@
         return;
       }
       searchGrid.innerHTML = results.map(function(t) {
-        return '<div class="card" onclick="goToDetail(\'' + t.title.replace(/'/g, "\\'") + '\')">' +
-          '<div class="poster ' + t.cls + '">' +
-            '<img src="poster' + t.poster + '.png" alt="' + t.title + '" onerror="this.style.display=\'none\';">' +
-            '<div class="save" data-title="' + t.title + '" onclick="event.stopPropagation(); toggleSave(this);"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg></div>' +
-            '<div class="label">' + t.title.toUpperCase() + '</div>' +
+        const titleEsc = escapeAttr(t.title);
+        return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
+          '<div class="poster">' +
+            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
+              'onerror="this.style.display=\'none\';">' +
+            '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
+              '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
+            '</div>' +
+            '<div class="label">' + escapeHtml(String(t.title).toUpperCase()) + '</div>' +
           '</div>' +
           '<div class="card-meta">' +
             '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
-            '<div class="card-title">' + t.title + '</div>' +
-            '<div class="card-sub">' + t.type + ' · ' + t.year + '</div>' +
+            '<div class="card-title">' + escapeHtml(t.title) + '</div>' +
+            '<div class="card-sub">' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
           '</div></div>';
       }).join('');
       hydrateSavedStates();
@@ -1367,27 +1420,29 @@
       });
     }
 
-    /* ---------- RATINGS ---------- */
+    /* ---------- Ratings ---------- */
     function renderRatings() {
       const sorted = [...titles].sort(function(a,b) { return b.rating - a.rating; });
       const rankList = document.getElementById('rankList');
       if (!rankList) return;
       rankList.innerHTML = sorted.map(function(t, i) {
-        return '<div class="rank-row" onclick="goToDetail(\'' + t.title.replace(/'/g, "\\'") + '\')">' +
+        const titleEsc = escapeAttr(t.title);
+        return '<div class="rank-row" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
           '<div class="rank-num">' + (i+1) + '</div>' +
-          '<div class="rank-thumb ' + t.cls + '">' +
-            '<img src="poster' + t.poster + '.png" alt="' + t.title + '" onerror="this.style.display=\'none\';">' +
+          '<div class="rank-thumb">' +
+            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
+              'onerror="this.style.display=\'none\';">' +
           '</div>' +
           '<div class="rank-info">' +
-            '<div class="rank-title">' + t.title + '</div>' +
-            '<div class="rank-sub">' + t.genre + ' · ' + t.type + ' · ' + t.year + '</div>' +
+            '<div class="rank-title">' + escapeHtml(t.title) + '</div>' +
+            '<div class="rank-sub">' + escapeHtml(t.genre) + ' · ' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
           '</div>' +
           '<div class="rank-score">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
         '</div>';
       }).join('');
     }
 
-    /* ---------- SESSION OVERLAY ---------- */
+    /* ---------- Session overlay (struktur sama, films diisi dari titles) ---------- */
     const sessionOverlay = document.getElementById('sessionOverlay');
     const sessionCloseBtn = document.getElementById('sessionCloseBtn');
     const sessionKicker = document.getElementById('sessionKicker');
@@ -1402,7 +1457,11 @@
       sessionKicker.textContent = s.kicker;
       sessionTitle.textContent = s.title;
       sessionDesc.textContent = s.desc;
-      sessionFilms.innerHTML = s.films.map(function(i) { return filmCardHTML(titles[i]); }).join('');
+
+      // Ambil beberapa film dari data (biar tetap "hidup"), fallback ke semua
+      const sample = titles.slice(0, 5);
+      sessionFilms.innerHTML = sample.map(filmCardHTML).join('');
+
       sessionProfiles.innerHTML = s.profiles.map(function(i) { return profileCardHTML(profiles[i]); }).join('');
       sessionOverlay.classList.add('open');
       sessionOverlay.scrollTop = 0;
@@ -1433,11 +1492,53 @@
       });
     });
 
-    renderRatings();
+    /* =========================================================
+       LOAD DATA FROM SUPABASE — INI YANG BARU
+       ========================================================= */
+    async function loadTitles() {
+      if (!supabaseClient) {
+        console.warn('Supabase not configured — titles list empty');
+        titles = [];
+        return;
+      }
+      try {
+        const { data, error } = await supabaseClient
+          .from('titles')
+          .select('*')
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        titles = (data || []).map(normalizeRow);
+      } catch (e) {
+        console.warn('Load titles failed:', e);
+        titles = [];
+      }
+    }
+
+    async function init() {
+      // Render profiles dulu (statis)
+      renderProfiles(document.getElementById('popularProfiles'), profiles);
+
+      // Load data dari Supabase
+      await loadTitles();
+
+      // Baru render yang butuh data
+      renderNewNow();
+      renderTrending();
+      renderMenus();
+      renderRatings();
+
+      // Saved list (dari Supabase juga)
+      await hydrateSavedStates();
+      renderSavedList();
+    }
+
+    // Expose ke global
     window.goToView = goToView;
     window.runSearch = runSearch;
     window.runCategorySearch = runCategorySearch;
     window.openSession = openSession;
+
+    init();
   })();
 </script>
 
