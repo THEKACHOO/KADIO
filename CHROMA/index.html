@@ -225,7 +225,8 @@
     width: 100%;
     max-width: 1180px;
     margin: 0 auto;
-    padding: 24px 16px 20px;
+    /* Diturunkan lagi ke bawah */
+    padding: 80px 16px 20px;
   }
   .hero-tag {
     display: inline-block;
@@ -261,24 +262,8 @@
   .hero-title { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
   .hero-sub { font-size: 12px; color: #9a9a95; }
 
-  .hero-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 4;
-    width: 38px; height: 38px;
-    border-radius: 50%;
-    border: 1px solid #2a2a2a;
-    background: rgba(10,10,10,0.55);
-    display: flex; align-items: center; justify-content: center;
-    transition: background .2s, border-color .2s, left .3s ease, right .3s ease;
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-  }
-  .hero-arrow:hover { background: rgba(242,201,76,0.25); border-color: #f2c94c; }
-  .hero-arrow svg { width: 16px; height: 16px; fill: none; stroke: #f5f5f2; stroke-width: 2.5; }
-  .hero-arrow.pos-right { right: 12px; left: auto; }
-  .hero-arrow.pos-left { left: 12px; right: auto; }
+  /* Arrow disembunyikan */
+  .hero-arrow { display: none; }
 
   .hero-dots {
     position: absolute;
@@ -300,8 +285,7 @@
   @media (min-width: 720px) {
     .hero-poster { width: 120px; height: 170px; }
     .hero-title { font-size: 28px; }
-    .hero-arrow { width: 44px; height: 44px; }
-    .hero-arrow svg { width: 18px; height: 18px; }
+    .hero-content { padding: 120px 16px 24px; }
   }
 
   /* ---------- CHIPS (EVENT SLIDER) ---------- */
@@ -645,6 +629,7 @@
     .search-pill input { font-size: 12px; }
     .hero-poster { width: 72px; height: 104px; }
     .hero-title { font-size: 16px; }
+    .hero-content { padding: 56px 12px 16px; }
     .card { width: 118px; }
     .poster { width: 118px; height: 168px; }
     .search-grid .poster { height: 150px; }
@@ -759,9 +744,6 @@
         </div>
       </div>
     </div>
-    <button class="hero-arrow pos-right" id="heroArrow" aria-label="Next">
-      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
     <div class="hero-dots" id="heroDots"></div>
   </div>
 
@@ -916,7 +898,6 @@
   (function initHeroSlider() {
     const slidesEl = document.getElementById('heroSlides');
     const dotsEl = document.getElementById('heroDots');
-    const arrowBtn = document.getElementById('heroArrow');
     if (!slidesEl) return;
 
     const mediaSlides = slidesEl.querySelectorAll('.hero-media');
@@ -949,22 +930,6 @@
       }
     }
 
-    function updateArrow() {
-      if (!arrowBtn) return;
-      const isLast = current === total - 1;
-      if (isLast) {
-        arrowBtn.classList.remove('pos-right');
-        arrowBtn.classList.add('pos-left');
-        arrowBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>';
-        arrowBtn.setAttribute('aria-label', 'Previous');
-      } else {
-        arrowBtn.classList.remove('pos-left');
-        arrowBtn.classList.add('pos-right');
-        arrowBtn.innerHTML = '<svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>';
-        arrowBtn.setAttribute('aria-label', 'Next');
-      }
-    }
-
     function goTo(index) {
       if (index < 0) index = 0;
       if (index >= total) index = total - 1;
@@ -975,14 +940,6 @@
           s.classList.toggle('active', i === current);
         });
       }
-      updateArrow();
-    }
-
-    if (arrowBtn) {
-      arrowBtn.addEventListener('click', function() {
-        if (current === total - 1) goTo(current - 1);
-        else goTo(current + 1);
-      });
     }
 
     let startX = 0, isDown = false;
@@ -997,8 +954,6 @@
         else if (dx > 0 && current > 0) goTo(current - 1);
       }
     });
-
-    updateArrow();
   })();
 
   (function(){
