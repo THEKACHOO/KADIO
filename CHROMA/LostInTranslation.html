@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>CHROMA — The Frog</title>
+<title>CHROMA — Lost in Translation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -482,13 +482,12 @@
   }
   const USER_ID = getLocalUserId();
 
-  let BASE_VOTES = 500;
-  let BASE_SCORE = 7.5;
+  let BASE_VOTES = 12836;
+  let BASE_SCORE = 7.8;
   let userRating = 0;
-
   const T = {
     title: '', genre: '', type: '', year: '',
-    rating: 0, votes: 500,
+    rating: 0, votes: 12836,
     poster: 'LIT.png',
     runtime: '', contentRating: '', tag: '',
     synopsis: '', director: '', writers: '',
@@ -555,7 +554,7 @@
       T.year           = data.year || '';
       T.rating         = Number(data.rating) || 0;
       T.votes          = data.votes || 500;
-      T.poster         = data.poster || (data.poster_num != null ? 'poster' + data.poster_num + '.png' : 'poster1.png');
+      T.poster         = data.poster || (data.poster_num != null ? 'poster' + data.poster_num + '.png' : 'LIT.png');
       T.runtime        = data.runtime || '';
       T.contentRating  = data.content_rating || '';
       T.tag            = data.tag || '';
