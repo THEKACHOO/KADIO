@@ -1,547 +1,131 @@
+<body>
+
+<header>
+  <div class="header-inner">
+    <button class="icon-btn" id="backBtn" aria-label="Back" onclick="window.location.href='index.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <a href="index.html"><span class="logo-text">CHROMA</span></a>
+    <div class="head-right">
+      <button class="icon-btn save-btn" id="saveBtn" aria-label="Save to list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Share">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO / BACKDROP dengan VIDEO 16:9 -->
+<div class="backdrop" id="backdrop">
+  <video id="heroVideo"
+    src="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4"
+    autoplay muted loop playsinline preload="auto"></video>
+  <div class="backdrop-shade"></div>
+</div>
+
+<div class="title-block">
+  <div class="title-row">
+    <div class="poster-lg" id="posterLg"></div>
+    <div class="title-meta-top">
+      <span class="kicker-tag" id="kickerTag">NOW SHOWING</span>
+      <div class="title-name" id="titleName">Loading...</div>
+      <div class="title-facts" id="titleFacts">—</div>
+    </div>
+  </div>
+</div>
+
+<div class="info-body">
+  <div class="rate-row">
+    <div class="score-card">
+      <div class="score-num" id="scoreNum">–</div>
+      <div class="score-sub">out of 10<br><b id="scoreCount">0</b> ratings</div>
+    </div>
+    <div class="yourrate-card">
+      <div class="yourrate-label">Rate</div>
+      <div class="yourrate-stars" id="yourRateStars"></div>
+      <div class="yourrate-status" id="yourRateStatus"></div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="btn btn-primary" id="playTrailerBtn">
+      <svg viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>Play Trailer
+    </button>
+    <button class="btn btn-ghost" id="addListBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><span>Add to List</span>
+    </button>
+  </div>
+
+  <div class="synopsis">
+    <p id="synopsisText"></p>
+    <div class="credit-line" id="creditLine"></div>
+  </div>
+</div>
+
+<section class="block">
+  <div class="section-head"><h2><span class="bar"></span>Cast &amp; Crew</h2></div>
+  <div class="profile-scroll" id="castScroll"></div>
+</section>
+
+<section class="block">
+  <div class="section-head"><h2><span class="bar"></span>Photos</h2></div>
+  <div class="gallery-scroll" id="galleryScroll"></div>
+  <div class="gallery-dots" id="galleryDots"></div>
+</section>
+
+<section class="block" id="reviewSection">
+  <div class="section-head"><h2><span class="bar"></span>User Reviews</h2></div>
+  <div class="review-list" id="reviewList"></div>
+
+  <div class="review-form-wrap" id="reviewFormWrap">
+    <form class="review-form" id="reviewForm">
+      <h3>Write a review</h3>
+      <div class="field">
+        <label for="reviewName">Name</label>
+        <input type="text" id="reviewName" maxlength="40" placeholder="Your name" required>
+      </div>
+      <div class="field">
+        <label for="reviewText">Review</label>
+        <textarea id="reviewText" maxlength="500" placeholder="Share your thoughts about this title..." required></textarea>
+      </div>
+      <div class="row">
+        <div class="review-rating-pill" id="reviewRatingPill">
+          <span>Your rating</span>
+          <b id="reviewRatingValue">–/10</b>
+        </div>
+        <button type="submit" class="review-submit" id="reviewSubmit">Submit</button>
+      </div>
+      <div class="review-form-msg" id="reviewFormMsg"></div>
+    </form>
+  </div>
+</section>
+
+<section class="block">
+  <div class="section-head"><h2><span class="bar"></span>More Like This</h2></div>
+  <div class="card-scroll" id="similarScroll"></div>
+</section>
+
+<div class="foot-links">
+  <div class="brand">CHROMA</div>
+  <p>Cinema House for Reviews, Original Media &amp; Arts — your home for ratings, reviews, showtimes, and everything film and TV.</p>
+</div>
+
+<!-- VIDEO MODAL -->
+<div class="video-modal" id="videoModal">
+  <button class="video-modal-close" id="videoModalClose" aria-label="Close">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <video id="modalVideo" controls playsinline preload="metadata"
+    src="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4"></video>
+</div>
+
+<!-- Supabase JS Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-(function () {
-  const TITLE_NAME = 'The Frog';
-  const SUPABASE_URL = 'https://euepdfhxyuomaqkpnrit.supabase.co';
-  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1ZXBkZmh4eXVvbWFxa3Bucml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0OTg3ODUsImV4cCI6MjEwNTA3NDc4NX0.N4bvYVFxxbXAk0XcBgaooC7SiSopAZrgXRCtw9oJc84';
-  let supabaseClient = null;
-  try {
-    if (window.supabase) {
-      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
-  } catch (e) { console.warn('Supabase init skipped:', e); }
-
-  function getLocalUserId() {
-    let uid = null;
-    try { uid = localStorage.getItem('chroma_user_id'); } catch(e) {}
-    if (!uid) {
-      uid = 'u_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
-      try { localStorage.setItem('chroma_user_id', uid); } catch(e) {}
-    }
-    return uid;
-  }
-  const USER_ID = getLocalUserId();
-
-  /* =========================================================
-     STATE
-     ========================================================= */
-  let BASE_VOTES = 500;
-  let BASE_SCORE = 7.5;
-  let userRating = 0;
-
-  const T = {
-    title: '', genre: '', type: '', year: '',
-    rating: 0, votes: 500,
-    poster: 'poster1.png',
-    runtime: '', contentRating: '', tag: '',
-    synopsis: '', director: '', writers: '',
-    cast: []
-  };
-
-  const CAST = [
-    { name: "Cast One",   cls: "p1" },
-    { name: "Cast Two",   cls: "p2" },
-    { name: "Cast Three", cls: "p3" },
-    { name: "Cast Four",  cls: "p4" }
-  ];
-
-  function starSVG(filled) {
-    return filled
-      ? '<svg viewBox="0 0 24 24" class="star-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>'
-      : '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>';
-  }
-
-  function escapeHtml(str) {
-    if (str == null) return '';
-    return String(str)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  /* =========================================================
-     ELEMENT REFS
-     ========================================================= */
-  const starsWrap = document.getElementById('yourRateStars');
-  const statusEl = document.getElementById('yourRateStatus');
-  const scoreNumEl = document.getElementById('scoreNum');
-  const scoreCountEl = document.getElementById('scoreCount');
-  const saveBtn = document.getElementById('saveBtn');
-  const addListBtn = document.getElementById('addListBtn');
-  const reviewFormWrap = document.getElementById('reviewFormWrap');
-  const reviewSection = document.getElementById('reviewSection');
-  const reviewList = document.getElementById('reviewList');
-  const reviewForm = document.getElementById('reviewForm');
-  const reviewNameInput = document.getElementById('reviewName');
-  const reviewTextInput = document.getElementById('reviewText');
-  const reviewRatingValue = document.getElementById('reviewRatingValue');
-  const reviewFormMsg = document.getElementById('reviewFormMsg');
-  const reviewSubmit = document.getElementById('reviewSubmit');
-  const similarScroll = document.getElementById('similarScroll');
-
-  /* =========================================================
-     LOAD TITLE FROM SUPABASE
-     ========================================================= */
-  async function loadTitle() {
-    if (!supabaseClient) return;
-    try {
-      const { data, error } = await supabaseClient
-        .from('titles')
-        .select('*')
-        .eq('title', TITLE_NAME)
-        .maybeSingle();
-      if (error) throw error;
-      if (!data) {
-        console.warn('Title not found:', TITLE_NAME);
-        document.getElementById('titleName').textContent = TITLE_NAME;
-        document.getElementById('titleFacts').textContent = 'Not found in database';
-        return;
-      }
-
-      T.title          = data.title || TITLE_NAME;
-      T.genre          = data.genre || '';
-      T.type           = data.type || '';
-      T.year           = data.year || '';
-      T.rating         = Number(data.rating) || 0;
-      T.votes          = data.votes || 500;
-      // Ambil nama file poster; fallback ke poster_num lama kalau ada
-      T.poster         = data.poster || (data.poster_num != null ? 'poster' + data.poster_num + '.png' : 'poster1.png');
-      T.runtime        = data.runtime || '';
-      T.contentRating  = data.content_rating || '';
-      T.tag            = data.tag || '';
-      T.synopsis       = data.synopsis || '';
-      T.director       = data.director || '';
-      T.writers        = data.writers || '';
-      T.cast           = CAST;
-
-      BASE_SCORE = T.rating;
-      BASE_VOTES = T.votes;
-
-      renderHero();
-    } catch (e) {
-      console.warn('Load title failed:', e);
-    }
-  }
-
-  /* =========================================================
-     RENDER HERO
-     ========================================================= */
-  function renderHero() {
-    document.title = T.title + ' — CHROMA';
-
-    const posterEl = document.getElementById('posterLg');
-    posterEl.innerHTML = '<img src="' + escapeHtml(T.poster) + '" alt="' + escapeHtml(T.title) + '" ' +
-      'onerror="this.style.display=\'none\';">';
-
-    document.getElementById('kickerTag').textContent = T.tag || '';
-    document.getElementById('titleName').textContent = T.title;
-
-    const facts = [T.year, T.type, T.genre, T.runtime, T.contentRating]
-      .filter(Boolean).join(' · ');
-    document.getElementById('titleFacts').textContent = facts;
-
-    scoreNumEl.textContent = BASE_SCORE.toFixed(1);
-    scoreCountEl.textContent = BASE_VOTES.toLocaleString('en-US');
-
-    document.getElementById('synopsisText').textContent = T.synopsis;
-    document.getElementById('creditLine').innerHTML =
-      (T.director ? '<b>Director</b> ' + escapeHtml(T.director) + '<br>' : '') +
-      (T.writers ? '<b>Writers</b> ' + escapeHtml(T.writers) + '<br>' : '') +
-      (T.genre ? '<b>Genre</b> ' + escapeHtml(T.genre) : '');
-
-    const castScroll = document.getElementById('castScroll');
-    castScroll.innerHTML = T.cast.map(function (c) {
-      const initials = c.name.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2);
-      return '<div class="profile-card">' +
-        '<div class="profile-photo ' + c.cls + '">' + initials + '</div>' +
-        '<div class="profile-name">' + c.name + '</div>' +
-        '<div class="profile-role">Actor</div>' +
-      '</div>';
-    }).join('');
-
-    const galleryScroll = document.getElementById('galleryScroll');
-    galleryScroll.innerHTML = [1,2,3,4,5,6].map(function () {
-      return '<div class="gallery-thumb"></div>';
-    }).join('');
-  }
-
-  /* =========================================================
-     RATING
-     ========================================================= */
-  const starButtons = [];
-  for (let i = 1; i <= 5; i++) {
-    const b = document.createElement('button');
-    b.innerHTML = starSVG(false);
-    b.dataset.val = i;
-    b.addEventListener('click', function () {
-      submitRating(i * 2, i);
-    });
-    starsWrap.appendChild(b);
-    starButtons.push(b);
-  }
-
-  function paintStars(halfStars) {
-    starButtons.forEach(function (el, idx) {
-      el.classList.toggle('on', idx < halfStars);
-    });
-  }
-
-  function updateReviewRatingPill() {
-    reviewRatingValue.textContent = userRating > 0 ? (userRating + '/10') : '–/10';
-  }
-
-  async function submitRating(score10, halfStars) {
-    userRating = score10;
-    paintStars(halfStars);
-    updateReviewRatingPill();
-    statusEl.textContent = 'Saving... ' + score10 + '/10';
-
-    if (!supabaseClient) {
-      try { localStorage.setItem('chroma_rating_' + TITLE_NAME, String(score10)); } catch(e) {}
-      statusEl.textContent = score10 + '/10';
-      revealReviewForm();
-      return;
-    }
-
-    try {
-      const { error } = await supabaseClient
-        .from('ratings')
-        .upsert(
-          { user_id: USER_ID, film_title: TITLE_NAME, score: score10, updated_at: new Date().toISOString() },
-          { onConflict: 'user_id,film_title' }
-        );
-      if (error) throw error;
-      statusEl.textContent = score10 + '/10';
-      await refreshAggregate();
-      revealReviewForm();
-    } catch (e) {
-      console.warn('Rating save failed:', e);
-      statusEl.textContent = 'Failed to save';
-    }
-  }
-
-  async function loadUserRating() {
-    if (!supabaseClient) {
-      try {
-        const v = localStorage.getItem('chroma_rating_' + TITLE_NAME);
-        if (v) {
-          userRating = parseInt(v, 10);
-          paintStars(Math.round(userRating / 2));
-          statusEl.textContent = userRating + '/10';
-          updateReviewRatingPill();
-          revealReviewForm(true);
-        }
-      } catch(e) {}
-      return;
-    }
-    try {
-      const { data, error } = await supabaseClient
-        .from('ratings')
-        .select('score')
-        .eq('user_id', USER_ID)
-        .eq('film_title', TITLE_NAME)
-        .maybeSingle();
-      if (error) throw error;
-      if (data && data.score) {
-        userRating = data.score;
-        paintStars(Math.round(userRating / 2));
-        statusEl.textContent = userRating + '/10';
-        updateReviewRatingPill();
-        revealReviewForm(true);
-      }
-    } catch (e) { console.warn('Load user rating failed:', e); }
-  }
-
-  async function refreshAggregate() {
-    if (!supabaseClient) return;
-    try {
-      const { data, error } = await supabaseClient
-        .from('ratings')
-        .select('score')
-        .eq('film_title', TITLE_NAME);
-      if (error) throw error;
-
-      const userScores = (data || []).map(function(r){ return r.score || 0; });
-      const userSum = userScores.reduce(function(a, b){ return a + b; }, 0);
-      const userCount = userScores.length;
-
-      const totalVotes = BASE_VOTES + userCount;
-      const totalSum = BASE_SCORE * BASE_VOTES + userSum;
-      const avg = totalSum / totalVotes;
-
-      scoreNumEl.textContent = avg.toFixed(1);
-      scoreCountEl.textContent = totalVotes.toLocaleString('en-US');
-    } catch (e) { console.warn('Aggregate failed:', e); }
-  }
-
-  /* =========================================================
-     REVEAL REVIEW FORM
-     ========================================================= */
-  let reviewRevealed = false;
-
-  function revealReviewForm(skipScroll) {
-    if (reviewRevealed) return;
-    reviewRevealed = true;
-    reviewFormWrap.classList.add('revealed');
-
-    if (!skipScroll) {
-      setTimeout(function () {
-        const y = reviewSection.getBoundingClientRect().top + window.pageYOffset - 80;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }, 350);
-    }
-  }
-
-  /* =========================================================
-     SAVE / ADD TO LIST
-     ========================================================= */
-  let isSaved = false;
-
-  function paintAddListBtn() {
-    addListBtn.classList.toggle('active', isSaved);
-    const span = addListBtn.querySelector('span');
-    if (span) span.textContent = isSaved ? 'Added' : 'Add to List';
-    const svg = addListBtn.querySelector('svg');
-    if (svg) {
-      svg.innerHTML = isSaved
-        ? '<path d="M20 6L9 17l-5-5"/>'
-        : '<path d="M12 5v14M5 12h14"/>';
-    }
-  }
-
-  async function loadSavedState() {
-    if (supabaseClient) {
-      try {
-        const { data, error } = await supabaseClient
-          .from('saves')
-          .select('film_title')
-          .eq('user_id', USER_ID)
-          .eq('film_title', TITLE_NAME)
-          .maybeSingle();
-        if (error) throw error;
-        isSaved = !!data;
-      } catch (e) { console.warn('Load save failed:', e); }
-    } else {
-      try {
-        const list = JSON.parse(localStorage.getItem('chroma_saved') || '[]');
-        isSaved = list.indexOf(TITLE_NAME) !== -1;
-      } catch (e) {}
-    }
-    saveBtn.classList.toggle('active', isSaved);
-    paintAddListBtn();
-  }
-
-  async function toggleSave() {
-    isSaved = !isSaved;
-    saveBtn.classList.toggle('active', isSaved);
-    paintAddListBtn();
-
-    if (!supabaseClient) {
-      try {
-        let list = JSON.parse(localStorage.getItem('chroma_saved') || '[]');
-        if (isSaved) { if (list.indexOf(TITLE_NAME) === -1) list.push(TITLE_NAME); }
-        else { list = list.filter(function(t) { return t !== TITLE_NAME; }); }
-        localStorage.setItem('chroma_saved', JSON.stringify(list));
-      } catch(e) {}
-      return;
-    }
-
-    try {
-      if (isSaved) {
-        await supabaseClient.from('saves').upsert(
-          { user_id: USER_ID, film_title: TITLE_NAME },
-          { onConflict: 'user_id,film_title' }
-        );
-      } else {
-        await supabaseClient.from('saves').delete()
-          .eq('user_id', USER_ID).eq('film_title', TITLE_NAME);
-      }
-    } catch (e) { console.warn('Save toggle failed:', e); }
-  }
-
-  saveBtn.addEventListener('click', toggleSave);
-  addListBtn.addEventListener('click', toggleSave);
-
-  /* =========================================================
-     PLAY TRAILER
-     ========================================================= */
-  const videoModal = document.getElementById('videoModal');
-  const modalVideo = document.getElementById('modalVideo');
-  const playTrailerBtn = document.getElementById('playTrailerBtn');
-  const videoModalClose = document.getElementById('videoModalClose');
-  const heroVideo = document.getElementById('heroVideo');
-
-  playTrailerBtn.addEventListener('click', function () {
-    videoModal.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    try { heroVideo.pause(); } catch(e) {}
-    modalVideo.currentTime = 0;
-    const p = modalVideo.play();
-    if (p && p.catch) p.catch(function(){});
-  });
-
-  function closeVideoModal() {
-    videoModal.classList.remove('open');
-    document.body.style.overflow = '';
-    try { modalVideo.pause(); } catch(e) {}
-    try { heroVideo.play(); } catch(e) {}
-  }
-  videoModalClose.addEventListener('click', closeVideoModal);
-  videoModal.addEventListener('click', function (e) {
-    if (e.target === videoModal) closeVideoModal();
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && videoModal.classList.contains('open')) closeVideoModal();
-  });
-
-  /* =========================================================
-     REVIEWS
-     ========================================================= */
-  function reviewCardHTML(r) {
-    const initials = (r.name || 'A').split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
-    const starCount = Math.round((r.stars || 0) / 2);
-    let starsHtml = '';
-    for (let i = 0; i < 5; i++) starsHtml += starSVG(i < starCount);
-    const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' }) : '';
-    return '<div class="review-card">' +
-      '<div class="review-top">' +
-        '<div class="review-avatar">' + escapeHtml(initials) + '</div>' +
-        '<div>' +
-          '<div class="review-name">' + escapeHtml(r.name || 'Anonymous') + '</div>' +
-          '<div class="review-date">' + dateStr + '</div>' +
-        '</div>' +
-        '<div class="review-stars">' + starsHtml +
-          '<span style="margin-left:4px;font-weight:700;color:#f5f5f2;">' + (r.stars || 0) + '/10</span></div>' +
-      '</div>' +
-      '<div class="review-text">' + escapeHtml(r.text || '') + '</div>' +
-    '</div>';
-  }
-
-  async function loadReviews() {
-    if (!supabaseClient) {
-      reviewList.innerHTML = '<p class="review-empty">No reviews yet.</p>';
-      return;
-    }
-    try {
-      const { data, error } = await supabaseClient
-        .from('reviews')
-        .select('name, stars, text, created_at')
-        .eq('film_title', TITLE_NAME)
-        .order('created_at', { ascending: false });
-      if (error) throw error;
-      if (!data || data.length === 0) {
-        reviewList.innerHTML = '<p class="review-empty">No reviews yet. Be the first!</p>';
-        return;
-      }
-      reviewList.innerHTML = data.map(reviewCardHTML).join('');
-    } catch (e) {
-      console.warn('Load reviews failed:', e);
-      reviewList.innerHTML = '<p class="review-empty">No reviews yet.</p>';
-    }
-  }
-
-  reviewForm.addEventListener('submit', async function (e) {
-    e.preventDefault();
-    reviewFormMsg.textContent = '';
-
-    const name = reviewNameInput.value.trim();
-    const text = reviewTextInput.value.trim();
-
-    if (!name) { reviewFormMsg.textContent = 'Please enter your name.'; return; }
-    if (!text) { reviewFormMsg.textContent = 'Please write your review.'; return; }
-    if (userRating < 1) { reviewFormMsg.textContent = 'Please rate this title first.'; return; }
-
-    reviewSubmit.disabled = true;
-    reviewFormMsg.textContent = 'Sending...';
-
-    if (!supabaseClient) {
-      reviewFormMsg.textContent = 'Supabase is not configured.';
-      reviewSubmit.disabled = false;
-      return;
-    }
-
-    try {
-      const { error } = await supabaseClient.from('reviews').insert({
-        user_id: USER_ID,
-        film_title: TITLE_NAME,
-        name: name,
-        text: text,
-        stars: userRating,
-        created_at: new Date().toISOString()
-      });
-      if (error) throw error;
-      reviewFormMsg.textContent = 'Review submitted ✓';
-      reviewForm.reset();
-      loadReviews();
-    } catch (e) {
-      console.warn('Submit review failed:', e);
-      reviewFormMsg.textContent = 'Failed to send. Please try again.';
-    } finally {
-      reviewSubmit.disabled = false;
-    }
-  });
-
-  /* =========================================================
-     MORE LIKE THIS
-     ========================================================= */
-  async function loadMoreLikeThis() {
-    if (!supabaseClient) {
-      similarScroll.innerHTML = '<p class="review-empty">Supabase not configured.</p>';
-      return;
-    }
-    try {
-      const { data, error } = await supabaseClient
-        .from('titles')
-        .select('title, genre, type, year, rating, poster, poster_num, page')
-        .eq('genre', T.genre)
-        .neq('title', TITLE_NAME)
-        .order('rating', { ascending: false })
-        .limit(6);
-      if (error) throw error;
-
-      if (!data || data.length === 0) {
-        similarScroll.innerHTML = '<p class="review-empty">No similar titles in this genre yet.</p>';
-        return;
-      }
-
-      similarScroll.innerHTML = data.map(function (s) {
-        const posterFile = s.poster || ('poster' + (s.poster_num || 1) + '.png');
-        return '<div class="card" data-href="' + escapeHtml(s.page || 'example.html') + '">' +
-          '<div class="poster">' +
-            '<img src="' + escapeHtml(posterFile) + '" alt="' + escapeHtml(s.title) + '" ' +
-              'onerror="this.style.display=\'none\';">' +
-            '<div class="label">' + escapeHtml(String(s.title).toUpperCase()) + '</div>' +
-          '</div>' +
-          '<div class="card-meta">' +
-            '<div class="rating">' + starSVG(true) + Number(s.rating || 0).toFixed(1) + '</div>' +
-            '<div class="card-title">' + escapeHtml(s.title) + '</div>' +
-            '<div class="card-sub">' + escapeHtml(s.type) + ' · ' + s.year + '</div>' +
-          '</div>' +
-        '</div>';
-      }).join('');
-
-      similarScroll.addEventListener('click', function (e) {
-        const card = e.target.closest('.card');
-        if (card && card.dataset.href) window.location.href = card.dataset.href;
-      });
-    } catch (e) {
-      console.warn('Load More Like This failed:', e);
-      similarScroll.innerHTML = '<p class="review-empty">Failed to load.</p>';
-    }
-  }
-
-  /* =========================================================
-     INIT
-     ========================================================= */
-  async function init() {
-    await loadTitle();
-    loadUserRating();
-    refreshAggregate();
-    loadSavedState();
-    loadReviews();
-    loadMoreLikeThis();
-  }
-
-  init();
-
-})();
+  ... (isi script kamu yang tadi, tidak perlu diubah) ...
 </script>
+
+</body>
+</html>
