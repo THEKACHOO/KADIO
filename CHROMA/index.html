@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-<title>CHROMA — Cinema House for Reviews, Original Media & Arts</title>
+<title>CHROMA — Title Details</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
 <style>
@@ -22,162 +22,40 @@
   ::-webkit-scrollbar { height: 0; width: 0; }
 
   .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
-  .hidden { display: none !important; }
 
   /* ---------- HEADER ---------- */
   header {
-    position: sticky;
-    top: 0;
-    z-index: 50;
+    position: sticky; top: 0; z-index: 50;
     background: rgba(10,10,10,0.92);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid #2a2a2a;
   }
   .header-inner {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
-    max-width: 1180px;
-    margin: 0 auto;
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px; max-width: 1180px; margin: 0 auto;
   }
-  .burger {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 2px;
-    flex-shrink: 0;
+  .icon-btn {
+    width: 32px; height: 32px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: background .15s;
   }
-  .burger span {
-    width: 20px;
-    height: 2px;
-    background: #f5f5f2;
-    border-radius: 1px;
-  }
-  .logo-wrap { display: flex; align-items: center; flex-shrink: 0; }
+  .icon-btn:hover { background: #1b1b1b; }
+  .icon-btn svg { width: 18px; height: 18px; }
   .logo-text {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700;
-    font-size: 22px;
-    color: #f5f5f2;
-    letter-spacing: 2px;
-    display: inline-block;
-    line-height: 1;
-    text-transform: uppercase;
-    position: relative;
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 20px;
+    letter-spacing: 2px; text-transform: uppercase; position: relative;
   }
   .logo-text::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0;
-    width: 100%; height: 2px;
-    background: #f2c94c;
-    opacity: 0.6;
-    border-radius: 1px;
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 100%; height: 2px; background: #f2c94c; opacity: 0.6; border-radius: 1px;
   }
+  .head-right { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+  .save-btn.active svg { fill: #f2c94c; stroke: #f2c94c; }
 
-  .search-pill {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    background: #141414;
-    border: 1px solid #2a2a2a;
-    border-radius: 999px;
-    padding: 7px 12px;
-    color: #9a9a95;
-    font-size: 13px;
-    min-width: 0;
-    transition: border-color .2s;
-  }
-  .search-pill:focus-within { border-color: #f2c94c; }
-  .search-pill svg { width: 14px; height: 14px; flex-shrink: 0; }
-  .search-pill input {
-    flex: 1; background: none; border: none; outline: none;
-    color: #f5f5f2;
-    font-family: 'Inter', sans-serif;
-    font-size: 13px;
-    min-width: 40px; width: 100%;
-  }
-  .search-pill input::placeholder { color: #9a9a95; }
-  .search-clear { color: #9a9a95; font-size: 16px; line-height: 1; padding: 0 2px; }
-  .head-actions { margin-left: auto; display: flex; align-items: center; flex-shrink: 0; }
-  .avatar {
-    width: 30px; height: 30px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    background: #f2c94c;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Archivo Black';
-    font-size: 11px;
-    color: #0a0a0a;
-    border: 1.5px solid #2a2a2a;
-    pointer-events: none; user-select: none;
-  }
-
-  /* ---------- MENU OVERLAY ---------- */
-  .menu-overlay {
-    position: fixed; inset: 0; z-index: 100;
-    background: rgba(0,0,0,0.6);
-    display: flex;
-    visibility: hidden; opacity: 0;
-    transition: opacity .2s ease;
-  }
-  .menu-overlay.open { visibility: visible; opacity: 1; }
-  .menu-panel {
-    width: 82%; max-width: 300px; height: 100%;
-    background: #141414;
-    border-right: 1px solid #2a2a2a;
-    padding: 20px 16px;
-    transform: translateX(-100%);
-    transition: transform .25s ease;
-    overflow-y: auto;
-  }
-  .menu-overlay.open .menu-panel { transform: translateX(0); }
-  .menu-close { position: absolute; top: 14px; right: 16px; font-size: 22px; color: #9a9a95; }
-  .menu-brand {
-    font-family: 'Oswald', sans-serif;
-    font-size: 22px; font-weight: 700;
-    color: #f2c94c; margin-bottom: 18px; letter-spacing: 2px;
-  }
-  .menu-section { margin-bottom: 22px; }
-  .menu-section h4 { font-size: 10px; letter-spacing: 1px; color: #9a9a95; margin-bottom: 10px; font-weight: 700; }
-  .menu-list { display: flex; flex-direction: column; gap: 2px; }
-  .menu-item {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 2px; font-size: 14px; font-weight: 600;
-    border-bottom: 1px solid #2a2a2a; text-align: left; width: 100%;
-  }
-  .menu-item .count { font-size: 11px; color: #9a9a95; font-weight: 500; }
-  .menu-item.event-item { flex-direction: column; align-items: flex-start; gap: 2px; }
-  .menu-item.event-item .event-date { font-size: 11px; color: #f2c94c; font-weight: 700; }
-  .menu-item.event-item .event-name { font-size: 13.5px; font-weight: 700; }
-  .menu-item.event-item .event-loc { font-size: 11px; color: #9a9a95; }
-
-  /* ---------- BOTTOM NAV ---------- */
-  footer.bottom-bar {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
-    background: #141414;
-    border-top: 1px solid #2a2a2a;
-    display: flex; justify-content: space-around;
-    padding: 8px 0 10px;
-  }
-  .tab {
-    display: flex; flex-direction: column; align-items: center; gap: 2px;
-    color: #9a9a95; font-size: 9px; font-weight: 600;
-  }
-  .tab svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
-  .tab.active { color: #f2c94c; }
-  .tab.active svg { fill: #f2c94c; stroke: #f2c94c; }
-  .tab.disabled { pointer-events: none; opacity: 0.5; }
-
-  @media (min-width: 720px) {
-    footer.bottom-bar { display: none; }
-  }
-
-  /* ---------- HERO / POPULAR SLIDER ---------- */
-  .hero {
+  /* ---------- HERO / BACKDROP (VIDEO 16:9) ---------- */
+  .backdrop {
     position: relative;
     width: 100%;
     aspect-ratio: 16 / 9;
@@ -185,241 +63,129 @@
     overflow: visible;
     background: #101014;
   }
-  .hero-slides {
-    display: flex;
-    transition: transform .45s cubic-bezier(.4,0,.2,1);
-    height: 100%;
-    width: 100%;
-  }
-  .hero-slide {
-    position: relative;
-    flex: 0 0 100%;
-    height: 100%;
-    display: flex;
-    align-items: flex-start;
-    overflow: hidden;
-  }
-  .hero-media {
-    position: absolute; inset: 0;
-    overflow: hidden; z-index: 0;
-    background: #101014;
-  }
-  .hero-media video {
+  .backdrop video {
     position: absolute; top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     width: 100%; height: 100%;
     object-fit: cover;
     border: 0;
     pointer-events: none;
-    opacity: 0.9;
   }
-  .hero-shade {
+  .backdrop-shade {
     position: absolute; inset: 0; z-index: 1;
     background:
-      linear-gradient(180deg, rgba(10,10,10,0.15) 0%, rgba(10,10,10,0.72) 55%, rgba(10,10,10,1) 100%),
-      linear-gradient(90deg, rgba(10,10,10,0.70) 0%, rgba(10,10,10,0.05) 60%);
+      linear-gradient(180deg, rgba(10,10,10,0.10) 0%, rgba(10,10,10,0.55) 55%, rgba(10,10,10,1) 100%),
+      linear-gradient(90deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.05) 60%);
     pointer-events: none;
   }
-  .hero-content {
+
+  .title-block {
     position: relative; z-index: 2;
-    width: 100%;
-    max-width: 1180px;
-    margin: 0 auto;
-    padding: 60px 20px 20px;
+    max-width: 1180px; margin: 0 auto;
+    padding: 0 16px;
+    margin-top: -140px;
   }
-  .hero-tag {
-    display: inline-block;
-    background: #f2c94c; color: #0a0a0a;
-    font-weight: 800; font-size: 10px;
-    letter-spacing: 0.5px;
-    padding: 3px 8px; border-radius: 3px; margin-bottom: 10px;
-  }
-  .hero-row { display: flex; gap: 14px; align-items: flex-end; }
-  .hero-poster {
-    width: 90px; height: 130px;
-    flex-shrink: 0;
-    border-radius: 8px;
-    background: #1a1a1a;
-    border: 1px solid rgba(255,255,255,0.08);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.55);
-    display: flex; align-items: center; justify-content: center;
-    position: relative; overflow: hidden;
-    cursor: pointer;
-  }
-  .hero-poster img { width: 100%; height: 100%; object-fit: cover; }
-  .hero-poster .fallback-text {
-    position: absolute;
-    font-family: 'Archivo Black';
-    font-size: 10px;
-    color: rgba(255,255,255,0.5);
-    letter-spacing: 1px;
-    transform: rotate(-90deg);
-    white-space: nowrap;
-  }
-  .hero-meta { flex: 1; min-width: 0; }
-  .hero-time { font-size: 12px; color: #9a9a95; margin-bottom: 2px; }
-  .hero-title { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
-  .hero-sub { font-size: 12px; color: #9a9a95; }
-
-  /* Hero arrows — hanya muncul di desktop */
-  .hero-arrow {
-    display: none;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 4;
-    width: 40px; height: 40px;
-    border-radius: 50%;
-    background: rgba(10,10,10,0.55);
-    border: 1px solid rgba(255,255,255,0.25);
-    align-items: center;
-    justify-content: center;
-    color: #f5f5f2;
-    transition: background .2s, border-color .2s, opacity .2s;
-  }
-  .hero-arrow:hover { background: rgba(10,10,10,0.85); border-color: #f2c94c; }
-  .hero-arrow svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; }
-  .hero-arrow.prev { left: 16px; }
-  .hero-arrow.next { right: 16px; }
-  .hero-arrow[disabled] { opacity: 0.25; pointer-events: none; }
-
-  .hero-dots {
-    position: absolute;
-    bottom: -16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    display: flex;
-    gap: 5px;
-  }
-  .hero-dots span {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.35);
-    transition: background .2s, width .2s;
-  }
-  .hero-dots span.active { background: #f2c94c; width: 18px; border-radius: 3px; }
-
-  @media (min-width: 720px) {
-    .hero-poster { width: 120px; height: 170px; }
-    .hero-title { font-size: 28px; }
-    .hero-content { padding: 200px 16px 24px; }
-    .hero-arrow { display: flex; }
-  }
-
-  /* ---------- CHIPS ---------- */
-  .chip-row {
-    display: flex; gap: 8px;
-    overflow-x: auto;
-    padding: 32px 16px 16px;
-    border-bottom: 1px solid #2a2a2a;
-    max-width: 1180px;
-    margin: 0 auto;
-    scroll-snap-type: x mandatory;
-  }
-  .chip {
-    flex-shrink: 0;
+  .title-row { display: flex; gap: 16px; align-items: flex-end; }
+  .poster-lg {
+    width: 118px; height: 170px; flex-shrink: 0;
+    border-radius: 10px; overflow: hidden;
     border: 1px solid #2a2a2a;
-    border-radius: 999px;
-    padding: 7px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    display: flex; align-items: center; gap: 4px;
-    color: #f5f5f2; white-space: nowrap;
-    background: #141414;
-    transition: border-color .18s ease, background .18s ease;
-    scroll-snap-align: start;
+    box-shadow: 0 16px 34px rgba(0,0,0,0.6);
+    background: #1a1a1a;
   }
-  .chip:active, .chip:hover { border-color: #f2c94c; background: #1b1b1b; }
-  .chip svg { width: 10px; height: 10px; }
+  .poster-lg img { width: 100%; height: 100%; object-fit: cover; }
+  .title-meta-top { padding-bottom: 4px; min-width: 0; }
+  .kicker-tag {
+    display: inline-block; font-size: 10px; font-weight: 800;
+    letter-spacing: 1px; color: #0a0a0a;
+    background: #f2c94c; padding: 3px 8px; border-radius: 3px; margin-bottom: 8px;
+  }
+  .title-name {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 24px; line-height: 1.15; letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .title-facts {
+    font-size: 12.5px; color: #c9c9c4; font-weight: 500;
+  }
+
+  .info-body { max-width: 1180px; margin: 0 auto; padding: 18px 16px 0; }
+
+  /* rating + user rating row */
+  .rate-row {
+    display: flex; align-items: stretch; gap: 12px;
+    padding: 16px 0 4px;
+    flex-wrap: wrap;
+  }
+  .score-card {
+    display: flex; align-items: center; gap: 10px;
+    background: #141414; border: 1px solid #2a2a2a; border-radius: 12px;
+    padding: 12px 16px; flex: 1; min-width: 150px;
+  }
+  .score-num { font-family: 'Archivo Black'; font-size: 26px; color: #f2c94c; line-height: 1; }
+  .score-sub { font-size: 11px; color: #9a9a95; line-height: 1.4; }
+  .score-sub b { color: #f5f5f2; font-weight: 700; }
+
+  .yourrate-card {
+    background: #141414; border: 1px solid #2a2a2a; border-radius: 12px;
+    padding: 12px 16px; flex: 1; min-width: 170px;
+  }
+  .yourrate-label { font-size: 12px; color: #c9c9c4; margin-bottom: 8px; font-weight: 600; }
+  .yourrate-stars { display: flex; gap: 3px; }
+  .yourrate-stars button svg { width: 22px; height: 22px; fill: none; stroke: #6b6b66; stroke-width: 1.6; transition: fill .1s, stroke .1s; }
+  .yourrate-stars button.on svg { fill: #f2c94c; stroke: #f2c94c; }
+  .yourrate-status { font-size: 11px; color: #f2c94c; margin-top: 6px; height: 14px; font-weight: 700; }
+
+  .action-row { display: flex; gap: 10px; padding: 14px 0 4px; flex-wrap: wrap; }
+  .btn {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 13px; font-weight: 700;
+    padding: 10px 16px; border-radius: 999px;
+    border: 1px solid #2a2a2a;
+    transition: background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .btn svg { width: 15px; height: 15px; }
+  .btn-primary { background: #f2c94c; color: #0a0a0a; border-color: #f2c94c; }
+  .btn-ghost { background: #141414; color: #f5f5f2; }
+  .btn-ghost.active {
+    background: #f2c94c; color: #0a0a0a; border-color: #f2c94c;
+  }
+  .btn-ghost.active svg { stroke: #0a0a0a; }
+
+  .synopsis { padding: 20px 0 6px; max-width: 720px; }
+  .synopsis p { font-size: 14px; line-height: 1.75; color: #c9c9c4; }
+  .credit-line { font-size: 12.5px; color: #9a9a95; margin-top: 14px; line-height: 1.9; }
+  .credit-line b { color: #f5f5f2; font-weight: 700; }
 
   /* ---------- SECTIONS ---------- */
   section.block { padding: 24px 0 4px; max-width: 1180px; margin: 0 auto; }
-  .section-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 16px 14px;
-  }
-  .section-head h2 {
-    font-size: 17px; font-weight: 800;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .section-head h2 .bar {
-    width: 4px; height: 16px;
-    background: #f2c94c; border-radius: 2px;
-  }
-  .see-all {
-    font-size: 12px; color: #f2c94c; font-weight: 700;
-    display: flex; align-items: center; gap: 2px;
-  }
+  .section-head { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 14px; }
+  .section-head h2 { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .section-head h2 .bar { width: 4px; height: 16px; background: #f2c94c; border-radius: 2px; }
 
-  .card-scroll {
-    display: flex; gap: 12px;
-    overflow-x: auto;
-    padding: 0 16px 8px;
-    scroll-snap-type: x mandatory;
-  }
+  .card-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 8px; scroll-snap-type: x mandatory; }
   .card { flex-shrink: 0; width: 140px; scroll-snap-align: start; cursor: pointer; transition: transform .12s ease; }
   .card:active { transform: scale(0.98); }
-  .poster {
-    width: 140px; height: 200px;
-    border-radius: 10px;
-    position: relative; overflow: hidden;
-    border: 1px solid #2a2a2a;
-    background: #1a1a1a;
-  }
+  .poster { width: 140px; height: 200px; border-radius: 10px; position: relative; overflow: hidden; border: 1px solid #2a2a2a; background: #1a1a1a; }
   .poster img { width: 100%; height: 100%; object-fit: cover; }
-  .poster .save {
-    position: absolute; top: 8px; left: 8px;
-    width: 24px; height: 24px;
-    border-radius: 50%;
-    background: rgba(10,10,10,0.55);
-    border: 1px solid rgba(255,255,255,0.35);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 2;
-  }
-  .poster .save svg { width: 11px; height: 11px; }
-  .poster .save.saved svg { fill: #f2c94c; stroke: #f2c94c; }
-  .poster .new-badge {
-    position: absolute; top: 8px; right: 8px;
-    background: #f2c94c; color: #0a0a0a;
-    font-size: 9px; font-weight: 800;
-    padding: 2px 6px; border-radius: 4px;
-    z-index: 2;
-  }
   .poster .label {
     position: absolute; bottom: 8px; left: 8px; right: 8px;
-    font-family: 'Archivo Black';
-    font-size: 12px; line-height: 1.1;
-    color: rgba(255,255,255,0.88);
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    z-index: 2;
+    font-family: 'Archivo Black'; font-size: 12px; line-height: 1.1;
+    color: rgba(255,255,255,0.88); text-shadow: 0 2px 8px rgba(0,0,0,0.6); z-index: 2;
   }
   .card-meta { padding-top: 8px; }
-  .rating {
-    display: flex; align-items: center; gap: 4px;
-    font-size: 12px; font-weight: 700;
-    margin-bottom: 2px; color: #f5f5f2;
-  }
+  .rating { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; margin-bottom: 2px; color: #f5f5f2; }
   .rating svg { width: 13px; height: 13px; fill: none; stroke: #f5f5f2; stroke-width: 2; flex-shrink: 0; }
   .rating .star-filled { fill: #f2c94c; stroke: #f2c94c; }
   .card-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
   .card-sub { font-size: 11px; color: #9a9a95; }
 
-  /* ---------- PROFILES ---------- */
-  .profile-scroll {
-    display: flex; gap: 14px;
-    overflow-x: auto;
-    padding: 0 16px 8px;
-  }
-  .profile-card { flex-shrink: 0; width: 84px; text-align: center; }
+  .profile-scroll { display: flex; gap: 14px; overflow-x: auto; padding: 0 16px 8px; }
+  .profile-card { flex-shrink: 0; width: 84px; text-align: center; cursor: pointer; }
   .profile-photo {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    margin: 0 auto 8px;
-    border: 1px solid #2a2a2a;
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Archivo Black';
-    font-size: 18px; color: rgba(255,255,255,0.85);
+    width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 8px;
+    border: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo Black'; font-size: 18px; color: rgba(255,255,255,0.85);
   }
   .profile-name { font-size: 12px; font-weight: 700; line-height: 1.2; }
   .profile-role { font-size: 10px; color: #9a9a95; margin-top: 1px; }
@@ -429,479 +195,296 @@
   .p4 { background: linear-gradient(150deg,#1f3a5a,#1a1a1a); }
   .p5 { background: linear-gradient(150deg,#5a2f1f,#1a1a1a); }
 
-  /* ---------- RANK LIST ---------- */
-  .rank-list { padding: 4px 16px 20px; display: flex; flex-direction: column; gap: 0; }
-  .rank-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid #2a2a2a;
-    cursor: pointer;
-    transition: background .15s;
+  /* ---------- GALLERY ---------- */
+  .gallery-scroll {
+    display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 8px;
+    scroll-snap-type: x mandatory;
   }
-  .rank-row:hover { background: rgba(242,201,76,0.04); }
-  .rank-num {
-    width: 22px; flex-shrink: 0;
-    font-family: 'Archivo Black';
-    font-size: 16px; color: #b89533; text-align: center;
+  .gallery-thumb {
+    flex-shrink: 0; width: 200px; height: 112px; border-radius: 8px;
+    border: 1px solid #2a2a2a; background: #1a1a1a;
+    scroll-snap-align: start; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform .12s ease;
   }
-  .rank-thumb {
-    width: 44px; height: 64px;
-    border-radius: 5px; flex-shrink: 0;
-    border: 1px solid #2a2a2a; overflow: hidden;
-    background: #1a1a1a; position: relative;
+  .gallery-thumb:active { transform: scale(0.97); }
+  .gallery-dots { display: flex; gap: 6px; padding: 2px 16px 4px; }
+  .gallery-dots span {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #2a2a2a; transition: background .15s, width .15s;
   }
-  .rank-thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .rank-info { flex: 1; min-width: 0; }
-  .rank-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
-  .rank-sub { font-size: 11px; color: #9a9a95; }
-  .rank-score {
-    display: flex; align-items: center; gap: 4px;
-    font-weight: 800; font-size: 13px; flex-shrink: 0; color: #f5f5f2;
-  }
-  .rank-score svg { width: 14px; height: 14px; fill: none; stroke: #f5f5f2; stroke-width: 2; flex-shrink: 0; }
-  .rank-score .star-filled { fill: #f2c94c; stroke: #f2c94c; }
+  .gallery-dots span.on { background: #f2c94c; width: 14px; border-radius: 3px; }
 
-  /* ---------- SEARCH ---------- */
-  .search-results { padding: 4px 16px 90px; max-width: 1180px; margin: 0 auto; }
-  .search-hint { font-size: 12px; color: #9a9a95; padding: 4px 16px 16px; }
-  .search-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
+  /* ---------- REVIEWS ---------- */
+  .review-list { padding: 4px 16px 8px; display: flex; flex-direction: column; gap: 14px; }
+  .review-empty { padding: 4px 16px 20px; font-size: 13px; color: #9a9a95; }
+  .review-card { border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px 16px; background: #101010; }
+  .review-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .review-avatar {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo Black'; font-size: 13px;
+    background: linear-gradient(150deg,#7a5a1f,#1a1a1a);
   }
-  .search-grid .card { width: auto; }
-  .search-grid .poster { width: 100%; height: 180px; }
-  .genre-tag {
-    display: inline-block;
-    font-size: 10px; font-weight: 700;
-    color: #f2c94c;
-    background: rgba(242,201,76,0.1);
-    padding: 2px 8px; border-radius: 4px; margin-top: 4px;
+  .review-name { font-size: 13px; font-weight: 700; }
+  .review-date { font-size: 11px; color: #9a9a95; }
+  .review-stars { display: flex; align-items: center; gap: 3px; margin-left: auto; }
+  .review-stars svg { width: 12px; height: 12px; fill: none; stroke: #f5f5f2; stroke-width: 2; }
+  .review-stars .star-filled { fill: #f2c94c; stroke: #f2c94c; }
+  .review-text { font-size: 13px; line-height: 1.65; color: #c9c9c4; }
+
+  /* ---------- REVIEW FORM ---------- */
+  .review-form-wrap {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s ease, opacity .35s ease;
+    opacity: 0;
   }
-  .empty-state { padding: 40px 12px; text-align: center; color: #9a9a95; font-size: 13px; }
+  .review-form-wrap.revealed {
+    max-height: 800px;
+    opacity: 1;
+  }
+  .review-form {
+    margin: 8px 16px 20px;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    background: #101010;
+    padding: 14px 16px;
+  }
+  .review-form h3 { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #f5f5f2; }
+  .review-form .field { margin-bottom: 10px; }
+  .review-form label { font-size: 11px; color: #9a9a95; display: block; margin-bottom: 4px; font-weight: 600; }
+  .review-form input[type="text"],
+  .review-form textarea {
+    width: 100%;
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: #f5f5f2;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .review-form input:focus,
+  .review-form textarea:focus { border-color: #f2c94c; }
+  .review-form textarea { resize: vertical; min-height: 78px; }
+  .review-form .row { display: flex; gap: 10px; align-items: center; }
+
+  .review-rating-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    background: rgba(242,201,76,0.08);
+    border: 1px solid rgba(242,201,76,0.35);
+    border-radius: 999px;
+    font-size: 12px;
+    color: #c9c9c4;
+    font-weight: 600;
+  }
+  .review-rating-pill b { color: #f2c94c; font-size: 13px; font-weight: 800; }
+
+  .review-submit {
+    background: #f2c94c;
+    color: #0a0a0a;
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-left: auto;
+  }
+  .review-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .review-form-msg { font-size: 11px; margin-top: 8px; min-height: 14px; color: #f2c94c; }
+
+  .foot-links { padding: 28px 16px 40px; border-top: 1px solid #2a2a2a; max-width: 1180px; margin: 24px auto 0; }
+  .foot-links .brand { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; color: #f2c94c; margin-bottom: 6px; letter-spacing: 2px; }
+  .foot-links p { font-size: 12px; color: #9a9a95; line-height: 1.6; max-width: 420px; }
+
+  /* ---------- VIDEO MODAL ---------- */
+  .video-modal {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.96);
+    display: flex; align-items: center; justify-content: center;
+    visibility: hidden; opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .video-modal.open { visibility: visible; opacity: 1; }
+  .video-modal video {
+    width: 100%; max-width: 1100px;
+    max-height: 85vh;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    object-fit: contain;
+  }
+  .video-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(20,20,20,0.7); border: 1px solid #2a2a2a;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  .video-modal-close svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
 
   @media (min-width: 720px) {
-    .search-grid { grid-template-columns: repeat(4, 1fr); }
-    .search-grid .poster { height: 220px; }
+    .hero-poster { width: 120px; height: 170px; }
+    .hero-title { font-size: 34px; }
+    .hero-content { padding: 140px 16px 20px; }
     .card { width: 160px; }
     .poster { width: 160px; height: 230px; }
-    .section-head h2 { font-size: 20px; }
-    .search-results { padding-bottom: 48px; }
+    .gallery-thumb { width: 260px; height: 146px; }
+    .synopsis { max-width: 100%; }
+    .foot-links p { max-width: 100%; }
   }
 
-  /* ---------- SEE ALL VIEW ---------- */
-  #seeAllView { padding-bottom: 90px; }
-  @media (min-width: 720px) {
-    #seeAllView { padding-bottom: 48px; }
-  }
-  .seeall-topbar {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px;
-    max-width: 1180px;
-    margin: 0 auto;
-  }
-  .back-btn {
-    width: 36px; height: 36px;
-    border-radius: 50%;
-    border: 1px solid #2a2a2a;
-    background: #141414;
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-    transition: border-color .2s, background .2s;
-  }
-  .back-btn:hover { border-color: #f2c94c; background: #1b1b1b; }
-  .back-btn svg { width: 16px; height: 16px; fill: none; stroke: #f5f5f2; stroke-width: 2.5; }
-  .seeall-title {
-    font-size: 20px; font-weight: 800;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .seeall-title .bar {
-    width: 4px; height: 18px;
-    background: #f2c94c; border-radius: 2px;
-  }
-  .seeall-count {
-    font-size: 12px; color: #9a9a95;
-    padding: 0 16px 16px;
-    max-width: 1180px;
-    margin: 0 auto;
-  }
-  #seeAllGrid {
-    padding: 0 16px 24px;
-    max-width: 1180px;
-    margin: 0 auto;
-  }
-
-  .profile-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px 14px;
-    padding: 0 16px 24px;
-    max-width: 1180px;
-    margin: 0 auto;
-  }
-  .profile-grid .profile-card { width: auto; }
-  .profile-grid .profile-photo { width: 80px; height: 80px; font-size: 20px; }
-
-  @media (min-width: 720px) {
-    .profile-grid { grid-template-columns: repeat(5, 1fr); }
-  }
-
-  /* ---------- PROMO ---------- */
-  .promo {
-    margin: 24px 16px;
-    padding: 28px 20px;
-    text-align: center;
-    background: #141414;
-    border: 1px solid #2a2a2a;
-    border-radius: 16px;
-    max-width: 1180px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .promo .icon {
-    width: 42px; height: 42px;
-    border-radius: 50%;
-    background: #f2c94c;
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 14px;
-  }
-  .promo .icon svg { width: 20px; height: 20px; }
-  .promo h3 { font-size: 18px; font-weight: 800; margin-bottom: 8px; }
-  .promo p {
-    font-size: 13px; color: #9a9a95;
-    max-width: 420px; margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  .foot-links {
-    padding: 28px 16px 90px;
-    border-top: 1px solid #2a2a2a;
-    max-width: 1180px;
-    margin: 0 auto;
-  }
-  .foot-links .brand {
-    font-family: 'Oswald', sans-serif;
-    font-size: 22px; font-weight: 700;
-    color: #f2c94c; margin-bottom: 6px; letter-spacing: 2px;
-  }
-  .foot-links p { font-size: 12px; color: #9a9a95; line-height: 1.6; max-width: 420px; }
-  @media (min-width: 720px) { @media (min-width: 720px) {
-  .foot-links { padding-bottom: 48px; }
-  .foot-links p { max-width: 100%; font-size: 13px; }
-} }
-
-  /* ---------- SESSION OVERLAY ---------- */
-  .session-overlay {
-    position: fixed; inset: 0; z-index: 120;
-    background: #0a0a0a;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    visibility: hidden; opacity: 0;
-    transition: opacity .22s ease;
-  }
-  .session-overlay.open { visibility: visible; opacity: 1; }
-  .session-topbar {
-    position: sticky; top: 0; z-index: 5;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 16px;
-    background: rgba(10,10,10,0.92);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: 1px solid #2a2a2a;
-  }
-  .session-topbar-brand {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700; letter-spacing: 2px;
-    color: #f2c94c; font-size: 16px;
-  }
-  .session-close { font-size: 26px; line-height: 1; color: #9a9a95; padding: 0 4px; }
-  .session-panel { max-width: 760px; margin: 0 auto; padding-bottom: 90px; }
-  .session-hero { padding: 24px 16px 8px; }
-  .session-kicker {
-    display: inline-block;
-    font-size: 10px; font-weight: 800;
-    letter-spacing: 1px; color: #f2c94c;
-    border: 1px solid rgba(242,201,76,0.4);
-    background: rgba(242,201,76,0.08);
-    padding: 3px 8px; border-radius: 4px; margin-bottom: 12px;
-  }
-  .session-title {
-    font-family: 'Oswald', sans-serif;
-    font-weight: 700; font-size: 26px;
-    line-height: 1.15; letter-spacing: 1px;
-    margin-bottom: 14px; text-transform: uppercase;
-  }
-  .session-desc { font-size: 14px; line-height: 1.75; color: #c9c9c4; }
-  .session-block { padding-top: 24px; }
-
-  @media (max-width: 380px) {
-    .header-inner { gap: 6px; padding: 8px 8px; }
-    .search-pill { padding: 5px 10px; font-size: 12px; }
-    .search-pill input { font-size: 12px; }
-    .hero-poster { width: 72px; height: 104px; }
-    .hero-title { font-size: 16px; }
-    .hero-content { padding: 53px 12px 16px; }
-    .card { width: 118px; }
-    .poster { width: 118px; height: 168px; }
-    .search-grid .poster { height: 150px; }
-    .profile-card { width: 70px; }
-    .profile-photo { width: 62px; height: 62px; font-size: 15px; }
-    .rank-thumb { width: 36px; height: 52px; }
-    .rank-num { font-size: 14px; }
-    .rank-title { font-size: 12px; }
-    .rating svg { width: 12px; height: 12px; }
-    .rank-score svg { width: 13px; height: 13px; }
-    .logo-text { font-size: 18px; }
-    .session-title { font-size: 20px; }
-    .seeall-title { font-size: 17px; }
-  }
+@media (max-width: 380px) {
+  .poster-lg { width: 96px; height: 138px; }
+  .title-name { font-size: 19px; }
+  .title-block { margin-top: -60px; }
+  .card { width: 118px; }
+  .poster { width: 118px; height: 168px; }
+  .score-num { font-size: 22px; }
+  .hero-dots { bottom: -22px; }
+  .chip-row { padding-top: 44px; }
+}
 </style>
 </head>
 <body>
 
 <header>
   <div class="header-inner">
-    <button class="burger" id="menuOpenBtn" aria-label="Menu"><span></span><span></span><span></span></button>
-    <span class="logo-wrap"><span class="logo-text">CHROMA</span></span>
-    <div class="search-pill">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="searchInput" type="text" placeholder="Search titles or genres">
-      <button id="searchClear" class="search-clear hidden">&times;</button>
+    <button class="icon-btn" id="backBtn" aria-label="Back" onclick="window.location.href='index.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <a href="index.html"><span class="logo-text">CHROMA</span></a>
+    <div class="head-right">
+      <button class="icon-btn save-btn" id="saveBtn" aria-label="Save to list">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>
+      </button>
+      <button class="icon-btn" aria-label="Share">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="10.6" x2="15.4" y2="6.4"/><line x1="8.6" y1="13.4" x2="15.4" y2="17.6"/></svg>
+      </button>
     </div>
-    <div class="head-actions"><div class="avatar" title="Your profile">?</div></div>
   </div>
 </header>
 
-<!-- SIDE MENU -->
-<div class="menu-overlay" id="menuOverlay">
-  <div class="menu-panel">
-    <button class="menu-close" id="menuCloseBtn">&times;</button>
-    <div class="menu-brand">CHROMA</div>
-    <div class="menu-section">
-      <h4>CATEGORIES</h4>
-      <div class="menu-list" id="categoryMenuList"></div>
-    </div>
-    <div class="menu-section">
-      <h4>GENRES</h4>
-      <div class="menu-list" id="genreMenuList"></div>
-    </div>
-    <div class="menu-section">
-      <h4>EVENTS</h4>
-      <div class="menu-list" id="eventMenuList">
-        <button class="menu-item event-item" data-session="ciff">
-          <span class="event-date">SEP 18 — 27, 2026</span>
-          <span class="event-name">CIFF — Cinema House Film Festival</span>
-          <span class="event-loc">Jakarta, Indonesia</span>
-        </button>
-        <button class="menu-item event-item" data-session="week">
-          <span class="event-date">OCT 02, 2026</span>
-          <span class="event-name">Example — Premiere Night</span>
-          <span class="event-loc">Grand Theatre, Jakarta</span>
-        </button>
-        <button class="menu-item event-item" data-session="golden">
-          <span class="event-date">OCT 14 — 16, 2026</span>
-          <span class="event-name">Golden Reel Awards</span>
-          <span class="event-loc">Nusantara Hall</span>
-        </button>
-        <button class="menu-item event-item" data-session="week">
-          <span class="event-date">NOV 05, 2026</span>
-          <span class="event-name">Example 5 — Cast Talk &amp; Screening</span>
-          <span class="event-loc">CHROMA Studio, Bandung</span>
-        </button>
-      </div>
+<!-- HERO / BACKDROP dengan VIDEO 16:9 -->
+<div class="backdrop" id="backdrop">
+  <video id="heroVideo"
+    src="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4"
+    autoplay muted loop playsinline preload="auto"></video>
+  <div class="backdrop-shade"></div>
+</div>
+
+<div class="title-block">
+  <div class="title-row">
+    <div class="poster-lg" id="posterLg"></div>
+    <div class="title-meta-top">
+      <span class="kicker-tag" id="kickerTag">NOW SHOWING</span>
+      <div class="title-name" id="titleName">Loading...</div>
+      <div class="title-facts" id="titleFacts">—</div>
     </div>
   </div>
 </div>
 
-<!-- ========== HOME VIEW ========== -->
-<div id="homeView">
+<div class="info-body">
+  <div class="rate-row">
+    <div class="score-card">
+      <div class="score-num" id="scoreNum">–</div>
+      <div class="score-sub">out of 10<br><b id="scoreCount">0</b> ratings</div>
+    </div>
+    <div class="yourrate-card">
+      <div class="yourrate-label">Rate</div>
+      <div class="yourrate-stars" id="yourRateStars"></div>
+      <div class="yourrate-status" id="yourRateStatus"></div>
+    </div>
+  </div>
 
-  <div class="hero" id="heroSlider">
-    <div class="hero-slides" id="heroSlides">
-      <div class="hero-slide">
-        <div class="hero-media" data-video="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4" data-poster="poster1.png"></div>
-        <div class="hero-shade"></div>
-        <div class="hero-content">
-          <span class="hero-tag">POPULAR</span>
-          <div class="hero-row">
-            <div class="hero-poster" onclick="window.location.href='TheFrog.html'">
-            <img src="Poster1.jpg" alt="The Frog" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-            <span class="fallback-text" style="display:none;">The Frog</span>
-            </div>
-            <div class="hero-meta">
-              <div class="hero-time">2:14</div>
-              <div class="hero-title">The Frog</div>
-              <div class="hero-sub">Watch the Official Trailer</div>
-            </div>
-          </div>
+  <div class="action-row">
+    <button class="btn btn-primary" id="playTrailerBtn">
+      <svg viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>Play Trailer
+    </button>
+    <button class="btn btn-ghost" id="addListBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><span>Add to List</span>
+    </button>
+  </div>
+
+  <div class="synopsis">
+    <p id="synopsisText"></p>
+    <div class="credit-line" id="creditLine"></div>
+  </div>
+</div>
+
+<section class="block">
+  <div class="section-head"><h2><span class="bar"></span>Cast &amp; Crew</h2></div>
+  <div class="profile-scroll" id="castScroll"></div>
+</section>
+
+<section class="block">
+  <div class="section-head"><h2><span class="bar"></span>Photos</h2></div>
+  <div class="gallery-scroll" id="galleryScroll"></div>
+  <div class="gallery-dots" id="galleryDots"></div>
+</section>
+
+<section class="block" id="reviewSection">
+  <div class="section-head"><h2><span class="bar"></span>User Reviews</h2></div>
+  <div class="review-list" id="reviewList"></div>
+
+  <div class="review-form-wrap" id="reviewFormWrap">
+    <form class="review-form" id="reviewForm">
+      <h3>Write a review</h3>
+      <div class="field">
+        <label for="reviewName">Name</label>
+        <input type="text" id="reviewName" maxlength="40" placeholder="Your name" required>
+      </div>
+      <div class="field">
+        <label for="reviewText">Review</label>
+        <textarea id="reviewText" maxlength="500" placeholder="Share your thoughts about this title..." required></textarea>
+      </div>
+      <div class="row">
+        <div class="review-rating-pill" id="reviewRatingPill">
+          <span>Your rating</span>
+          <b id="reviewRatingValue">–/10</b>
         </div>
+        <button type="submit" class="review-submit" id="reviewSubmit">Submit</button>
       </div>
-      <div class="hero-slide">
-        <div class="hero-media" data-video="https://res.cloudinary.com/dt5yn0xqh/video/upload/v1781524860/samples/sea-turtle.mp4" data-poster="poster2.png"></div>
-        <div class="hero-shade"></div>
-        <div class="hero-content">
-          <span class="hero-tag">POPULAR</span>
-          <div class="hero-row">
-           <div class="hero-poster" onclick="window.location.href='Turtle.html'">
-           <img src="Poster2.jpg" alt="A Turtle's Tale" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-           <span class="fallback-text" style="display:none;">A Turtle's Tale</span>
-</div>
-            <div class="hero-meta">
-              <div class="hero-time">1:48</div>
-              <div class="hero-title">A Turtle's Tale</div>
-              <div class="hero-sub">Watch the Official Trailer</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Tombol navigasi hero — hanya tampil di desktop -->
-    <button class="hero-arrow prev" id="heroPrev" aria-label="Previous slide">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-    <button class="hero-arrow next" id="heroNext" aria-label="Next slide">
-      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
-    </button>
-
-    <div class="hero-dots" id="heroDots"></div>
+      <div class="review-form-msg" id="reviewFormMsg"></div>
+    </form>
   </div>
+</section>
 
-  <div class="chip-row" id="eventChipRow">
-    <button class="chip" data-session="ciff">CIFF <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-    <button class="chip" data-session="nyaff">NYAFF 2026 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-    <button class="chip" data-session="week">Releasing This Week <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-    <button class="chip" data-session="golden">Golden Reel Awards <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-  </div>
+<section class="block">
+  <div class="section-head"><h2><span class="bar"></span>More Like This</h2></div>
+  <div class="card-scroll" id="similarScroll"></div>
+</section>
 
-  <section class="block">
-    <div class="section-head">
-      <h2><span class="bar"></span>New &amp; Now Showing</h2>
-      <a class="see-all" href="#" data-seeall="newNow">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
-    </div>
-    <div class="card-scroll" id="newNowShowing"></div>
-  </section>
-
-  <section class="block">
-    <div class="section-head">
-      <h2><span class="bar"></span>Trending This Week</h2>
-      <a class="see-all" href="#" data-seeall="trending">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
-    </div>
-    <div class="card-scroll" id="trendingWeek"></div>
-  </section>
-
-  <section class="block" id="savedSection">
-    <div class="section-head">
-      <h2><span class="bar"></span>Your List</h2>
-      <a class="see-all" href="#" data-seeall="saved">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
-    </div>
-    <div class="card-scroll" id="savedList"></div>
-    <p class="search-hint" id="savedEmpty" style="padding:0 16px 12px;">No saved titles yet. Tap the bookmark icon on any poster to add it here.</p>
-  </section>
-
-  <section class="block">
-    <div class="section-head">
-      <h2><span class="bar"></span>Popular Profiles</h2>
-      <a class="see-all" href="#" data-seeall="profiles">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
-    </div>
-    <div class="profile-scroll" id="popularProfiles"></div>
-  </section>
-
-  <div class="promo">
-    <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#0a0a0a" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg></div>
-    <h3>Keep rating what you watch</h3>
-    <p>Your ratings shape your personal Top Rated list — check the Ratings tab below to see how your picks stack up.</p>
-  </div>
-
-  <div class="foot-links">
-    <div class="brand">CHROMA</div>
-    <p>Cinema House for Reviews, Original Media &amp; Arts. Your home for ratings, reviews, showtimes, and everything. Featured by Kadio, The Kachoo.</p>
-  </div>
+<div class="foot-links">
+  <div class="brand">CHROMA</div>
+  <p>Cinema House for Reviews, Original Media &amp; Arts — your home for ratings, reviews, showtimes, and everything film and TV.</p>
 </div>
 
-<!-- ========== SEARCH VIEW ========== -->
-<div id="searchView" class="hidden">
-  <p class="search-hint" id="searchHint">Start typing a title or genre above to search.</p>
-  <div class="search-results">
-    <div class="search-grid" id="searchGrid"></div>
-  </div>
+<!-- VIDEO MODAL -->
+<div class="video-modal" id="videoModal">
+  <button class="video-modal-close" id="videoModalClose" aria-label="Close">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <video id="modalVideo" controls playsinline preload="metadata"
+    src="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4"></video>
 </div>
-
-<!-- ========== RATINGS VIEW ========== -->
-<div id="ratingsView" class="hidden">
-  <section class="block">
-    <div class="section-head"><h2><span class="bar"></span>Top Rated</h2></div>
-    <p class="search-hint" style="padding-top:0;">Ranked from highest to lowest rated.</p>
-    <div class="rank-list" id="rankList"></div>
-  </section>
-</div>
-
-<!-- ========== SEE ALL VIEW ========== -->
-<div id="seeAllView" class="hidden">
-  <div class="seeall-topbar">
-    <button class="back-btn" id="seeAllBack" aria-label="Back">
-      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-    </button>
-    <h2 class="seeall-title"><span class="bar"></span><span id="seeAllTitle">Section</span></h2>
-  </div>
-  <p class="seeall-count" id="seeAllCount"></p>
-  <div class="search-grid" id="seeAllGrid"></div>
-  <div class="profile-grid hidden" id="seeAllProfileGrid"></div>
-  <div class="empty-state hidden" id="seeAllEmpty"></div>
-</div>
-
-<!-- ========== SESSION / FESTIVAL OVERLAY ========== -->
-<div class="session-overlay" id="sessionOverlay">
-  <div class="session-topbar">
-    <span class="session-topbar-brand">CHROMA</span>
-    <button class="session-close" id="sessionCloseBtn" aria-label="Close">&times;</button>
-  </div>
-  <div class="session-panel">
-    <div class="session-hero">
-      <span class="session-kicker" id="sessionKicker"></span>
-      <h2 class="session-title" id="sessionTitle"></h2>
-      <p class="session-desc" id="sessionDesc"></p>
-    </div>
-    <div class="session-block">
-      <div class="section-head"><h2><span class="bar"></span>Films in this Session</h2></div>
-      <div class="card-scroll" id="sessionFilms"></div>
-    </div>
-    <div class="session-block">
-      <div class="section-head"><h2><span class="bar"></span>Profiles in this Session</h2></div>
-      <div class="profile-scroll" id="sessionProfiles"></div>
-    </div>
-  </div>
-</div>
-
-<footer class="bottom-bar">
-  <a class="tab active" href="#" data-view="home">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12l9-9 9 9"/><path d="M5 10v10h14V10"/></svg>
-    Home
-  </a>
-  <a class="tab" href="#" data-view="search">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    Search
-  </a>
-  <a class="tab" href="#" data-view="ratings">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>
-    Ratings
-  </a>
-  <a class="tab disabled" href="#" tabindex="-1">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a8 8 0 0116 0v1"/></svg>
-    Account
-  </a>
-</footer>
 
 <!-- Supabase JS Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+(function () {
+  const TITLE_NAME = 'The Frog';
   const SUPABASE_URL = 'https://euepdfhxyuomaqkpnrit.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1ZXBkZmh4eXVvbWFxa3Bucml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0OTg3ODUsImV4cCI6MjEwNTA3NDc4NX0.N4bvYVFxxbXAk0XcBgaooC7SiSopAZrgXRCtw9oJc84';
   let supabaseClient = null;
   try {
-    if (window.supabase && SUPABASE_URL.indexOf('YOUR-PROJECT') === -1) {
+    if (window.supabase) {
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     }
   } catch (e) { console.warn('Supabase init skipped:', e); }
@@ -918,665 +501,531 @@
   const USER_ID = getLocalUserId();
 
   /* =========================================================
-     HERO SLIDER — hardcode 2 video, dengan tombol desktop
+     STATE
      ========================================================= */
-  (function initHeroSlider() {
-    const slidesEl = document.getElementById('heroSlides');
-    const dotsEl = document.getElementById('heroDots');
-    const prevBtn = document.getElementById('heroPrev');
-    const nextBtn = document.getElementById('heroNext');
-    if (!slidesEl) return;
+  let BASE_VOTES = 500;
+  let BASE_SCORE = 7.5;
+  let userRating = 0;
 
-    const mediaSlides = slidesEl.querySelectorAll('.hero-media');
-    let current = 0;
-    const total = mediaSlides.length;
+  const T = {
+    title: '', genre: '', type: '', year: '',
+    rating: 0, votes: 500,
+    poster: 1, runtime: '', contentRating: '', tag: '',
+    synopsis: '', director: '', writers: '',
+    cast: []
+  };
 
-    mediaSlides.forEach(function(media) {
-      const url = media.dataset.video;
-      if (!url) return;
-      const video = document.createElement('video');
-      video.src = url;
-      video.poster = media.dataset.poster || '';
-      video.autoplay = true;
-      video.muted = true;
-      video.loop = true;
-      video.playsInline = true;
-      video.setAttribute('playsinline', '');
-      video.setAttribute('muted', '');
-      video.setAttribute('preload', 'auto');
-      media.appendChild(video);
-      const p = video.play();
-      if (p && p.catch) p.catch(function(){});
-    });
+  // Cast & crew (hardcode — bisa lo ubah manual di sini)
+  const CAST = [
+    { name: "Cast One",   cls: "p1" },
+    { name: "Cast Two",   cls: "p2" },
+    { name: "Cast Three", cls: "p3" },
+    { name: "Cast Four",  cls: "p4" }
+  ];
 
-    if (dotsEl) {
-      for (let i = 0; i < total; i++) {
-        const d = document.createElement('span');
-        if (i === 0) d.classList.add('active');
-        dotsEl.appendChild(d);
-      }
-    }
+  function starSVG(filled) {
+    return filled
+      ? '<svg viewBox="0 0 24 24" class="star-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>';
+  }
 
-    function goTo(index) {
-      if (index < 0) index = 0;
-      if (index >= total) index = total - 1;
-      current = index;
-      slidesEl.style.transform = 'translateX(-' + (current * 100) + '%)';
-      if (dotsEl) {
-        dotsEl.querySelectorAll('span').forEach(function(s, i) {
-          s.classList.toggle('active', i === current);
-        });
-      }
-      // update tombol disabled
-      if (prevBtn) prevBtn.disabled = (current === 0);
-      if (nextBtn) nextBtn.disabled = (current === total - 1);
-    }
-
-    // event tombol desktop
-    if (prevBtn) prevBtn.addEventListener('click', function() { goTo(current - 1); });
-    if (nextBtn) nextBtn.addEventListener('click', function() { goTo(current + 1); });
-
-    // swipe touch tetap
-    let startX = 0, isDown = false;
-    slidesEl.addEventListener('touchstart', function(e) {
-      startX = e.touches[0].clientX; isDown = true;
-    }, { passive: true });
-    slidesEl.addEventListener('touchend', function(e) {
-      if (!isDown) return; isDown = false;
-      const dx = e.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) > 40) {
-        if (dx < 0 && current < total - 1) goTo(current + 1);
-        else if (dx > 0 && current > 0) goTo(current - 1);
-      }
-    });
-
-    // set state awal tombol
-    goTo(0);
-  })();
+  function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
 
   /* =========================================================
-     MAIN APP
+     ELEMENT REFS
      ========================================================= */
-  (function(){
+  const starsWrap = document.getElementById('yourRateStars');
+  const statusEl = document.getElementById('yourRateStatus');
+  const scoreNumEl = document.getElementById('scoreNum');
+  const scoreCountEl = document.getElementById('scoreCount');
+  const saveBtn = document.getElementById('saveBtn');
+  const addListBtn = document.getElementById('addListBtn');
+  const reviewFormWrap = document.getElementById('reviewFormWrap');
+  const reviewSection = document.getElementById('reviewSection');
+  const reviewList = document.getElementById('reviewList');
+  const reviewForm = document.getElementById('reviewForm');
+  const reviewNameInput = document.getElementById('reviewName');
+  const reviewTextInput = document.getElementById('reviewText');
+  const reviewRatingValue = document.getElementById('reviewRatingValue');
+  const reviewFormMsg = document.getElementById('reviewFormMsg');
+  const reviewSubmit = document.getElementById('reviewSubmit');
+  const similarScroll = document.getElementById('similarScroll');
 
-    // Data global — diisi dari Supabase saat init
-    let titles = [];
-
-    // Static profiles
-    const profiles = [
-      { name:"Gathur D. Kafka", role:"CEO",              initials:"GK", cls:"p1" },
-      { name:"Logan Romanov",       role:"CTO & Director",   initials:"LR", cls:"p2" },
-      { name:"Example",             role:"Actor",            initials:"EX", cls:"p3" },
-      { name:"Example",             role:"Actress",          initials:"EX", cls:"p4" },
-      { name:"Example",             role:"Screenwriter",     initials:"EX", cls:"p5" },
-      { name:"Example",             role:"Director",         initials:"EX", cls:"p1" }
-    ];
-
-    // Category menu
-    const CATEGORIES = ["Film", "Movie", "Series", "Theater", "Short Movie"];
-
-    // Sessions
-    const SESSIONS = {
-      ciff: {
-        kicker: "SEP 25 — 27, 2026 · JAKARTA, INDONESIA",
-        title: "Chroma International Film Festival",
-        desc: "The Chroma International Film Festival (CIFF) official launch in Jakarta for premieres, retrospectives and industry conversations. Screenings run across four venues, accompanied by masterclasses, a co-production market, and nightly Q&A sessions with attending filmmakers.",
-        films: [],
-        profiles: [0, 1, 2, 5]
-      },
-      nyaff: {
-        kicker: "OCT 08 — 12, 2026 · Korean Cultural Center New York",
-        title: "New York Film Festival 2026",
-        desc: "A city-wide celebration of independent cinema, the New York Film Festival 2026 showcases bold new work from first- and second-time directors. The programme spans fiction, documentary and experimental shorts, screened in repurposed theatres, rooftops and open-air courtyards across the capital. Audience awards are decided entirely by public vote at the end of the closing night.",
-        films: [],
-        profiles: [2, 3, 4]
-      },
-      week: {
-        kicker: "SEP 14 — 20, 2026 · NOW SHOWING",
-        title: "Releasing This Week",
-        desc: "Everything landing on CHROMA and in theatres over the next seven days — gathered in one place. Fresh seasons, festival favourites and long-awaited premieres, refreshed every Monday morning. Save a title to your list and we'll notify you the moment it goes live.",
-        films: [],
-        profiles: [1, 2, 5]
-      },
-      golden: {
-        kicker: "Des 1, 2027 · Lincoln Center",
-        title: "Golden Reel Awards 2027",
-        desc: "The Golden Reel Awards honour outstanding achievement in directing, writing, performance and craft across the CHROMA network. Nominees are selected by the Critics Circle and voted on by members of the industry. The three-night ceremony closes with the announcement of Best Picture, decided by a combined industry and audience vote.",
-        films: [],
-        profiles: [0, 1, 3, 4]
+  /* =========================================================
+     LOAD TITLE FROM SUPABASE
+     ========================================================= */
+  async function loadTitle() {
+    if (!supabaseClient) return;
+    try {
+      const { data, error } = await supabaseClient
+        .from('titles')
+        .select('*')
+        .eq('title', TITLE_NAME)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) {
+        console.warn('Title not found:', TITLE_NAME);
+        document.getElementById('titleName').textContent = TITLE_NAME;
+        document.getElementById('titleFacts').textContent = 'Not found in database';
+        return;
       }
-    };
 
-    /* ---------- Utility ---------- */
-    function starSVG(filled) {
-      if (filled) {
-        return '<svg viewBox="0 0 24 24" class="star-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>';
-      }
-      return '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>';
+      T.title          = data.title || TITLE_NAME;
+      T.genre          = data.genre || '';
+      T.type           = data.type || '';
+      T.year           = data.year || '';
+      T.rating         = Number(data.rating) || 0;
+      T.votes          = data.votes || 500;
+      T.poster         = data.poster_num || 1;
+      T.runtime        = data.runtime || '';
+      T.contentRating  = data.content_rating || '';
+      T.tag            = data.tag || '';
+      T.synopsis       = data.synopsis || '';
+      T.director       = data.director || '';
+      T.writers        = data.writers || '';
+      T.cast           = CAST;
+
+      BASE_SCORE = T.rating;
+      BASE_VOTES = T.votes;
+
+      renderHero();
+    } catch (e) {
+      console.warn('Load title failed:', e);
     }
+  }
 
-    function escapeAttr(str) {
-      return String(str || '').replace(/'/g, "\\'").replace(/"/g, '&quot;');
-    }
+  /* =========================================================
+     RENDER HERO
+     ========================================================= */
+  function renderHero() {
+    document.title = T.title + ' — CHROMA';
 
-    function escapeHtml(str) {
-      if (str == null) return '';
-      return String(str)
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;');
-    }
+    const posterEl = document.getElementById('posterLg');
+    posterEl.innerHTML = '<img src="poster' + T.poster + '.png" alt="' + escapeHtml(T.title) + '" ' +
+      'onerror="this.style.display=\'none\';">';
 
-    // Normalisasi data dari Supabase
-    function normalizeRow(r) {
-      return {
-        id:        r.id,
-        title:     r.title || '',
-        slug:      r.slug || '',
-        genre:     r.genre || '',
-        type:      r.type || '',
-        year:      r.year || '',
-        rating:    Number(r.rating) || 0,
-        poster:    r.poster_num || 1,
-        cls:       '',
-        page:      r.page || 'example.html',
-        is_new:    !!r.is_new,
-        is_trending: !!r.is_trending
-      };
-    }
+    document.getElementById('kickerTag').textContent = T.tag || '';
+    document.getElementById('titleName').textContent = T.title;
 
-    /* ---------- HTML builders ---------- */
-    function filmCardHTML(t) {
-      const titleEsc = escapeAttr(t.title);
-      const label = escapeHtml(String(t.title).toUpperCase());
-      return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
-        '<div class="poster">' +
-          '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
-            'onerror="this.style.display=\'none\';">' +
-          '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
-            '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
-          '</div>' +
-          '<div class="label">' + label + '</div>' +
-        '</div>' +
-        '<div class="card-meta">' +
-          '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
-          '<div class="card-title">' + escapeHtml(t.title) + '</div>' +
-          '<div class="card-sub">' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
-        '</div>' +
-      '</div>';
-    }
+    const facts = [T.year, T.type, T.genre, T.runtime, T.contentRating]
+      .filter(Boolean).join(' · ');
+    document.getElementById('titleFacts').textContent = facts;
 
-    function profileCardHTML(p) {
+    scoreNumEl.textContent = BASE_SCORE.toFixed(1);
+    scoreCountEl.textContent = BASE_VOTES.toLocaleString('en-US');
+
+    document.getElementById('synopsisText').textContent = T.synopsis;
+    document.getElementById('creditLine').innerHTML =
+      (T.director ? '<b>Director</b> ' + escapeHtml(T.director) + '<br>' : '') +
+      (T.writers ? '<b>Writers</b> ' + escapeHtml(T.writers) + '<br>' : '') +
+      (T.genre ? '<b>Genre</b> ' + escapeHtml(T.genre) : '');
+
+    // Cast
+    const castScroll = document.getElementById('castScroll');
+    castScroll.innerHTML = T.cast.map(function (c) {
+      const initials = c.name.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2);
       return '<div class="profile-card">' +
-        '<div class="profile-photo ' + p.cls + '">' + p.initials + '</div>' +
-        '<div class="profile-name">' + p.name + '</div>' +
-        '<div class="profile-role">' + p.role + '</div>' +
+        '<div class="profile-photo ' + c.cls + '">' + initials + '</div>' +
+        '<div class="profile-name">' + c.name + '</div>' +
+        '<div class="profile-role">Actor</div>' +
       '</div>';
+    }).join('');
+
+    // Gallery placeholder
+    const galleryScroll = document.getElementById('galleryScroll');
+    galleryScroll.innerHTML = [1,2,3,4,5,6].map(function () {
+      return '<div class="gallery-thumb"></div>';
+    }).join('');
+  }
+
+  /* =========================================================
+     RATING — baseline + sync ke Supabase
+     ========================================================= */
+  const starButtons = [];
+  for (let i = 1; i <= 5; i++) {
+    const b = document.createElement('button');
+    b.innerHTML = starSVG(false);
+    b.dataset.val = i;
+    b.addEventListener('click', function () {
+      submitRating(i * 2, i);
+    });
+    starsWrap.appendChild(b);
+    starButtons.push(b);
+  }
+
+  function paintStars(halfStars) {
+    starButtons.forEach(function (el, idx) {
+      el.classList.toggle('on', idx < halfStars);
+    });
+  }
+
+  function updateReviewRatingPill() {
+    reviewRatingValue.textContent = userRating > 0 ? (userRating + '/10') : '–/10';
+  }
+
+  async function submitRating(score10, halfStars) {
+    userRating = score10;
+    paintStars(halfStars);
+    updateReviewRatingPill();
+    statusEl.textContent = 'Saving... ' + score10 + '/10';
+
+    if (!supabaseClient) {
+      try { localStorage.setItem('chroma_rating_' + TITLE_NAME, String(score10)); } catch(e) {}
+      statusEl.textContent = score10 + '/10';
+      revealReviewForm();
+      return;
     }
 
-    /* ---------- Render basic sections ---------- */
-    function renderProfiles(container, list) {
-      if (!container) return;
-      container.innerHTML = list.map(profileCardHTML).join('');
+    try {
+      const { error } = await supabaseClient
+        .from('ratings')
+        .upsert(
+          { user_id: USER_ID, film_title: TITLE_NAME, score: score10, updated_at: new Date().toISOString() },
+          { onConflict: 'user_id,film_title' }
+        );
+      if (error) throw error;
+      statusEl.textContent = score10 + '/10';
+      await refreshAggregate();
+      revealReviewForm();
+    } catch (e) {
+      console.warn('Rating save failed:', e);
+      statusEl.textContent = 'Failed to save';
     }
+  }
 
-    function renderNewNow() {
-      const list = titles.filter(function(t) { return t.is_new; });
-      const el = document.getElementById('newNowShowing');
-      if (!el) return;
-      el.innerHTML = list.length
-        ? list.map(filmCardHTML).join('')
-        : '<p class="search-hint">No titles in this section yet.</p>';
-    }
-
-    function renderTrending() {
-      const list = titles.filter(function(t) { return t.is_trending; });
-      const el = document.getElementById('trendingWeek');
-      if (!el) return;
-      el.innerHTML = list.length
-        ? list.map(filmCardHTML).join('')
-        : '<p class="search-hint">No titles in this section yet.</p>';
-    }
-
-    function renderMenus() {
-      // Categories
-      const categoryMenuList = document.getElementById('categoryMenuList');
-      if (categoryMenuList) {
-        categoryMenuList.innerHTML = '';
-        CATEGORIES.forEach(function(c) {
-          const count = titles.filter(function(t) {
-            return t.type.toLowerCase() === c.toLowerCase();
-          }).length;
-          const item = document.createElement('button');
-          item.className = 'menu-item';
-          item.innerHTML = '<span>' + c + '</span><span class="count">' + count + ' titles</span>';
-          item.addEventListener('click', function() {
-            document.getElementById('menuOverlay').classList.remove('open');
-            goToView('search');
-            const si = document.getElementById('searchInput');
-            if (si) si.value = '';
-            runCategorySearch(c);
-          });
-          categoryMenuList.appendChild(item);
-        });
-      }
-
-      // Genres — auto dari data
-      const genreMenuList = document.getElementById('genreMenuList');
-      if (genreMenuList) {
-        genreMenuList.innerHTML = '';
-        const genres = [...new Set(titles.map(function(t){ return t.genre; }).filter(Boolean))].sort();
-        genres.forEach(function(g) {
-          const count = titles.filter(function(t){ return t.genre === g; }).length;
-          const item = document.createElement('button');
-          item.className = 'menu-item';
-          item.innerHTML = '<span>' + escapeHtml(g) + '</span><span class="count">' + count + ' titles</span>';
-          item.addEventListener('click', function() {
-            document.getElementById('menuOverlay').classList.remove('open');
-            goToView('search');
-            const si = document.getElementById('searchInput');
-            if (si) si.value = g;
-            runSearch(g);
-          });
-          genreMenuList.appendChild(item);
-        });
-      }
-    }
-
-    /* ---------- Save / Your List ---------- */
-    let savedTitles = [];
-
-    function findTitleObj(name) {
-      return titles.find(function(t) { return t.title === name; });
-    }
-
-    function renderSavedList() {
-      const container = document.getElementById('savedList');
-      const emptyMsg = document.getElementById('savedEmpty');
-      if (!container) return;
-      if (savedTitles.length === 0) {
-        container.innerHTML = '';
-        if (emptyMsg) emptyMsg.classList.remove('hidden');
-        return;
-      }
-      if (emptyMsg) emptyMsg.classList.add('hidden');
-      container.innerHTML = savedTitles
-        .map(function(name) { return findTitleObj(name); })
-        .filter(Boolean)
-        .map(function(t) { return filmCardHTML(t); })
-        .join('');
-      hydrateSavedStates();
-    }
-
-    async function toggleSave(el) {
-      const title = el.dataset.title;
-      if (!title) return;
-      const isSaved = el.classList.contains('saved');
-
-      if (isSaved) {
-        savedTitles = savedTitles.filter(function(t) { return t !== title; });
-      } else {
-        if (savedTitles.indexOf(title) === -1) savedTitles.push(title);
-      }
-      renderSavedList();
-
-      if (!supabaseClient) {
-        try { localStorage.setItem('chroma_saved', JSON.stringify(savedTitles)); } catch(e) {}
-        return;
-      }
-
+  async function loadUserRating() {
+    if (!supabaseClient) {
       try {
-        if (isSaved) {
-          await supabaseClient.from('saves').delete()
-            .eq('user_id', USER_ID).eq('film_title', title);
-        } else {
-          await supabaseClient.from('saves').upsert(
-            { user_id: USER_ID, film_title: title },
-            { onConflict: 'user_id,film_title' }
-          );
+        const v = localStorage.getItem('chroma_rating_' + TITLE_NAME);
+        if (v) {
+          userRating = parseInt(v, 10);
+          paintStars(Math.round(userRating / 2));
+          statusEl.textContent = userRating + '/10';
+          updateReviewRatingPill();
+          revealReviewForm(true);
         }
-      } catch (e) {
-        console.warn('Save to Supabase failed:', e);
-      }
-    }
-    window.toggleSave = toggleSave;
-
-    async function hydrateSavedStates() {
-      if (supabaseClient) {
-        try {
-          const { data } = await supabaseClient.from('saves').select('film_title').eq('user_id', USER_ID);
-          if (data) savedTitles = data.map(function(r) { return r.film_title; });
-        } catch(e) {}
-      } else {
-        try { savedTitles = JSON.parse(localStorage.getItem('chroma_saved') || '[]'); } catch(e) {}
-      }
-      document.querySelectorAll('.poster .save').forEach(function(el) {
-        el.classList.toggle('saved', savedTitles.indexOf(el.dataset.title) !== -1);
-      });
-    }
-
-    /* ---------- Navigate to detail ---------- */
-    function goToDetail(title, page) {
-      try {
-        sessionStorage.setItem('chroma_selected', JSON.stringify(title));
-        sessionStorage.setItem('chroma_page', page || 'example.html');
       } catch(e) {}
-      window.location.href = page || 'example.html';
+      return;
     }
-    window.goToDetail = goToDetail;
-
-    /* ---------- MENU toggle ---------- */
-    const menuOverlay = document.getElementById('menuOverlay');
-    const menuOpenBtn = document.getElementById('menuOpenBtn');
-    const menuCloseBtn = document.getElementById('menuCloseBtn');
-    if (menuOpenBtn) menuOpenBtn.addEventListener('click', function() { menuOverlay.classList.add('open'); });
-    if (menuCloseBtn) menuCloseBtn.addEventListener('click', function() { menuOverlay.classList.remove('open'); });
-    if (menuOverlay) {
-      menuOverlay.addEventListener('click', function(e) {
-        if (e.target === menuOverlay) menuOverlay.classList.remove('open');
-      });
-    }
-
-    /* ---------- Views ---------- */
-    const homeView = document.getElementById('homeView');
-    const searchView = document.getElementById('searchView');
-    const ratingsView = document.getElementById('ratingsView');
-    const seeAllView = document.getElementById('seeAllView');
-    const tabs = document.querySelectorAll('.tab[data-view]');
-
-    function goToView(name) {
-      if (homeView) homeView.classList.toggle('hidden', name !== 'home');
-      if (searchView) searchView.classList.toggle('hidden', name !== 'search');
-      if (ratingsView) ratingsView.classList.toggle('hidden', name !== 'ratings');
-      if (seeAllView) seeAllView.classList.toggle('hidden', name !== 'seeall');
-      tabs.forEach(function(t) {
-        t.classList.toggle('active', t.dataset.view === name || (name === 'seeall' && t.dataset.view === 'home'));
-      });
-      window.scrollTo({ top: 0, behavior: 'instant' });
-      if (name === 'ratings') renderRatings();
-    }
-
-    tabs.forEach(function(t) {
-      t.addEventListener('click', function(e) {
-        e.preventDefault();
-        goToView(t.dataset.view);
-      });
-    });
-
-    /* ---------- See All ---------- */
-    const seeAllTitle = document.getElementById('seeAllTitle');
-    const seeAllCount = document.getElementById('seeAllCount');
-    const seeAllGrid = document.getElementById('seeAllGrid');
-    const seeAllProfileGrid = document.getElementById('seeAllProfileGrid');
-    const seeAllEmpty = document.getElementById('seeAllEmpty');
-    const seeAllBack = document.getElementById('seeAllBack');
-
-    const SEEALL_META = {
-      newNow:   { title: "New & Now Showing" },
-      trending: { title: "Trending This Week" },
-      saved:    { title: "Your List" },
-      profiles: { title: "Popular Profiles" }
-    };
-
-    function openSeeAll(key) {
-      const meta = SEEALL_META[key];
-      if (!meta) return;
-
-      seeAllTitle.textContent = meta.title;
-      seeAllGrid.innerHTML = '';
-      seeAllProfileGrid.innerHTML = '';
-      seeAllEmpty.classList.add('hidden');
-      seeAllGrid.classList.remove('hidden');
-      seeAllProfileGrid.classList.add('hidden');
-
-      if (key === 'profiles') {
-        seeAllGrid.classList.add('hidden');
-        seeAllProfileGrid.classList.remove('hidden');
-        seeAllCount.textContent = profiles.length + ' profiles';
-        seeAllProfileGrid.innerHTML = profiles.map(profileCardHTML).join('');
-      } else if (key === 'saved') {
-        if (savedTitles.length === 0) {
-          seeAllCount.textContent = '';
-          seeAllGrid.classList.add('hidden');
-          seeAllEmpty.classList.remove('hidden');
-          seeAllEmpty.textContent = 'No saved titles yet. Tap the bookmark icon on any poster to add it here.';
-        } else {
-          const list = savedTitles.map(findTitleObj).filter(Boolean);
-          seeAllCount.textContent = list.length + ' saved title' + (list.length === 1 ? '' : 's');
-          seeAllGrid.innerHTML = list.map(filmCardHTML).join('');
-        }
-      } else {
-        const list = key === 'newNow'
-          ? titles.filter(function(t){ return t.is_new; })
-          : titles.filter(function(t){ return t.is_trending; });
-        seeAllCount.textContent = list.length + ' titles';
-        if (list.length === 0) {
-          seeAllGrid.classList.add('hidden');
-          seeAllEmpty.classList.remove('hidden');
-          seeAllEmpty.textContent = 'No titles in this section yet.';
-        } else {
-          seeAllGrid.innerHTML = list.map(filmCardHTML).join('');
-        }
+    try {
+      const { data, error } = await supabaseClient
+        .from('ratings')
+        .select('score')
+        .eq('user_id', USER_ID)
+        .eq('film_title', TITLE_NAME)
+        .maybeSingle();
+      if (error) throw error;
+      if (data && data.score) {
+        userRating = data.score;
+        paintStars(Math.round(userRating / 2));
+        statusEl.textContent = userRating + '/10';
+        updateReviewRatingPill();
+        revealReviewForm(true);
       }
+    } catch (e) { console.warn('Load user rating failed:', e); }
+  }
 
-      goToView('seeall');
-      hydrateSavedStates();
+  async function refreshAggregate() {
+    if (!supabaseClient) return;
+    try {
+      const { data, error } = await supabaseClient
+        .from('ratings')
+        .select('score')
+        .eq('film_title', TITLE_NAME);
+      if (error) throw error;
+
+      const userScores = (data || []).map(function(r){ return r.score || 0; });
+      const userSum = userScores.reduce(function(a, b){ return a + b; }, 0);
+      const userCount = userScores.length;
+
+      const totalVotes = BASE_VOTES + userCount;
+      const totalSum = BASE_SCORE * BASE_VOTES + userSum;
+      const avg = totalSum / totalVotes;
+
+      scoreNumEl.textContent = avg.toFixed(1);
+      scoreCountEl.textContent = totalVotes.toLocaleString('en-US');
+    } catch (e) { console.warn('Aggregate failed:', e); }
+  }
+
+  /* =========================================================
+     REVEAL REVIEW FORM + AUTO SCROLL
+     ========================================================= */
+  let reviewRevealed = false;
+
+  function revealReviewForm(skipScroll) {
+    if (reviewRevealed) return;
+    reviewRevealed = true;
+    reviewFormWrap.classList.add('revealed');
+
+    if (!skipScroll) {
+      setTimeout(function () {
+        const y = reviewSection.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 350);
     }
+  }
 
-    document.querySelectorAll('[data-seeall]').forEach(function(el) {
-      el.addEventListener('click', function(e) {
-        e.preventDefault();
-        openSeeAll(el.dataset.seeall);
-      });
-    });
+  /* =========================================================
+     SAVE / ADD TO LIST
+     ========================================================= */
+  let isSaved = false;
 
-    if (seeAllBack) {
-      seeAllBack.addEventListener('click', function() {
-        goToView('home');
-      });
+  function paintAddListBtn() {
+    addListBtn.classList.toggle('active', isSaved);
+    const span = addListBtn.querySelector('span');
+    if (span) span.textContent = isSaved ? 'Added' : 'Add to List';
+    const svg = addListBtn.querySelector('svg');
+    if (svg) {
+      svg.innerHTML = isSaved
+        ? '<path d="M20 6L9 17l-5-5"/>'
+        : '<path d="M12 5v14M5 12h14"/>';
     }
+  }
 
-    /* ---------- Search ---------- */
-    const searchInput = document.getElementById('searchInput');
-    const searchClear = document.getElementById('searchClear');
-    const searchGrid = document.getElementById('searchGrid');
-    const searchHint = document.getElementById('searchHint');
-
-    function runSearch(query) {
-      const q = query.trim().toLowerCase();
-      if (searchClear) searchClear.classList.toggle('hidden', q.length === 0);
-      if (!searchGrid || !searchHint) return;
-      if (q.length === 0) {
-        searchHint.textContent = 'Start typing a title or genre above to search.';
-        searchGrid.innerHTML = '';
-        return;
-      }
-      const results = titles.filter(function(t) {
-        return t.title.toLowerCase().includes(q) || t.genre.toLowerCase().includes(q);
-      });
-      searchHint.textContent = results.length
-        ? results.length + ' result' + (results.length === 1 ? '' : 's') + ' for "' + query + '"'
-        : '';
-      if (results.length === 0) {
-        searchGrid.innerHTML = '';
-        searchHint.innerHTML = '<div class="empty-state">No titles or genres match "' + escapeHtml(query) + '".</div>';
-        return;
-      }
-      searchGrid.innerHTML = results.map(function(t) {
-        const titleEsc = escapeAttr(t.title);
-        return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
-          '<div class="poster">' +
-            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
-              'onerror="this.style.display=\'none\';">' +
-            '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
-              '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
-            '</div>' +
-            '<div class="label">' + escapeHtml(String(t.title).toUpperCase()) + '</div>' +
-          '</div>' +
-          '<div class="card-meta">' +
-            '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
-            '<div class="card-title">' + escapeHtml(t.title) + '</div>' +
-            '<div class="card-sub">' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
-            '<span class="genre-tag">' + escapeHtml(t.genre) + '</span>' +
-          '</div></div>';
-      }).join('');
-      hydrateSavedStates();
-    }
-
-    function runCategorySearch(cat) {
-      const results = titles.filter(function(t) {
-        return t.type.toLowerCase() === cat.toLowerCase();
-      });
-      if (searchHint) searchHint.textContent = results.length + ' ' + cat + ' title' + (results.length === 1 ? '' : 's');
-      if (!searchGrid) return;
-      if (results.length === 0) {
-        searchGrid.innerHTML = '<div class="empty-state">No titles in this category yet.</div>';
-        return;
-      }
-      searchGrid.innerHTML = results.map(function(t) {
-        const titleEsc = escapeAttr(t.title);
-        return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
-          '<div class="poster">' +
-            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
-              'onerror="this.style.display=\'none\';">' +
-            '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
-              '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
-            '</div>' +
-            '<div class="label">' + escapeHtml(String(t.title).toUpperCase()) + '</div>' +
-          '</div>' +
-          '<div class="card-meta">' +
-            '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
-            '<div class="card-title">' + escapeHtml(t.title) + '</div>' +
-            '<div class="card-sub">' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
-          '</div></div>';
-      }).join('');
-      hydrateSavedStates();
-    }
-
-    if (searchInput) {
-      searchInput.addEventListener('input', function() {
-        if (searchView && !searchView.classList.contains('hidden')) goToView('search');
-        runSearch(searchInput.value);
-      });
-      searchInput.addEventListener('focus', function() { goToView('search'); });
-    }
-    if (searchClear) {
-      searchClear.addEventListener('click', function() {
-        if (searchInput) { searchInput.value = ''; runSearch(''); searchInput.focus(); }
-      });
-    }
-
-    /* ---------- Ratings ---------- */
-    function renderRatings() {
-      const sorted = [...titles].sort(function(a,b) { return b.rating - a.rating; });
-      const rankList = document.getElementById('rankList');
-      if (!rankList) return;
-      rankList.innerHTML = sorted.map(function(t, i) {
-        const titleEsc = escapeAttr(t.title);
-        return '<div class="rank-row" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
-          '<div class="rank-num">' + (i+1) + '</div>' +
-          '<div class="rank-thumb">' +
-            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
-              'onerror="this.style.display=\'none\';">' +
-          '</div>' +
-          '<div class="rank-info">' +
-            '<div class="rank-title">' + escapeHtml(t.title) + '</div>' +
-            '<div class="rank-sub">' + escapeHtml(t.genre) + ' · ' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
-          '</div>' +
-          '<div class="rank-score">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
-        '</div>';
-      }).join('');
-    }
-
-    /* ---------- Session overlay ---------- */
-    const sessionOverlay = document.getElementById('sessionOverlay');
-    const sessionCloseBtn = document.getElementById('sessionCloseBtn');
-    const sessionKicker = document.getElementById('sessionKicker');
-    const sessionTitle = document.getElementById('sessionTitle');
-    const sessionDesc = document.getElementById('sessionDesc');
-    const sessionFilms = document.getElementById('sessionFilms');
-    const sessionProfiles = document.getElementById('sessionProfiles');
-
-    function openSession(key) {
-      const s = SESSIONS[key];
-      if (!s || !sessionOverlay) return;
-      sessionKicker.textContent = s.kicker;
-      sessionTitle.textContent = s.title;
-      sessionDesc.textContent = s.desc;
-
-      const sample = titles.slice(0, 5);
-      sessionFilms.innerHTML = sample.map(filmCardHTML).join('');
-
-      sessionProfiles.innerHTML = s.profiles.map(function(i) { return profileCardHTML(profiles[i]); }).join('');
-      sessionOverlay.classList.add('open');
-      sessionOverlay.scrollTop = 0;
-      document.body.style.overflow = 'hidden';
-      hydrateSavedStates();
-    }
-
-    function closeSession() {
-      if (!sessionOverlay) return;
-      sessionOverlay.classList.remove('open');
-      document.body.style.overflow = '';
-    }
-
-    if (sessionCloseBtn) sessionCloseBtn.addEventListener('click', closeSession);
-    if (sessionOverlay) {
-      sessionOverlay.addEventListener('click', function(e) {
-        if (e.target === sessionOverlay) closeSession();
-      });
-    }
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeSession();
-    });
-
-    document.querySelectorAll('[data-session]').forEach(function(el) {
-      el.addEventListener('click', function() {
-        if (menuOverlay) menuOverlay.classList.remove('open');
-        openSession(el.dataset.session);
-      });
-    });
-
-    /* =========================================================
-       LOAD DATA FROM SUPABASE
-       ========================================================= */
-    async function loadTitles() {
-      if (!supabaseClient) {
-        console.warn('Supabase not configured — titles list empty');
-        titles = [];
-        return;
-      }
+  async function loadSavedState() {
+    if (supabaseClient) {
       try {
         const { data, error } = await supabaseClient
-          .from('titles')
-          .select('*')
-          .order('created_at', { ascending: false });
+          .from('saves')
+          .select('film_title')
+          .eq('user_id', USER_ID)
+          .eq('film_title', TITLE_NAME)
+          .maybeSingle();
         if (error) throw error;
-        titles = (data || []).map(normalizeRow);
-      } catch (e) {
-        console.warn('Load titles failed:', e);
-        titles = [];
+        isSaved = !!data;
+      } catch (e) { console.warn('Load save failed:', e); }
+    } else {
+      try {
+        const list = JSON.parse(localStorage.getItem('chroma_saved') || '[]');
+        isSaved = list.indexOf(TITLE_NAME) !== -1;
+      } catch (e) {}
+    }
+    saveBtn.classList.toggle('active', isSaved);
+    paintAddListBtn();
+  }
+
+  async function toggleSave() {
+    isSaved = !isSaved;
+    saveBtn.classList.toggle('active', isSaved);
+    paintAddListBtn();
+
+    if (!supabaseClient) {
+      try {
+        let list = JSON.parse(localStorage.getItem('chroma_saved') || '[]');
+        if (isSaved) { if (list.indexOf(TITLE_NAME) === -1) list.push(TITLE_NAME); }
+        else { list = list.filter(function(t) { return t !== TITLE_NAME; }); }
+        localStorage.setItem('chroma_saved', JSON.stringify(list));
+      } catch(e) {}
+      return;
+    }
+
+    try {
+      if (isSaved) {
+        await supabaseClient.from('saves').upsert(
+          { user_id: USER_ID, film_title: TITLE_NAME },
+          { onConflict: 'user_id,film_title' }
+        );
+      } else {
+        await supabaseClient.from('saves').delete()
+          .eq('user_id', USER_ID).eq('film_title', TITLE_NAME);
       }
+    } catch (e) { console.warn('Save toggle failed:', e); }
+  }
+
+  saveBtn.addEventListener('click', toggleSave);
+  addListBtn.addEventListener('click', toggleSave);
+
+  /* =========================================================
+     PLAY TRAILER
+     ========================================================= */
+  const videoModal = document.getElementById('videoModal');
+  const modalVideo = document.getElementById('modalVideo');
+  const playTrailerBtn = document.getElementById('playTrailerBtn');
+  const videoModalClose = document.getElementById('videoModalClose');
+  const heroVideo = document.getElementById('heroVideo');
+
+  playTrailerBtn.addEventListener('click', function () {
+    videoModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    try { heroVideo.pause(); } catch(e) {}
+    modalVideo.currentTime = 0;
+    const p = modalVideo.play();
+    if (p && p.catch) p.catch(function(){});
+  });
+
+  function closeVideoModal() {
+    videoModal.classList.remove('open');
+    document.body.style.overflow = '';
+    try { modalVideo.pause(); } catch(e) {}
+    try { heroVideo.play(); } catch(e) {}
+  }
+  videoModalClose.addEventListener('click', closeVideoModal);
+  videoModal.addEventListener('click', function (e) {
+    if (e.target === videoModal) closeVideoModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && videoModal.classList.contains('open')) closeVideoModal();
+  });
+
+  /* =========================================================
+     REVIEWS
+     ========================================================= */
+  function reviewCardHTML(r) {
+    const initials = (r.name || 'A').split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+    const starCount = Math.round((r.stars || 0) / 2);
+    let starsHtml = '';
+    for (let i = 0; i < 5; i++) starsHtml += starSVG(i < starCount);
+    const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' }) : '';
+    return '<div class="review-card">' +
+      '<div class="review-top">' +
+        '<div class="review-avatar">' + escapeHtml(initials) + '</div>' +
+        '<div>' +
+          '<div class="review-name">' + escapeHtml(r.name || 'Anonymous') + '</div>' +
+          '<div class="review-date">' + dateStr + '</div>' +
+        '</div>' +
+        '<div class="review-stars">' + starsHtml +
+          '<span style="margin-left:4px;font-weight:700;color:#f5f5f2;">' + (r.stars || 0) + '/10</span></div>' +
+      '</div>' +
+      '<div class="review-text">' + escapeHtml(r.text || '') + '</div>' +
+    '</div>';
+  }
+
+  async function loadReviews() {
+    if (!supabaseClient) {
+      reviewList.innerHTML = '<p class="review-empty">No reviews yet.</p>';
+      return;
+    }
+    try {
+      const { data, error } = await supabaseClient
+        .from('reviews')
+        .select('name, stars, text, created_at')
+        .eq('film_title', TITLE_NAME)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        reviewList.innerHTML = '<p class="review-empty">No reviews yet. Be the first!</p>';
+        return;
+      }
+      reviewList.innerHTML = data.map(reviewCardHTML).join('');
+    } catch (e) {
+      console.warn('Load reviews failed:', e);
+      reviewList.innerHTML = '<p class="review-empty">No reviews yet.</p>';
+    }
+  }
+
+  reviewForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    reviewFormMsg.textContent = '';
+
+    const name = reviewNameInput.value.trim();
+    const text = reviewTextInput.value.trim();
+
+    if (!name) { reviewFormMsg.textContent = 'Please enter your name.'; return; }
+    if (!text) { reviewFormMsg.textContent = 'Please write your review.'; return; }
+    if (userRating < 1) { reviewFormMsg.textContent = 'Please rate this title first.'; return; }
+
+    reviewSubmit.disabled = true;
+    reviewFormMsg.textContent = 'Sending...';
+
+    if (!supabaseClient) {
+      reviewFormMsg.textContent = 'Supabase is not configured.';
+      reviewSubmit.disabled = false;
+      return;
     }
 
-    async function init() {
-      renderProfiles(document.getElementById('popularProfiles'), profiles);
-      await loadTitles();
-      renderNewNow();
-      renderTrending();
-      renderMenus();
-      renderRatings();
-      await hydrateSavedStates();
-      renderSavedList();
+    try {
+      const { error } = await supabaseClient.from('reviews').insert({
+        user_id: USER_ID,
+        film_title: TITLE_NAME,
+        name: name,
+        text: text,
+        stars: userRating,
+        created_at: new Date().toISOString()
+      });
+      if (error) throw error;
+      reviewFormMsg.textContent = 'Review submitted ✓';
+      reviewForm.reset();
+      loadReviews();
+    } catch (e) {
+      console.warn('Submit review failed:', e);
+      reviewFormMsg.textContent = 'Failed to send. Please try again.';
+    } finally {
+      reviewSubmit.disabled = false;
     }
+  });
 
-    window.goToView = goToView;
-    window.runSearch = runSearch;
-    window.runCategorySearch = runCategorySearch;
-    window.openSession = openSession;
+  /* =========================================================
+     MORE LIKE THIS — filter genre sama dari tabel titles
+     ========================================================= */
+  async function loadMoreLikeThis() {
+    if (!supabaseClient) {
+      similarScroll.innerHTML = '<p class="review-empty">Supabase not configured.</p>';
+      return;
+    }
+    try {
+      const { data, error } = await supabaseClient
+        .from('titles')
+        .select('title, genre, type, year, rating, poster_num, page')
+        .eq('genre', T.genre)
+        .neq('title', TITLE_NAME)
+        .order('rating', { ascending: false })
+        .limit(6);
+      if (error) throw error;
 
-    init();
-  })();
+      if (!data || data.length === 0) {
+        similarScroll.innerHTML = '<p class="review-empty">No similar titles in this genre yet.</p>';
+        return;
+      }
+
+      similarScroll.innerHTML = data.map(function (s) {
+        return '<div class="card" data-href="' + escapeHtml(s.page || 'example.html') + '">' +
+          '<div class="poster">' +
+            '<img src="poster' + (s.poster_num || 1) + '.png" alt="' + escapeHtml(s.title) + '" ' +
+              'onerror="this.style.display=\'none\';">' +
+            '<div class="label">' + escapeHtml(String(s.title).toUpperCase()) + '</div>' +
+          '</div>' +
+          '<div class="card-meta">' +
+            '<div class="rating">' + starSVG(true) + Number(s.rating || 0).toFixed(1) + '</div>' +
+            '<div class="card-title">' + escapeHtml(s.title) + '</div>' +
+            '<div class="card-sub">' + escapeHtml(s.type) + ' · ' + s.year + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      similarScroll.addEventListener('click', function (e) {
+        const card = e.target.closest('.card');
+        if (card && card.dataset.href) window.location.href = card.dataset.href;
+      });
+    } catch (e) {
+      console.warn('Load More Like This failed:', e);
+      similarScroll.innerHTML = '<p class="review-empty">Failed to load.</p>';
+    }
+  }
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  async function init() {
+    // Load data judul dari Supabase dulu
+    await loadTitle();
+
+    // Baru load sisanya (paralel)
+    loadUserRating();
+    refreshAggregate();
+    loadSavedState();
+    loadReviews();
+    loadMoreLikeThis();
+  }
+
+  init();
+
+})();
 </script>
 
 </body>
