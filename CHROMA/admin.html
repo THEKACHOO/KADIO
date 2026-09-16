@@ -255,8 +255,8 @@
       </div>
 
       <div class="field">
-        <label for="f_poster_num">Poster # (1, 2, 3, … bebas)</label>
-        <input type="number" id="f_poster_num" min="1" placeholder="1">
+        <label for="f_poster">Poster File (PNG)</label>
+        <input type="text" id="f_poster" placeholder="poster1.png">
       </div>
 
       <input type="hidden" id="f_cls" value="g1">
@@ -313,7 +313,7 @@
     synopsis:       document.getElementById('f_synopsis'),
     director:       document.getElementById('f_director'),
     writers:        document.getElementById('f_writers'),
-    poster_num:     document.getElementById('f_poster_num'),
+    poster:         document.getElementById('f_poster'),
     cls:            document.getElementById('f_cls'),
     is_new:         document.getElementById('f_is_new'),
     is_trending:    document.getElementById('f_is_trending')
@@ -345,6 +345,13 @@
       .replace(/'/g, '&#39;');
   }
 
+  function posterSrc(t) {
+    // pakai field poster baru, fallback ke poster_num lama kalau ada
+    if (t.poster) return t.poster;
+    if (t.poster_num != null) return 'poster' + t.poster_num + '.png';
+    return 'poster1.png';
+  }
+
   async function loadTitles() {
     listContainer.innerHTML = '<p class="empty">Loading...</p>';
     try {
@@ -365,10 +372,11 @@
         const badges = [];
         if (t.is_new) badges.push('<span class="badge new">NEW</span>');
         if (t.is_trending) badges.push('<span class="badge trend">TRENDING</span>');
+        const src = posterSrc(t);
         return '<div class="list-row">' +
           '<div class="list-thumb">' +
-            '<img src="poster' + (t.poster_num || 1) + '.png" alt="" ' +
-              'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'P' + (t.poster_num || 1) + '\';">' +
+            '<img src="' + escapeHtml(src) + '" alt="" ' +
+              'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'PNG\';">' +
           '</div>' +
           '<div class="list-info">' +
             '<div class="list-title">' + escapeHtml(t.title) + '</div>' +
@@ -426,7 +434,7 @@
     F.synopsis.value = t.synopsis || '';
     F.director.value = t.director || '';
     F.writers.value = t.writers || '';
-    F.poster_num.value = t.poster_num != null ? t.poster_num : '';
+    F.poster.value = t.poster || (t.poster_num != null ? 'poster' + t.poster_num + '.png' : '');
     F.is_new.checked = !!t.is_new;
     F.is_trending.checked = !!t.is_trending;
 
@@ -454,7 +462,7 @@
     F.synopsis.value = '';
     F.director.value = '';
     F.writers.value = '';
-    F.poster_num.value = '';
+    F.poster.value = '';
     F.is_new.checked = false;
     F.is_trending.checked = false;
 
@@ -488,7 +496,7 @@
       synopsis:       F.synopsis.value.trim() || null,
       director:       F.director.value.trim() || null,
       writers:        F.writers.value.trim() || null,
-      poster_num:     F.poster_num.value ? parseInt(F.poster_num.value, 10) : null,
+      poster:         F.poster.value.trim() || null,
       cls:            'g1',
       is_new:         F.is_new.checked,
       is_trending:    F.is_trending.checked,
