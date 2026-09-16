@@ -1,3 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+<title>CHROMA — The Frog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: #0a0a0a;
+    color: #f5f5f2;
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    width: 100%;
+  }
+  img { display: block; max-width: 100%; }
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; background: none; border: none; color: inherit; }
+  ::-webkit-scrollbar { height: 0; width: 0; }
+
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 16px; }
+
+  header {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(10,10,10,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .header-inner {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px; max-width: 1180px; margin: 0 auto;
+  }
+  .icon-btn {
+    width: 32px; height: 32px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: background .15s;
+  }
+  .icon-btn:hover { background: #1b1b1b; }
+  .icon-btn svg { width: 18px; height: 18px; }
+  .logo-text {
+    font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 20px;
+    letter-spacing: 2px; text-transform: uppercase; position: relative;
+  }
+  .logo-text::after {
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 100%; height: 2px; background: #f2c94c; opacity: 0.6; border-radius: 1px;
+  }
+  .head-right { margin-left: auto; display: flex; align-items: center; gap: 4px; }
+  .save-btn.active svg { fill: #f2c94c; stroke: #f2c94c; }
+
+  .backdrop {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 70vh;
+    overflow: visible;
+    background: #101014;
+  }
+  .backdrop video {
+    position: absolute; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border: 0;
+    pointer-events: none;
+  }
+  .backdrop-shade {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(180deg, rgba(10,10,10,0.10) 0%, rgba(10,10,10,0.55) 55%, rgba(10,10,10,1) 100%),
+      linear-gradient(90deg, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.05) 60%);
+    pointer-events: none;
+  }
+
+  .title-block {
+    position: relative; z-index: 2;
+    max-width: 1180px; margin: 0 auto;
+    padding: 0 16px;
+    margin-top: -140px;
+  }
+  .title-row { display: flex; gap: 16px; align-items: flex-end; }
+  .poster-lg {
+    width: 118px; height: 170px; flex-shrink: 0;
+    border-radius: 10px; overflow: hidden;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 16px 34px rgba(0,0,0,0.6);
+    background: #1a1a1a;
+  }
+  .poster-lg img { width: 100%; height: 100%; object-fit: cover; }
+  .title-meta-top { padding-bottom: 4px; min-width: 0; }
+  .kicker-tag {
+    display: inline-block; font-size: 10px; font-weight: 800;
+    letter-spacing: 1px; color: #0a0a0a;
+    background: #f2c94c; padding: 3px 8px; border-radius: 3px; margin-bottom: 8px;
+  }
+  .title-name {
+    font-family: 'Oswald', sans-serif; font-weight: 700;
+    font-size: 24px; line-height: 1.15; letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .title-facts { font-size: 12.5px; color: #c9c9c4; font-weight: 500; }
+
+  .info-body { max-width: 1180px; margin: 0 auto; padding: 18px 16px 0; }
+
+  .rate-row {
+    display: flex; align-items: stretch; gap: 12px;
+    padding: 16px 0 4px;
+    flex-wrap: wrap;
+  }
+  .score-card {
+    display: flex; align-items: center; gap: 10px;
+    background: #141414; border: 1px solid #2a2a2a; border-radius: 12px;
+    padding: 12px 16px; flex: 1; min-width: 150px;
+  }
+  .score-num { font-family: 'Archivo Black'; font-size: 26px; color: #f2c94c; line-height: 1; }
+  .score-sub { font-size: 11px; color: #9a9a95; line-height: 1.4; }
+  .score-sub b { color: #f5f5f2; font-weight: 700; }
+
+  .yourrate-card {
+    background: #141414; border: 1px solid #2a2a2a; border-radius: 12px;
+    padding: 12px 16px; flex: 1; min-width: 170px;
+  }
+  .yourrate-label { font-size: 12px; color: #c9c9c4; margin-bottom: 8px; font-weight: 600; }
+  .yourrate-stars { display: flex; gap: 3px; }
+  .yourrate-stars button svg { width: 22px; height: 22px; fill: none; stroke: #6b6b66; stroke-width: 1.6; transition: fill .1s, stroke .1s; }
+  .yourrate-stars button.on svg { fill: #f2c94c; stroke: #f2c94c; }
+  .yourrate-status { font-size: 11px; color: #f2c94c; margin-top: 6px; height: 14px; font-weight: 700; }
+
+  .action-row { display: flex; gap: 10px; padding: 14px 0 4px; flex-wrap: wrap; }
+  .btn {
+    display: flex; align-items: center; gap: 7px;
+    font-size: 13px; font-weight: 700;
+    padding: 10px 16px; border-radius: 999px;
+    border: 1px solid #2a2a2a;
+    transition: background .18s ease, color .18s ease, border-color .18s ease;
+  }
+  .btn svg { width: 15px; height: 15px; }
+  .btn-primary { background: #f2c94c; color: #0a0a0a; border-color: #f2c94c; }
+  .btn-ghost { background: #141414; color: #f5f5f2; }
+  .btn-ghost.active {
+    background: #f2c94c; color: #0a0a0a; border-color: #f2c94c;
+  }
+  .btn-ghost.active svg { stroke: #0a0a0a; }
+
+  .synopsis { padding: 20px 0 6px; max-width: 720px; }
+  .synopsis p { font-size: 14px; line-height: 1.75; color: #c9c9c4; }
+  .credit-line { font-size: 12.5px; color: #9a9a95; margin-top: 14px; line-height: 1.9; }
+  .credit-line b { color: #f5f5f2; font-weight: 700; }
+
+  section.block { padding: 24px 0 4px; max-width: 1180px; margin: 0 auto; }
+  .section-head { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 14px; }
+  .section-head h2 { font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .section-head h2 .bar { width: 4px; height: 16px; background: #f2c94c; border-radius: 2px; }
+
+  .card-scroll { display: flex; gap: 12px; overflow-x: auto; padding: 0 16px 8px; scroll-snap-type: x mandatory; }
+  .card { flex-shrink: 0; width: 140px; scroll-snap-align: start; cursor: pointer; transition: transform .12s ease; }
+  .card:active { transform: scale(0.98); }
+  .poster { width: 140px; height: 200px; border-radius: 10px; position: relative; overflow: hidden; border: 1px solid #2a2a2a; background: #1a1a1a; }
+  .poster img { width: 100%; height: 100%; object-fit: cover; }
+  .poster .label {
+    position: absolute; bottom: 8px; left: 8px; right: 8px;
+    font-family: 'Archivo Black'; font-size: 12px; line-height: 1.1;
+    color: rgba(255,255,255,0.88); text-shadow: 0 2px 8px rgba(0,0,0,0.6); z-index: 2;
+  }
+  .card-meta { padding-top: 8px; }
+  .rating { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; margin-bottom: 2px; color: #f5f5f2; }
+  .rating svg { width: 13px; height: 13px; fill: none; stroke: #f5f5f2; stroke-width: 2; flex-shrink: 0; }
+  .rating .star-filled { fill: #f2c94c; stroke: #f2c94c; }
+  .card-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+  .card-sub { font-size: 11px; color: #9a9a95; }
+
+  .profile-scroll { display: flex; gap: 14px; overflow-x: auto; padding: 0 16px 8px; }
+  .profile-card { flex-shrink: 0; width: 84px; text-align: center; cursor: pointer; }
+  .profile-photo {
+    width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 8px;
+    border: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo Black'; font-size: 18px; color: rgba(255,255,255,0.85);
+  }
+  .profile-name { font-size: 12px; font-weight: 700; line-height: 1.2; }
+  .profile-role { font-size: 10px; color: #9a9a95; margin-top: 1px; }
+  .p1 { background: linear-gradient(150deg,#7a5a1f,#1a1a1a); }
+  .p2 { background: linear-gradient(150deg,#1f5a4f,#1a1a1a); }
+  .p3 { background: linear-gradient(150deg,#5a1f4a,#1a1a1a); }
+  .p4 { background: linear-gradient(150deg,#1f3a5a,#1a1a1a); }
+  .p5 { background: linear-gradient(150deg,#5a2f1f,#1a1a1a); }
+
+  .gallery-scroll {
+    display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 8px;
+    scroll-snap-type: x mandatory;
+  }
+  .gallery-thumb {
+    flex-shrink: 0; width: 200px; height: 112px; border-radius: 8px;
+    border: 1px solid #2a2a2a; background: #1a1a1a;
+    scroll-snap-align: start; cursor: pointer;
+    position: relative; overflow: hidden;
+    transition: transform .12s ease;
+  }
+  .gallery-thumb:active { transform: scale(0.97); }
+  .gallery-dots { display: flex; gap: 6px; padding: 2px 16px 4px; }
+  .gallery-dots span {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #2a2a2a; transition: background .15s, width .15s;
+  }
+  .gallery-dots span.on { background: #f2c94c; width: 14px; border-radius: 3px; }
+
+  .review-list { padding: 4px 16px 8px; display: flex; flex-direction: column; gap: 14px; }
+  .review-empty { padding: 4px 16px 20px; font-size: 13px; color: #9a9a95; }
+  .review-card { border: 1px solid #2a2a2a; border-radius: 12px; padding: 14px 16px; background: #101010; }
+  .review-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .review-avatar {
+    width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo Black'; font-size: 13px;
+    background: linear-gradient(150deg,#7a5a1f,#1a1a1a);
+  }
+  .review-name { font-size: 13px; font-weight: 700; }
+  .review-date { font-size: 11px; color: #9a9a95; }
+  .review-stars { display: flex; align-items: center; gap: 3px; margin-left: auto; }
+  .review-stars svg { width: 12px; height: 12px; fill: none; stroke: #f5f5f2; stroke-width: 2; }
+  .review-stars .star-filled { fill: #f2c94c; stroke: #f2c94c; }
+  .review-text { font-size: 13px; line-height: 1.65; color: #c9c9c4; }
+
+  .review-form-wrap {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .5s ease, opacity .35s ease;
+    opacity: 0;
+  }
+  .review-form-wrap.revealed {
+    max-height: 800px;
+    opacity: 1;
+  }
+  .review-form {
+    margin: 8px 16px 20px;
+    border: 1px solid #2a2a2a;
+    border-radius: 12px;
+    background: #101010;
+    padding: 14px 16px;
+  }
+  .review-form h3 { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: #f5f5f2; }
+  .review-form .field { margin-bottom: 10px; }
+  .review-form label { font-size: 11px; color: #9a9a95; display: block; margin-bottom: 4px; font-weight: 600; }
+  .review-form input[type="text"],
+  .review-form textarea {
+    width: 100%;
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    padding: 9px 12px;
+    color: #f5f5f2;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .review-form input:focus,
+  .review-form textarea:focus { border-color: #f2c94c; }
+  .review-form textarea { resize: vertical; min-height: 78px; }
+  .review-form .row { display: flex; gap: 10px; align-items: center; }
+
+  .review-rating-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    background: rgba(242,201,76,0.08);
+    border: 1px solid rgba(242,201,76,0.35);
+    border-radius: 999px;
+    font-size: 12px;
+    color: #c9c9c4;
+    font-weight: 600;
+  }
+  .review-rating-pill b { color: #f2c94c; font-size: 13px; font-weight: 800; }
+
+  .review-submit {
+    background: #f2c94c;
+    color: #0a0a0a;
+    border-radius: 999px;
+    padding: 9px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-left: auto;
+  }
+  .review-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  .review-form-msg { font-size: 11px; margin-top: 8px; min-height: 14px; color: #f2c94c; }
+
+  .foot-links { padding: 28px 16px 40px; border-top: 1px solid #2a2a2a; max-width: 1180px; margin: 24px auto 0; }
+  .foot-links .brand { font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700; color: #f2c94c; margin-bottom: 6px; letter-spacing: 2px; }
+  .foot-links p { font-size: 12px; color: #9a9a95; line-height: 1.6; max-width: 420px; }
+
+  .video-modal {
+    position: fixed; inset: 0; z-index: 300;
+    background: rgba(0,0,0,0.96);
+    display: flex; align-items: center; justify-content: center;
+    visibility: hidden; opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .video-modal.open { visibility: visible; opacity: 1; }
+  .video-modal video {
+    width: 100%; max-width: 1100px;
+    max-height: 85vh;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    object-fit: contain;
+  }
+  .video-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(20,20,20,0.7); border: 1px solid #2a2a2a;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  .video-modal-close svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
+
+  @media (min-width: 720px) {
+    .card { width: 160px; }
+    .poster { width: 160px; height: 230px; }
+    .gallery-thumb { width: 260px; height: 146px; }
+    .synopsis { max-width: 100%; }
+    .foot-links p { max-width: 100%; }
+  }
+
+  @media (max-width: 380px) {
+    .poster-lg { width: 96px; height: 138px; }
+    .title-name { font-size: 19px; }
+    .title-block { margin-top: -60px; }
+    .card { width: 118px; }
+    .poster { width: 118px; height: 168px; }
+    .score-num { font-size: 22px; }
+  }
+</style>
+</head>
 <body>
 
 <header>
@@ -17,7 +356,6 @@
   </div>
 </header>
 
-<!-- HERO / BACKDROP dengan VIDEO 16:9 -->
 <div class="backdrop" id="backdrop">
   <video id="heroVideo"
     src="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4"
@@ -112,7 +450,6 @@
   <p>Cinema House for Reviews, Original Media &amp; Arts — your home for ratings, reviews, showtimes, and everything film and TV.</p>
 </div>
 
-<!-- VIDEO MODAL -->
 <div class="video-modal" id="videoModal">
   <button class="video-modal-close" id="videoModalClose" aria-label="Close">
     <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -121,10 +458,519 @@
     src="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4"></video>
 </div>
 
-<!-- Supabase JS Client -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  ... (isi script kamu yang tadi, tidak perlu diubah) ...
+(function () {
+  const TITLE_NAME = 'The Frog';
+  const SUPABASE_URL = 'https://euepdfhxyuomaqkpnrit.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1ZXBkZmh4eXVvbWFxa3Bucml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0OTg3ODUsImV4cCI6MjEwNTA3NDc4NX0.N4bvYVFxxbXAk0XcBgaooC7SiSopAZrgXRCtw9oJc84';
+  let supabaseClient = null;
+  try {
+    if (window.supabase) {
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    }
+  } catch (e) { console.warn('Supabase init skipped:', e); }
+
+  function getLocalUserId() {
+    let uid = null;
+    try { uid = localStorage.getItem('chroma_user_id'); } catch(e) {}
+    if (!uid) {
+      uid = 'u_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36);
+      try { localStorage.setItem('chroma_user_id', uid); } catch(e) {}
+    }
+    return uid;
+  }
+  const USER_ID = getLocalUserId();
+
+  let BASE_VOTES = 500;
+  let BASE_SCORE = 7.5;
+  let userRating = 0;
+
+  const T = {
+    title: '', genre: '', type: '', year: '',
+    rating: 0, votes: 500,
+    poster: 'poster1.png',
+    runtime: '', contentRating: '', tag: '',
+    synopsis: '', director: '', writers: '',
+    cast: []
+  };
+
+  const CAST = [
+    { name: "Cast One",   cls: "p1" },
+    { name: "Cast Two",   cls: "p2" },
+    { name: "Cast Three", cls: "p3" },
+    { name: "Cast Four",  cls: "p4" }
+  ];
+
+  function starSVG(filled) {
+    return filled
+      ? '<svg viewBox="0 0 24 24" class="star-filled"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>'
+      : '<svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/></svg>';
+  }
+
+  function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  const starsWrap = document.getElementById('yourRateStars');
+  const statusEl = document.getElementById('yourRateStatus');
+  const scoreNumEl = document.getElementById('scoreNum');
+  const scoreCountEl = document.getElementById('scoreCount');
+  const saveBtn = document.getElementById('saveBtn');
+  const addListBtn = document.getElementById('addListBtn');
+  const reviewFormWrap = document.getElementById('reviewFormWrap');
+  const reviewSection = document.getElementById('reviewSection');
+  const reviewList = document.getElementById('reviewList');
+  const reviewForm = document.getElementById('reviewForm');
+  const reviewNameInput = document.getElementById('reviewName');
+  const reviewTextInput = document.getElementById('reviewText');
+  const reviewRatingValue = document.getElementById('reviewRatingValue');
+  const reviewFormMsg = document.getElementById('reviewFormMsg');
+  const reviewSubmit = document.getElementById('reviewSubmit');
+  const similarScroll = document.getElementById('similarScroll');
+
+  async function loadTitle() {
+    if (!supabaseClient) return;
+    try {
+      const { data, error } = await supabaseClient
+        .from('titles')
+        .select('*')
+        .eq('title', TITLE_NAME)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) {
+        console.warn('Title not found:', TITLE_NAME);
+        document.getElementById('titleName').textContent = TITLE_NAME;
+        document.getElementById('titleFacts').textContent = 'Not found in database';
+        return;
+      }
+
+      T.title          = data.title || TITLE_NAME;
+      T.genre          = data.genre || '';
+      T.type           = data.type || '';
+      T.year           = data.year || '';
+      T.rating         = Number(data.rating) || 0;
+      T.votes          = data.votes || 500;
+      T.poster         = data.poster || (data.poster_num != null ? 'poster' + data.poster_num + '.png' : 'poster1.png');
+      T.runtime        = data.runtime || '';
+      T.contentRating  = data.content_rating || '';
+      T.tag            = data.tag || '';
+      T.synopsis       = data.synopsis || '';
+      T.director       = data.director || '';
+      T.writers        = data.writers || '';
+      T.cast           = CAST;
+
+      BASE_SCORE = T.rating;
+      BASE_VOTES = T.votes;
+
+      renderHero();
+    } catch (e) {
+      console.warn('Load title failed:', e);
+    }
+  }
+
+  function renderHero() {
+    document.title = T.title + ' — CHROMA';
+
+    const posterEl = document.getElementById('posterLg');
+    posterEl.innerHTML = '<img src="' + escapeHtml(T.poster) + '" alt="' + escapeHtml(T.title) + '" ' +
+      'onerror="this.style.display=\'none\';">';
+
+    document.getElementById('kickerTag').textContent = T.tag || '';
+    document.getElementById('titleName').textContent = T.title;
+
+    const facts = [T.year, T.type, T.genre, T.runtime, T.contentRating]
+      .filter(Boolean).join(' · ');
+    document.getElementById('titleFacts').textContent = facts;
+
+    scoreNumEl.textContent = BASE_SCORE.toFixed(1);
+    scoreCountEl.textContent = BASE_VOTES.toLocaleString('en-US');
+
+    document.getElementById('synopsisText').textContent = T.synopsis;
+    document.getElementById('creditLine').innerHTML =
+      (T.director ? '<b>Director</b> ' + escapeHtml(T.director) + '<br>' : '') +
+      (T.writers ? '<b>Writers</b> ' + escapeHtml(T.writers) + '<br>' : '') +
+      (T.genre ? '<b>Genre</b> ' + escapeHtml(T.genre) : '');
+
+    const castScroll = document.getElementById('castScroll');
+    castScroll.innerHTML = T.cast.map(function (c) {
+      const initials = c.name.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2);
+      return '<div class="profile-card">' +
+        '<div class="profile-photo ' + c.cls + '">' + initials + '</div>' +
+        '<div class="profile-name">' + c.name + '</div>' +
+        '<div class="profile-role">Actor</div>' +
+      '</div>';
+    }).join('');
+
+    const galleryScroll = document.getElementById('galleryScroll');
+    galleryScroll.innerHTML = [1,2,3,4,5,6].map(function () {
+      return '<div class="gallery-thumb"></div>';
+    }).join('');
+  }
+
+  const starButtons = [];
+  for (let i = 1; i <= 5; i++) {
+    const b = document.createElement('button');
+    b.innerHTML = starSVG(false);
+    b.dataset.val = i;
+    b.addEventListener('click', function () {
+      submitRating(i * 2, i);
+    });
+    starsWrap.appendChild(b);
+    starButtons.push(b);
+  }
+
+  function paintStars(halfStars) {
+    starButtons.forEach(function (el, idx) {
+      el.classList.toggle('on', idx < halfStars);
+    });
+  }
+
+  function updateReviewRatingPill() {
+    reviewRatingValue.textContent = userRating > 0 ? (userRating + '/10') : '–/10';
+  }
+
+  async function submitRating(score10, halfStars) {
+    userRating = score10;
+    paintStars(halfStars);
+    updateReviewRatingPill();
+    statusEl.textContent = 'Saving... ' + score10 + '/10';
+
+    if (!supabaseClient) {
+      try { localStorage.setItem('chroma_rating_' + TITLE_NAME, String(score10)); } catch(e) {}
+      statusEl.textContent = score10 + '/10';
+      revealReviewForm();
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient
+        .from('ratings')
+        .upsert(
+          { user_id: USER_ID, film_title: TITLE_NAME, score: score10, updated_at: new Date().toISOString() },
+          { onConflict: 'user_id,film_title' }
+        );
+      if (error) throw error;
+      statusEl.textContent = score10 + '/10';
+      await refreshAggregate();
+      revealReviewForm();
+    } catch (e) {
+      console.warn('Rating save failed:', e);
+      statusEl.textContent = 'Failed to save';
+    }
+  }
+
+  async function loadUserRating() {
+    if (!supabaseClient) {
+      try {
+        const v = localStorage.getItem('chroma_rating_' + TITLE_NAME);
+        if (v) {
+          userRating = parseInt(v, 10);
+          paintStars(Math.round(userRating / 2));
+          statusEl.textContent = userRating + '/10';
+          updateReviewRatingPill();
+          revealReviewForm(true);
+        }
+      } catch(e) {}
+      return;
+    }
+    try {
+      const { data, error } = await supabaseClient
+        .from('ratings')
+        .select('score')
+        .eq('user_id', USER_ID)
+        .eq('film_title', TITLE_NAME)
+        .maybeSingle();
+      if (error) throw error;
+      if (data && data.score) {
+        userRating = data.score;
+        paintStars(Math.round(userRating / 2));
+        statusEl.textContent = userRating + '/10';
+        updateReviewRatingPill();
+        revealReviewForm(true);
+      }
+    } catch (e) { console.warn('Load user rating failed:', e); }
+  }
+
+  async function refreshAggregate() {
+    if (!supabaseClient) return;
+    try {
+      const { data, error } = await supabaseClient
+        .from('ratings')
+        .select('score')
+        .eq('film_title', TITLE_NAME);
+      if (error) throw error;
+
+      const userScores = (data || []).map(function(r){ return r.score || 0; });
+      const userSum = userScores.reduce(function(a, b){ return a + b; }, 0);
+      const userCount = userScores.length;
+
+      const totalVotes = BASE_VOTES + userCount;
+      const totalSum = BASE_SCORE * BASE_VOTES + userSum;
+      const avg = totalSum / totalVotes;
+
+      scoreNumEl.textContent = avg.toFixed(1);
+      scoreCountEl.textContent = totalVotes.toLocaleString('en-US');
+    } catch (e) { console.warn('Aggregate failed:', e); }
+  }
+
+  let reviewRevealed = false;
+
+  function revealReviewForm(skipScroll) {
+    if (reviewRevealed) return;
+    reviewRevealed = true;
+    reviewFormWrap.classList.add('revealed');
+
+    if (!skipScroll) {
+      setTimeout(function () {
+        const y = reviewSection.getBoundingClientRect().top + window.pageYOffset - 80;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 350);
+    }
+  }
+
+  let isSaved = false;
+
+  function paintAddListBtn() {
+    addListBtn.classList.toggle('active', isSaved);
+    const span = addListBtn.querySelector('span');
+    if (span) span.textContent = isSaved ? 'Added' : 'Add to List';
+    const svg = addListBtn.querySelector('svg');
+    if (svg) {
+      svg.innerHTML = isSaved
+        ? '<path d="M20 6L9 17l-5-5"/>'
+        : '<path d="M12 5v14M5 12h14"/>';
+    }
+  }
+
+  async function loadSavedState() {
+    if (supabaseClient) {
+      try {
+        const { data, error } = await supabaseClient
+          .from('saves')
+          .select('film_title')
+          .eq('user_id', USER_ID)
+          .eq('film_title', TITLE_NAME)
+          .maybeSingle();
+        if (error) throw error;
+        isSaved = !!data;
+      } catch (e) { console.warn('Load save failed:', e); }
+    } else {
+      try {
+        const list = JSON.parse(localStorage.getItem('chroma_saved') || '[]');
+        isSaved = list.indexOf(TITLE_NAME) !== -1;
+      } catch (e) {}
+    }
+    saveBtn.classList.toggle('active', isSaved);
+    paintAddListBtn();
+  }
+
+  async function toggleSave() {
+    isSaved = !isSaved;
+    saveBtn.classList.toggle('active', isSaved);
+    paintAddListBtn();
+
+    if (!supabaseClient) {
+      try {
+        let list = JSON.parse(localStorage.getItem('chroma_saved') || '[]');
+        if (isSaved) { if (list.indexOf(TITLE_NAME) === -1) list.push(TITLE_NAME); }
+        else { list = list.filter(function(t) { return t !== TITLE_NAME; }); }
+        localStorage.setItem('chroma_saved', JSON.stringify(list));
+      } catch(e) {}
+      return;
+    }
+
+    try {
+      if (isSaved) {
+        await supabaseClient.from('saves').upsert(
+          { user_id: USER_ID, film_title: TITLE_NAME },
+          { onConflict: 'user_id,film_title' }
+        );
+      } else {
+        await supabaseClient.from('saves').delete()
+          .eq('user_id', USER_ID).eq('film_title', TITLE_NAME);
+      }
+    } catch (e) { console.warn('Save toggle failed:', e); }
+  }
+
+  saveBtn.addEventListener('click', toggleSave);
+  addListBtn.addEventListener('click', toggleSave);
+
+  const videoModal = document.getElementById('videoModal');
+  const modalVideo = document.getElementById('modalVideo');
+  const playTrailerBtn = document.getElementById('playTrailerBtn');
+  const videoModalClose = document.getElementById('videoModalClose');
+  const heroVideo = document.getElementById('heroVideo');
+
+  playTrailerBtn.addEventListener('click', function () {
+    videoModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    try { heroVideo.pause(); } catch(e) {}
+    modalVideo.currentTime = 0;
+    const p = modalVideo.play();
+    if (p && p.catch) p.catch(function(){});
+  });
+
+  function closeVideoModal() {
+    videoModal.classList.remove('open');
+    document.body.style.overflow = '';
+    try { modalVideo.pause(); } catch(e) {}
+    try { heroVideo.play(); } catch(e) {}
+  }
+  videoModalClose.addEventListener('click', closeVideoModal);
+  videoModal.addEventListener('click', function (e) {
+    if (e.target === videoModal) closeVideoModal();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && videoModal.classList.contains('open')) closeVideoModal();
+  });
+
+  function reviewCardHTML(r) {
+    const initials = (r.name || 'A').split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
+    const starCount = Math.round((r.stars || 0) / 2);
+    let starsHtml = '';
+    for (let i = 0; i < 5; i++) starsHtml += starSVG(i < starCount);
+    const dateStr = r.created_at ? new Date(r.created_at).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' }) : '';
+    return '<div class="review-card">' +
+      '<div class="review-top">' +
+        '<div class="review-avatar">' + escapeHtml(initials) + '</div>' +
+        '<div>' +
+          '<div class="review-name">' + escapeHtml(r.name || 'Anonymous') + '</div>' +
+          '<div class="review-date">' + dateStr + '</div>' +
+        '</div>' +
+        '<div class="review-stars">' + starsHtml +
+          '<span style="margin-left:4px;font-weight:700;color:#f5f5f2;">' + (r.stars || 0) + '/10</span></div>' +
+      '</div>' +
+      '<div class="review-text">' + escapeHtml(r.text || '') + '</div>' +
+    '</div>';
+  }
+
+  async function loadReviews() {
+    if (!supabaseClient) {
+      reviewList.innerHTML = '<p class="review-empty">No reviews yet.</p>';
+      return;
+    }
+    try {
+      const { data, error } = await supabaseClient
+        .from('reviews')
+        .select('name, stars, text, created_at')
+        .eq('film_title', TITLE_NAME)
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      if (!data || data.length === 0) {
+        reviewList.innerHTML = '<p class="review-empty">No reviews yet. Be the first!</p>';
+        return;
+      }
+      reviewList.innerHTML = data.map(reviewCardHTML).join('');
+    } catch (e) {
+      console.warn('Load reviews failed:', e);
+      reviewList.innerHTML = '<p class="review-empty">No reviews yet.</p>';
+    }
+  }
+
+  reviewForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    reviewFormMsg.textContent = '';
+
+    const name = reviewNameInput.value.trim();
+    const text = reviewTextInput.value.trim();
+
+    if (!name) { reviewFormMsg.textContent = 'Please enter your name.'; return; }
+    if (!text) { reviewFormMsg.textContent = 'Please write your review.'; return; }
+    if (userRating < 1) { reviewFormMsg.textContent = 'Please rate this title first.'; return; }
+
+    reviewSubmit.disabled = true;
+    reviewFormMsg.textContent = 'Sending...';
+
+    if (!supabaseClient) {
+      reviewFormMsg.textContent = 'Supabase is not configured.';
+      reviewSubmit.disabled = false;
+      return;
+    }
+
+    try {
+      const { error } = await supabaseClient.from('reviews').insert({
+        user_id: USER_ID,
+        film_title: TITLE_NAME,
+        name: name,
+        text: text,
+        stars: userRating,
+        created_at: new Date().toISOString()
+      });
+      if (error) throw error;
+      reviewFormMsg.textContent = 'Review submitted ✓';
+      reviewForm.reset();
+      loadReviews();
+    } catch (e) {
+      console.warn('Submit review failed:', e);
+      reviewFormMsg.textContent = 'Failed to send. Please try again.';
+    } finally {
+      reviewSubmit.disabled = false;
+    }
+  });
+
+  async function loadMoreLikeThis() {
+    if (!supabaseClient) {
+      similarScroll.innerHTML = '<p class="review-empty">Supabase not configured.</p>';
+      return;
+    }
+    try {
+      const { data, error } = await supabaseClient
+        .from('titles')
+        .select('title, genre, type, year, rating, poster, poster_num, page')
+        .eq('genre', T.genre)
+        .neq('title', TITLE_NAME)
+        .order('rating', { ascending: false })
+        .limit(6);
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        similarScroll.innerHTML = '<p class="review-empty">No similar titles in this genre yet.</p>';
+        return;
+      }
+
+      similarScroll.innerHTML = data.map(function (s) {
+        const posterFile = s.poster || ('poster' + (s.poster_num || 1) + '.png');
+        return '<div class="card" data-href="' + escapeHtml(s.page || 'example.html') + '">' +
+          '<div class="poster">' +
+            '<img src="' + escapeHtml(posterFile) + '" alt="' + escapeHtml(s.title) + '" ' +
+              'onerror="this.style.display=\'none\';">' +
+            '<div class="label">' + escapeHtml(String(s.title).toUpperCase()) + '</div>' +
+          '</div>' +
+          '<div class="card-meta">' +
+            '<div class="rating">' + starSVG(true) + Number(s.rating || 0).toFixed(1) + '</div>' +
+            '<div class="card-title">' + escapeHtml(s.title) + '</div>' +
+            '<div class="card-sub">' + escapeHtml(s.type) + ' · ' + s.year + '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      similarScroll.addEventListener('click', function (e) {
+        const card = e.target.closest('.card');
+        if (card && card.dataset.href) window.location.href = card.dataset.href;
+      });
+    } catch (e) {
+      console.warn('Load More Like This failed:', e);
+      similarScroll.innerHTML = '<p class="review-empty">Failed to load.</p>';
+    }
+  }
+
+  async function init() {
+    await loadTitle();
+    loadUserRating();
+    refreshAggregate();
+    loadSavedState();
+    loadReviews();
+    loadMoreLikeThis();
+  }
+
+  init();
+
+})();
 </script>
 
 </body>
