@@ -225,7 +225,7 @@
     width: 100%;
     max-width: 1180px;
     margin: 0 auto;
-    padding: 54px 20px 20px;
+    padding: 120px 20px 20px;
   }
   .hero-tag {
     display: inline-block;
@@ -261,11 +261,31 @@
   .hero-title { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
   .hero-sub { font-size: 12px; color: #9a9a95; }
 
-  .hero-arrow { display: none; }
+  /* Hero arrows — hanya muncul di desktop */
+  .hero-arrow {
+    display: none;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 4;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(10,10,10,0.55);
+    border: 1px solid rgba(255,255,255,0.25);
+    align-items: center;
+    justify-content: center;
+    color: #f5f5f2;
+    transition: background .2s, border-color .2s, opacity .2s;
+  }
+  .hero-arrow:hover { background: rgba(10,10,10,0.85); border-color: #f2c94c; }
+  .hero-arrow svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.5; }
+  .hero-arrow.prev { left: 16px; }
+  .hero-arrow.next { right: 16px; }
+  .hero-arrow[disabled] { opacity: 0.25; pointer-events: none; }
 
   .hero-dots {
     position: absolute;
-    bottom: -20px;
+    bottom: -16px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
@@ -283,14 +303,15 @@
   @media (min-width: 720px) {
     .hero-poster { width: 120px; height: 170px; }
     .hero-title { font-size: 28px; }
-    .hero-content { padding: 120px 16px 24px; }
+    .hero-content { padding: 200px 16px 24px; }
+    .hero-arrow { display: flex; }
   }
 
   /* ---------- CHIPS ---------- */
   .chip-row {
     display: flex; gap: 8px;
     overflow-x: auto;
-    padding: 32px 16px 14px;
+    padding: 32px 16px 16px;
     border-bottom: 1px solid #2a2a2a;
     max-width: 1180px;
     margin: 0 auto;
@@ -566,7 +587,10 @@
     color: #f2c94c; margin-bottom: 6px; letter-spacing: 2px;
   }
   .foot-links p { font-size: 12px; color: #9a9a95; line-height: 1.6; max-width: 420px; }
-  @media (min-width: 720px) { .foot-links { padding-bottom: 48px; } }
+  @media (min-width: 720px) { @media (min-width: 720px) {
+  .foot-links { padding-bottom: 48px; }
+  .foot-links p { max-width: 100%; font-size: 13px; }
+} }
 
   /* ---------- SESSION OVERLAY ---------- */
   .session-overlay {
@@ -618,7 +642,7 @@
     .search-pill input { font-size: 12px; }
     .hero-poster { width: 72px; height: 104px; }
     .hero-title { font-size: 16px; }
-    .hero-content { padding: 56px 12px 16px; }
+    .hero-content { padding: 53px 12px 16px; }
     .card { width: 118px; }
     .poster { width: 118px; height: 168px; }
     .search-grid .poster { height: 150px; }
@@ -726,19 +750,28 @@
             </div>
             <div class="hero-meta">
               <div class="hero-time">1:48</div>
-              <div class="hero-title">Turtle</div>
+              <div class="hero-title">A Turtle's Tale</div>
               <div class="hero-sub">Watch the Official Trailer</div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- Tombol navigasi hero — hanya tampil di desktop -->
+    <button class="hero-arrow prev" id="heroPrev" aria-label="Previous slide">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="hero-arrow next" id="heroNext" aria-label="Next slide">
+      <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+
     <div class="hero-dots" id="heroDots"></div>
   </div>
 
   <div class="chip-row" id="eventChipRow">
-    <button class="chip" data-session="ciff">CIFF 2026 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-    <button class="chip" data-session="jff">Jakarta Film Festival <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
+    <button class="chip" data-session="ciff">CIFF <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
+    <button class="chip" data-session="nyaff">NYAFF 2026 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
     <button class="chip" data-session="week">Releasing This Week <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
     <button class="chip" data-session="golden">Golden Reel Awards <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
   </div>
@@ -784,7 +817,7 @@
 
   <div class="foot-links">
     <div class="brand">CHROMA</div>
-    <p>Cinema House for Reviews, Original Media &amp; Arts — your home for ratings, reviews, showtimes, and everything film and TV.</p>
+    <p>Cinema House for Reviews, Original Media &amp; Arts. Your home for ratings, reviews, showtimes, and everything. Featured by Kadio, The Kachoo.</p>
   </div>
 </div>
 
@@ -885,11 +918,13 @@
   const USER_ID = getLocalUserId();
 
   /* =========================================================
-     HERO SLIDER — tetap seperti aslinya (hardcode 2 video)
+     HERO SLIDER — hardcode 2 video, dengan tombol desktop
      ========================================================= */
   (function initHeroSlider() {
     const slidesEl = document.getElementById('heroSlides');
     const dotsEl = document.getElementById('heroDots');
+    const prevBtn = document.getElementById('heroPrev');
+    const nextBtn = document.getElementById('heroNext');
     if (!slidesEl) return;
 
     const mediaSlides = slidesEl.querySelectorAll('.hero-media');
@@ -932,8 +967,16 @@
           s.classList.toggle('active', i === current);
         });
       }
+      // update tombol disabled
+      if (prevBtn) prevBtn.disabled = (current === 0);
+      if (nextBtn) nextBtn.disabled = (current === total - 1);
     }
 
+    // event tombol desktop
+    if (prevBtn) prevBtn.addEventListener('click', function() { goTo(current - 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function() { goTo(current + 1); });
+
+    // swipe touch tetap
     let startX = 0, isDown = false;
     slidesEl.addEventListener('touchstart', function(e) {
       startX = e.touches[0].clientX; isDown = true;
@@ -946,6 +989,9 @@
         else if (dx > 0 && current > 0) goTo(current - 1);
       }
     });
+
+    // set state awal tombol
+    goTo(0);
   })();
 
   /* =========================================================
@@ -956,9 +1002,9 @@
     // Data global — diisi dari Supabase saat init
     let titles = [];
 
-    // Static profiles (bukan bagian yang diminta diubah)
+    // Static profiles
     const profiles = [
-      { name:"Gathur Delano Kafka", role:"CEO",              initials:"GK", cls:"p1" },
+      { name:"Gathur D. Kafka", role:"CEO",              initials:"GK", cls:"p1" },
       { name:"Logan Romanov",       role:"CTO & Director",   initials:"LR", cls:"p2" },
       { name:"Example",             role:"Actor",            initials:"EX", cls:"p3" },
       { name:"Example",             role:"Actress",          initials:"EX", cls:"p4" },
@@ -966,22 +1012,22 @@
       { name:"Example",             role:"Director",         initials:"EX", cls:"p1" }
     ];
 
-    // Category menu — label tetap, tapi count dari data
+    // Category menu
     const CATEGORIES = ["Film", "Movie", "Series", "Theater", "Short Movie"];
 
-    // Sessions — tetap hardcode persis seperti aslinya
+    // Sessions
     const SESSIONS = {
       ciff: {
-        kicker: "SEP 18 — 27, 2026 · JAKARTA, INDONESIA",
-        title: "Chroma International Film Festival 2026",
-        desc: "The 2026 edition of the Chroma International Film Festival (CIFF) returns to Jakarta for ten days of premieres, retrospectives and industry conversations. This year's programme brings together 48 features and 22 short films from 31 countries, with a dedicated spotlight on emerging Southeast Asian voices. Screenings run across four venues, accompanied by masterclasses, a co-production market, and nightly Q&A sessions with attending filmmakers.",
+        kicker: "SEP 25 — 27, 2026 · JAKARTA, INDONESIA",
+        title: "Chroma International Film Festival",
+        desc: "The Chroma International Film Festival (CIFF) official launch in Jakarta for premieres, retrospectives and industry conversations. Screenings run across four venues, accompanied by masterclasses, a co-production market, and nightly Q&A sessions with attending filmmakers.",
         films: [],
         profiles: [0, 1, 2, 5]
       },
-      jff: {
-        kicker: "OCT 08 — 12, 2026 · JAKARTA, INDONESIA",
-        title: "Jakarta Film Festival 2026",
-        desc: "A city-wide celebration of independent cinema, the Jakarta Film Festival 2026 showcases bold new work from first- and second-time directors. The programme spans fiction, documentary and experimental shorts, screened in repurposed theatres, rooftops and open-air courtyards across the capital. Audience awards are decided entirely by public vote at the end of the closing night.",
+      nyaff: {
+        kicker: "OCT 08 — 12, 2026 · Korean Cultural Center New York",
+        title: "New York Film Festival 2026",
+        desc: "A city-wide celebration of independent cinema, the New York Film Festival 2026 showcases bold new work from first- and second-time directors. The programme spans fiction, documentary and experimental shorts, screened in repurposed theatres, rooftops and open-air courtyards across the capital. Audience awards are decided entirely by public vote at the end of the closing night.",
         films: [],
         profiles: [2, 3, 4]
       },
@@ -993,8 +1039,8 @@
         profiles: [1, 2, 5]
       },
       golden: {
-        kicker: "OCT 14 — 16, 2026 · NUSANTARA HALL",
-        title: "Golden Reel Awards 2026",
+        kicker: "Des 1, 2027 · Lincoln Center",
+        title: "Golden Reel Awards 2027",
         desc: "The Golden Reel Awards honour outstanding achievement in directing, writing, performance and craft across the CHROMA network. Nominees are selected by the Critics Circle and voted on by members of the industry. The three-night ceremony closes with the announcement of Best Picture, decided by a combined industry and audience vote.",
         films: [],
         profiles: [0, 1, 3, 4]
@@ -1021,7 +1067,7 @@
         .replace(/'/g, '&#39;');
     }
 
-    // Normalisasi data dari Supabase → format yang dipakai template
+    // Normalisasi data dari Supabase
     function normalizeRow(r) {
       return {
         id:        r.id,
@@ -1032,7 +1078,7 @@
         year:      r.year || '',
         rating:    Number(r.rating) || 0,
         poster:    r.poster_num || 1,
-        cls:       '',             // gak dipakai lagi, biar default hitam
+        cls:       '',
         page:      r.page || 'example.html',
         is_new:    !!r.is_new,
         is_trending: !!r.is_trending
@@ -1442,7 +1488,7 @@
       }).join('');
     }
 
-    /* ---------- Session overlay (struktur sama, films diisi dari titles) ---------- */
+    /* ---------- Session overlay ---------- */
     const sessionOverlay = document.getElementById('sessionOverlay');
     const sessionCloseBtn = document.getElementById('sessionCloseBtn');
     const sessionKicker = document.getElementById('sessionKicker');
@@ -1458,7 +1504,6 @@
       sessionTitle.textContent = s.title;
       sessionDesc.textContent = s.desc;
 
-      // Ambil beberapa film dari data (biar tetap "hidup"), fallback ke semua
       const sample = titles.slice(0, 5);
       sessionFilms.innerHTML = sample.map(filmCardHTML).join('');
 
@@ -1493,7 +1538,7 @@
     });
 
     /* =========================================================
-       LOAD DATA FROM SUPABASE — INI YANG BARU
+       LOAD DATA FROM SUPABASE
        ========================================================= */
     async function loadTitles() {
       if (!supabaseClient) {
@@ -1515,24 +1560,16 @@
     }
 
     async function init() {
-      // Render profiles dulu (statis)
       renderProfiles(document.getElementById('popularProfiles'), profiles);
-
-      // Load data dari Supabase
       await loadTitles();
-
-      // Baru render yang butuh data
       renderNewNow();
       renderTrending();
       renderMenus();
       renderRatings();
-
-      // Saved list (dari Supabase juga)
       await hydrateSavedStates();
       renderSavedList();
     }
 
-    // Expose ke global
     window.goToView = goToView;
     window.runSearch = runSearch;
     window.runCategorySearch = runCategorySearch;
@@ -1543,4 +1580,4 @@
 </script>
 
 </body>
- </html>
+</html>
