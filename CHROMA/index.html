@@ -1067,23 +1067,27 @@
         .replace(/'/g, '&#39;');
     }
 
-    // Normalisasi data dari Supabase
     function normalizeRow(r) {
-      return {
-        id:        r.id,
-        title:     r.title || '',
-        slug:      r.slug || '',
-        genre:     r.genre || '',
-        type:      r.type || '',
-        year:      r.year || '',
-        rating:    Number(r.rating) || 0,
-        poster:    r.poster_num || 1,
-        cls:       '',
-        page:      r.page || 'example.html',
-        is_new:    !!r.is_new,
-        is_trending: !!r.is_trending
-      };
-    }
+  // Ambil nama file poster; fallback ke poster_num lama kalau ada
+  let posterFile = r.poster;
+  if (!posterFile && r.poster_num != null) posterFile = 'poster' + r.poster_num + '.png';
+  if (!posterFile) posterFile = 'poster1.png';
+
+  return {
+    id:        r.id,
+    title:     r.title || '',
+    slug:      r.slug || '',
+    genre:     r.genre || '',
+    type:      r.type || '',
+    year:      r.year || '',
+    rating:    Number(r.rating) || 0,
+    poster:    posterFile,
+    cls:       '',
+    page:      r.page || 'example.html',
+    is_new:    !!r.is_new,
+    is_trending: !!r.is_trending
+  };
+}
 
     /* ---------- HTML builders ---------- */
     function filmCardHTML(t) {
