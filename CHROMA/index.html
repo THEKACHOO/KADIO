@@ -587,10 +587,10 @@
     color: #f2c94c; margin-bottom: 6px; letter-spacing: 2px;
   }
   .foot-links p { font-size: 12px; color: #9a9a95; line-height: 1.6; max-width: 420px; }
-  @media (min-width: 720px) { @media (min-width: 720px) {
-  .foot-links { padding-bottom: 48px; }
-  .foot-links p { max-width: 100%; font-size: 13px; }
-} }
+  @media (min-width: 720px) {
+    .foot-links { padding-bottom: 48px; }
+    .foot-links p { max-width: 100%; font-size: 13px; }
+  }
 
   /* ---------- SESSION OVERLAY ---------- */
   .session-overlay {
@@ -967,16 +967,13 @@
           s.classList.toggle('active', i === current);
         });
       }
-      // update tombol disabled
       if (prevBtn) prevBtn.disabled = (current === 0);
       if (nextBtn) nextBtn.disabled = (current === total - 1);
     }
 
-    // event tombol desktop
     if (prevBtn) prevBtn.addEventListener('click', function() { goTo(current - 1); });
     if (nextBtn) nextBtn.addEventListener('click', function() { goTo(current + 1); });
 
-    // swipe touch tetap
     let startX = 0, isDown = false;
     slidesEl.addEventListener('touchstart', function(e) {
       startX = e.touches[0].clientX; isDown = true;
@@ -990,7 +987,6 @@
       }
     });
 
-    // set state awal tombol
     goTo(0);
   })();
 
@@ -999,10 +995,8 @@
      ========================================================= */
   (function(){
 
-    // Data global — diisi dari Supabase saat init
     let titles = [];
 
-    // Static profiles
     const profiles = [
       { name:"Gathur D. Kafka", role:"CEO",              initials:"GK", cls:"p1" },
       { name:"Logan Romanov",       role:"CTO & Director",   initials:"LR", cls:"p2" },
@@ -1012,10 +1006,8 @@
       { name:"Example",             role:"Director",         initials:"EX", cls:"p1" }
     ];
 
-    // Category menu
     const CATEGORIES = ["Film", "Movie", "Series", "Theater", "Short Movie"];
 
-    // Sessions
     const SESSIONS = {
       ciff: {
         kicker: "SEP 25 — 27, 2026 · JAKARTA, INDONESIA",
@@ -1068,26 +1060,26 @@
     }
 
     function normalizeRow(r) {
-  // Ambil nama file poster; fallback ke poster_num lama kalau ada
-  let posterFile = r.poster;
-  if (!posterFile && r.poster_num != null) posterFile = 'poster' + r.poster_num + '.png';
-  if (!posterFile) posterFile = 'poster1.png';
+      // Ambil nama file poster; fallback ke poster_num lama kalau ada
+      let posterFile = r.poster;
+      if (!posterFile && r.poster_num != null) posterFile = 'poster' + r.poster_num + '.png';
+      if (!posterFile) posterFile = 'poster1.png';
 
-  return {
-    id:        r.id,
-    title:     r.title || '',
-    slug:      r.slug || '',
-    genre:     r.genre || '',
-    type:      r.type || '',
-    year:      r.year || '',
-    rating:    Number(r.rating) || 0,
-    poster:    posterFile,
-    cls:       '',
-    page:      r.page || 'example.html',
-    is_new:    !!r.is_new,
-    is_trending: !!r.is_trending
-  };
-}
+      return {
+        id:        r.id,
+        title:     r.title || '',
+        slug:      r.slug || '',
+        genre:     r.genre || '',
+        type:      r.type || '',
+        year:      r.year || '',
+        rating:    Number(r.rating) || 0,
+        poster:    posterFile,
+        cls:       '',
+        page:      r.page || 'example.html',
+        is_new:    !!r.is_new,
+        is_trending: !!r.is_trending
+      };
+    }
 
     /* ---------- HTML builders ---------- */
     function filmCardHTML(t) {
@@ -1095,7 +1087,7 @@
       const label = escapeHtml(String(t.title).toUpperCase());
       return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
         '<div class="poster">' +
-          '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
+          '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
             'onerror="this.style.display=\'none\';">' +
           '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
@@ -1143,7 +1135,6 @@
     }
 
     function renderMenus() {
-      // Categories
       const categoryMenuList = document.getElementById('categoryMenuList');
       if (categoryMenuList) {
         categoryMenuList.innerHTML = '';
@@ -1165,7 +1156,6 @@
         });
       }
 
-      // Genres — auto dari data
       const genreMenuList = document.getElementById('genreMenuList');
       if (genreMenuList) {
         genreMenuList.innerHTML = '';
@@ -1410,7 +1400,7 @@
         const titleEsc = escapeAttr(t.title);
         return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
           '<div class="poster">' +
-            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
+            '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
               'onerror="this.style.display=\'none\';">' +
             '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
@@ -1441,7 +1431,7 @@
         const titleEsc = escapeAttr(t.title);
         return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
           '<div class="poster">' +
-            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
+            '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
               'onerror="this.style.display=\'none\';">' +
             '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
@@ -1480,7 +1470,7 @@
         return '<div class="rank-row" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
           '<div class="rank-num">' + (i+1) + '</div>' +
           '<div class="rank-thumb">' +
-            '<img src="poster' + (t.poster || 1) + '.png" alt="' + escapeHtml(t.title) + '" ' +
+            '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
               'onerror="this.style.display=\'none\';">' +
           '</div>' +
           '<div class="rank-info">' +
