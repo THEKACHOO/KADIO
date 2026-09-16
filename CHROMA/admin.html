@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHROMA — Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0a0a; color: #f5f5f2;
+    font-family: 'Inter', sans-serif;
+    padding: 20px 16px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; gap: 12px;
+  }
+  .brand {
+    font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+    color: #f2c94c; letter-spacing: 2px;
+  }
+  .brand small {
+    color: #9a9a95; font-size: 11px; margin-left: 8px;
+    letter-spacing: 0; font-family: 'Inter'; font-weight: 500;
+  }
+  .back-link { font-size: 12px; color: #9a9a95; text-decoration: none; }
+  .back-link:hover { color: #f2c94c; }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+  .tab {
+    padding: 8px 14px; border-radius: 999px;
+    background: #141414; border: 1px solid #2a2a2a;
+    font-size: 12px; font-weight: 700; color: #c9c9c4;
+    cursor: pointer; transition: background .15s, border-color .15s, color .15s;
+    font-family: inherit;
+  }
+  .tab.active { background: #f2c94c; color: #0a0a0a; border-color: #f2c94c; }
+
+  .card {
+    background: #101010; border: 1px solid #2a2a2a;
+    border-radius: 12px; padding: 18px;
+    margin-bottom: 18px;
+  }
+  .card h2 {
+    font-size: 14px; font-weight: 700; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card h2::before {
+    content: ''; width: 4px; height: 14px;
+    background: #f2c94c; border-radius: 2px;
+  }
+
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block; font-size: 11px; color: #9a9a95;
+    margin-bottom: 4px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%; background: #0a0a0a;
+    border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 9px 12px; color: #f5f5f2;
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    outline: none; transition: border-color .15s;
+  }
+  .field input::placeholder, .field textarea::placeholder {
+    color: #555;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: #f2c94c;
+  }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field select { cursor: pointer; }
+
+  .check-row {
+    display: flex; gap: 16px; margin: 12px 0;
+    flex-wrap: wrap;
+  }
+  .check-row label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #c9c9c4; font-weight: 600;
+    cursor: pointer;
+  }
+  .check-row input[type="checkbox"] {
+    width: 16px; height: 16px; accent-color: #f2c94c;
+    cursor: pointer;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 18px; border-radius: 999px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    border: 1px solid #2a2a2a; background: #141414; color: #f5f5f2;
+    font-family: inherit; transition: background .15s, border-color .15s;
+  }
+  .btn:hover { background: #1b1b1b; }
+  .btn-primary { background: #f2c94c; color: #0a0a0a; border-color: #f2c94c; }
+  .btn-primary:hover { background: #e0b83f; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+  .msg { font-size: 12px; margin-top: 10px; min-height: 16px; color: #f2c94c; }
+  .msg.error { color: #ff7a7a; }
+  .msg.success { color: #7aff9e; }
+
+  .list-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid #2a2a2a;
+  }
+  .list-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .list-thumb {
+    width: 42px; height: 58px; border-radius: 6px;
+    background: #1a1a1a; border: 1px solid #2a2a2a;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo Black'; font-size: 10px; color: #6b6b66;
+    overflow: hidden; position: relative;
+  }
+  .list-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  .list-info { flex: 1; min-width: 0; }
+  .list-title { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; }
+  .list-sub { font-size: 11px; color: #9a9a95; }
+  .list-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+  .badge {
+    font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 3px;
+    letter-spacing: 0.3px;
+  }
+  .badge.new { background: rgba(122,255,158,0.15); color: #7aff9e; border: 1px solid rgba(122,255,158,0.35); }
+  .badge.trend { background: rgba(242,201,76,0.15); color: #f2c94c; border: 1px solid rgba(242,201,76,0.35); }
+
+  .list-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .list-actions button {
+    padding: 6px 12px; font-size: 11px; border-radius: 6px;
+    border: 1px solid #2a2a2a; background: #141414; color: #f5f5f2;
+    cursor: pointer; font-weight: 600; font-family: inherit;
+    transition: border-color .15s, background .15s;
+  }
+  .list-actions button.edit { border-color: rgba(242,201,76,0.4); color: #f2c94c; }
+  .list-actions button.edit:hover { background: rgba(242,201,76,0.08); }
+  .list-actions button.del { border-color: rgba(220,60,60,0.4); color: #ff7a7a; }
+  .list-actions button.del:hover { background: rgba(220,60,60,0.08); }
+
+  .empty { color: #9a9a95; font-size: 13px; padding: 8px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="top">
+    <div class="brand">CHROMA<small>Admin Panel</small></div>
+    <a href="index.html" class="back-link">← Back to site</a>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="list">All Titles</button>
+    <button class="tab" data-tab="form">Add / Edit</button>
+  </div>
+
+  <div id="tabList">
+    <div class="card">
+      <h2>All Titles (<span id="listCount">0</span>)</h2>
+      <div id="listContainer">
+        <p class="empty">Loading...</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="tabForm" style="display:none;">
+    <div class="card">
+      <h2 id="formTitle">Add New Title</h2>
+      <input type="hidden" id="f_id">
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_title">Title *</label>
+          <input type="text" id="f_title" placeholder="Example 9" required>
+        </div>
+        <div class="field">
+          <label for="f_slug">Slug * (auto dari title)</label>
+          <input type="text" id="f_slug" placeholder="example-9" required>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label for="f_genre">Genre *</label>
+          <input type="text" id="f_genre" placeholder="Drama" required>
+        </div>
+        <div class="field">
+          <label for="f_type">Type *</label>
+          <select id="f_type" required>
+            <option value="Film">Film</option>
+            <option value="Series">Series</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f_year">Year *</label>
+          <input type="number" id="f_year" min="1900" max="2100" placeholder="2026" required>
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label for="f_rating">Baseline Rating (0–10)</label>
+          <input type="number" id="f_rating" min="0" max="10" step="0.1" placeholder="7.6">
+        </div>
+        <div class="field">
+          <label for="f_votes">Baseline Votes</label>
+          <input type="number" id="f_votes" min="0" placeholder="500">
+        </div>
+        <div class="field">
+          <label for="f_runtime">Runtime</label>
+          <input type="text" id="f_runtime" placeholder="2h 18m / 48m/ep">
+        </div>
+      </div>
+
+      <div class="grid-3">
+        <div class="field">
+          <label for="f_content_rating">Content Rating</label>
+          <input type="text" id="f_content_rating" placeholder="13+ / 16+ / 18+">
+        </div>
+        <div class="field">
+          <label for="f_tag">Tag</label>
+          <input type="text" id="f_tag" placeholder="NEW SEASON / IN THEATERS">
+        </div>
+        <div class="field">
+          <label for="f_page">Page (HTML file)</label>
+          <input type="text" id="f_page" placeholder="Example9.html">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f_synopsis">Synopsis</label>
+        <textarea id="f_synopsis" placeholder="A man's life unravels..."></textarea>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="f_director">Director</label>
+          <input type="text" id="f_director" placeholder="Placeholder Director">
+        </div>
+        <div class="field">
+          <label for="f_writers">Writers (pisah pakai koma)</label>
+          <input type="text" id="f_writers" placeholder="Writer A, Writer B, Writer C">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="f_poster_num">Poster # (1, 2, 3, … bebas)</label>
+        <input type="number" id="f_poster_num" min="1" placeholder="1">
+      </div>
+
+      <input type="hidden" id="f_cls" value="g1">
+
+      <div class="check-row">
+        <label><input type="checkbox" id="f_is_new"> Show in "New &amp; Now Showing"</label>
+        <label><input type="checkbox" id="f_is_trending"> Show in "Trending This Week"</label>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="saveBtn">Save Title</button>
+        <button class="btn" id="cancelBtn" style="display:none;">Cancel Edit</button>
+      </div>
+      <div class="msg" id="formMsg"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+
+  const SUPABASE_URL = 'https://euepdfhxyuomaqkpnrit.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1ZXBkZmh4eXVvbWFxa3Bucml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0OTg3ODUsImV4cCI6MjEwNTA3NDc4NX0.N4bvYVFxxbXAk0XcBgaooC7SiSopAZrgXRCtw9oJc84';
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  function showTab(name) {
+    document.querySelectorAll('.tab').forEach(function (x) {
+      x.classList.toggle('active', x.dataset.tab === name);
+    });
+    document.getElementById('tabList').style.display = name === 'list' ? 'block' : 'none';
+    document.getElementById('tabForm').style.display = name === 'form' ? 'block' : 'none';
+  }
+
+  document.querySelectorAll('.tab').forEach(function (t) {
+    t.addEventListener('click', function () { showTab(t.dataset.tab); });
+  });
+
+  const F = {
+    id:             document.getElementById('f_id'),
+    title:          document.getElementById('f_title'),
+    slug:           document.getElementById('f_slug'),
+    genre:          document.getElementById('f_genre'),
+    type:           document.getElementById('f_type'),
+    year:           document.getElementById('f_year'),
+    rating:         document.getElementById('f_rating'),
+    votes:          document.getElementById('f_votes'),
+    runtime:        document.getElementById('f_runtime'),
+    content_rating: document.getElementById('f_content_rating'),
+    tag:            document.getElementById('f_tag'),
+    page:           document.getElementById('f_page'),
+    synopsis:       document.getElementById('f_synopsis'),
+    director:       document.getElementById('f_director'),
+    writers:        document.getElementById('f_writers'),
+    poster_num:     document.getElementById('f_poster_num'),
+    cls:            document.getElementById('f_cls'),
+    is_new:         document.getElementById('f_is_new'),
+    is_trending:    document.getElementById('f_is_trending')
+  };
+
+  const formMsg = document.getElementById('formMsg');
+  const formTitle = document.getElementById('formTitle');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const listContainer = document.getElementById('listContainer');
+  const listCount = document.getElementById('listCount');
+
+  function autoSlug(str) {
+    return str.toLowerCase().trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+
+  F.title.addEventListener('input', function () {
+    if (!F.id.value) F.slug.value = autoSlug(F.title.value);
+  });
+
+  function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  async function loadTitles() {
+    listContainer.innerHTML = '<p class="empty">Loading...</p>';
+    try {
+      const { data, error } = await sb
+        .from('titles')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+
+      listCount.textContent = data.length;
+
+      if (data.length === 0) {
+        listContainer.innerHTML = '<p class="empty">No titles yet. Go to "Add / Edit" to add one.</p>';
+        return;
+      }
+
+      listContainer.innerHTML = data.map(function (t) {
+        const badges = [];
+        if (t.is_new) badges.push('<span class="badge new">NEW</span>');
+        if (t.is_trending) badges.push('<span class="badge trend">TRENDING</span>');
+        return '<div class="list-row">' +
+          '<div class="list-thumb">' +
+            '<img src="poster' + (t.poster_num || 1) + '.png" alt="" ' +
+              'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'P' + (t.poster_num || 1) + '\';">' +
+          '</div>' +
+          '<div class="list-info">' +
+            '<div class="list-title">' + escapeHtml(t.title) + '</div>' +
+            '<div class="list-sub">' +
+              escapeHtml(t.genre) + ' · ' + escapeHtml(t.type) + ' · ' + t.year +
+              ' · ★ ' + Number(t.rating || 0).toFixed(1) +
+              ' · ' + (t.votes || 0) + ' votes' +
+            '</div>' +
+            (badges.length ? '<div class="list-badges">' + badges.join('') + '</div>' : '') +
+          '</div>' +
+          '<div class="list-actions">' +
+            '<button class="edit" data-id="' + t.id + '">Edit</button>' +
+            '<button class="del" data-id="' + t.id + '">Delete</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      listContainer.querySelectorAll('button.edit').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const row = data.find(function (x) { return x.id === btn.dataset.id; });
+          if (row) fillForm(row);
+        });
+      });
+
+      listContainer.querySelectorAll('button.del').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Delete this title? Cannot be undone.')) return;
+          try {
+            const { error } = await sb.from('titles').delete().eq('id', btn.dataset.id);
+            if (error) throw error;
+            loadTitles();
+          } catch (e) { alert('Delete failed: ' + e.message); }
+        });
+      });
+
+    } catch (e) {
+      console.error(e);
+      listContainer.innerHTML = '<p class="empty" style="color:#ff7a7a;">Failed: ' + escapeHtml(e.message) + '</p>';
+    }
+  }
+
+  function fillForm(t) {
+    F.id.value = t.id || '';
+    F.title.value = t.title || '';
+    F.slug.value = t.slug || '';
+    F.genre.value = t.genre || '';
+    F.type.value = t.type || 'Film';
+    F.year.value = t.year || '';
+    F.rating.value = t.rating != null ? t.rating : '';
+    F.votes.value = t.votes != null ? t.votes : '';
+    F.runtime.value = t.runtime || '';
+    F.content_rating.value = t.content_rating || '';
+    F.tag.value = t.tag || '';
+    F.page.value = t.page || '';
+    F.synopsis.value = t.synopsis || '';
+    F.director.value = t.director || '';
+    F.writers.value = t.writers || '';
+    F.poster_num.value = t.poster_num != null ? t.poster_num : '';
+    F.is_new.checked = !!t.is_new;
+    F.is_trending.checked = !!t.is_trending;
+
+    formTitle.textContent = 'Edit Title — ' + t.title;
+    cancelBtn.style.display = 'inline-flex';
+    formMsg.textContent = '';
+    formMsg.className = 'msg';
+    showTab('form');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function resetForm() {
+    F.id.value = '';
+    F.title.value = '';
+    F.slug.value = '';
+    F.genre.value = '';
+    F.type.value = 'Film';
+    F.year.value = '';
+    F.rating.value = '';
+    F.votes.value = '';
+    F.runtime.value = '';
+    F.content_rating.value = '';
+    F.tag.value = '';
+    F.page.value = '';
+    F.synopsis.value = '';
+    F.director.value = '';
+    F.writers.value = '';
+    F.poster_num.value = '';
+    F.is_new.checked = false;
+    F.is_trending.checked = false;
+
+    formTitle.textContent = 'Add New Title';
+    cancelBtn.style.display = 'none';
+    formMsg.textContent = '';
+    formMsg.className = 'msg';
+  }
+
+  cancelBtn.addEventListener('click', function () {
+    resetForm();
+    showTab('list');
+  });
+
+  saveBtn.addEventListener('click', async function () {
+    formMsg.textContent = '';
+    formMsg.className = 'msg';
+
+    const payload = {
+      title:          F.title.value.trim(),
+      slug:           F.slug.value.trim(),
+      genre:          F.genre.value.trim(),
+      type:           F.type.value,
+      year:           F.year.value ? parseInt(F.year.value, 10) : null,
+      rating:         F.rating.value ? parseFloat(F.rating.value) : null,
+      votes:          F.votes.value ? parseInt(F.votes.value, 10) : null,
+      runtime:        F.runtime.value.trim() || null,
+      content_rating: F.content_rating.value.trim() || null,
+      tag:            F.tag.value.trim() || null,
+      page:           F.page.value.trim() || null,
+      synopsis:       F.synopsis.value.trim() || null,
+      director:       F.director.value.trim() || null,
+      writers:        F.writers.value.trim() || null,
+      poster_num:     F.poster_num.value ? parseInt(F.poster_num.value, 10) : null,
+      cls:            'g1',
+      is_new:         F.is_new.checked,
+      is_trending:    F.is_trending.checked,
+      updated_at:     new Date().toISOString()
+    };
+
+    if (!payload.title) { formMsg.textContent = 'Title is required.'; formMsg.classList.add('error'); return; }
+    if (!payload.slug)  { formMsg.textContent = 'Slug is required.'; formMsg.classList.add('error'); return; }
+    if (!payload.genre) { formMsg.textContent = 'Genre is required.'; formMsg.classList.add('error'); return; }
+    if (payload.rating != null && (payload.rating < 0 || payload.rating > 10)) {
+      formMsg.textContent = 'Rating must be 0–10.'; formMsg.classList.add('error'); return;
+    }
+
+    saveBtn.disabled = true;
+    formMsg.textContent = 'Saving...';
+
+    try {
+      if (F.id.value) {
+        const { error } = await sb.from('titles').update(payload).eq('id', F.id.value);
+        if (error) throw error;
+        formMsg.textContent = 'Updated ✓';
+        formMsg.classList.add('success');
+      } else {
+        const { error } = await sb.from('titles').insert(payload);
+        if (error) throw error;
+        formMsg.textContent = 'Created ✓';
+        formMsg.classList.add('success');
+      }
+      resetForm();
+      await loadTitles();
+      setTimeout(function () { showTab('list'); }, 500);
+    } catch (e) {
+      console.error(e);
+      formMsg.textContent = 'Failed: ' + e.message;
+      formMsg.classList.add('error');
+    } finally {
+      saveBtn.disabled = false;
+    }
+  });
+
+  resetForm();
+  loadTitles();
+
+})();
+</script>
+</body>
+</html>
