@@ -261,7 +261,6 @@
   .hero-title { font-size: 20px; font-weight: 800; margin-bottom: 2px; }
   .hero-sub { font-size: 12px; color: #9a9a95; }
 
-  /* Hero arrows — hanya muncul di desktop */
   .hero-arrow {
     display: none;
     position: absolute;
@@ -413,14 +412,12 @@
     display: flex; align-items: center; justify-content: center;
     font-family: 'Archivo Black';
     font-size: 18px; color: rgba(255,255,255,0.85);
+    overflow: hidden;
+    background: linear-gradient(150deg,#7a5a1f,#1a1a1a);
   }
+  .profile-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .profile-name { font-size: 12px; font-weight: 700; line-height: 1.2; }
   .profile-role { font-size: 10px; color: #9a9a95; margin-top: 1px; }
-  .p1 { background: linear-gradient(150deg,#7a5a1f,#1a1a1a); }
-  .p2 { background: linear-gradient(150deg,#1f5a4f,#1a1a1a); }
-  .p3 { background: linear-gradient(150deg,#5a1f4a,#1a1a1a); }
-  .p4 { background: linear-gradient(150deg,#1f3a5a,#1a1a1a); }
-  .p5 { background: linear-gradient(150deg,#5a2f1f,#1a1a1a); }
 
   /* ---------- RANK LIST ---------- */
   .rank-list { padding: 4px 16px 20px; display: flex; flex-direction: column; gap: 0; }
@@ -470,6 +467,7 @@
     color: #f2c94c;
     background: rgba(242,201,76,0.1);
     padding: 2px 8px; border-radius: 4px; margin-top: 4px;
+    margin-right: 4px;
   }
   .empty-state { padding: 40px 12px; text-align: center; color: #9a9a95; font-size: 13px; }
 
@@ -611,6 +609,18 @@
   }
   .session-close { font-size: 26px; line-height: 1; color: #9a9a95; padding: 0 4px; }
   .session-panel { max-width: 760px; margin: 0 auto; padding-bottom: 90px; }
+
+  .session-poster-banner {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    max-height: 320px;
+    overflow: hidden;
+    background: #101014;
+  }
+  .session-poster-banner img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+
   .session-hero { padding: 24px 16px 8px; }
   .session-kicker {
     display: inline-block;
@@ -628,6 +638,45 @@
   }
   .session-desc { font-size: 14px; line-height: 1.75; color: #c9c9c4; }
   .session-block { padding-top: 24px; }
+
+  /* session photo gallery */
+  .session-gallery-scroll {
+    display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 8px;
+    scroll-snap-type: x mandatory;
+  }
+  .session-gallery-thumb {
+    flex-shrink: 0; width: 200px; height: 112px;
+    border-radius: 8px; border: 1px solid #2a2a2a;
+    background: #1a1a1a; overflow: hidden;
+    scroll-snap-align: start; cursor: pointer;
+  }
+  .session-gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* photo lightbox */
+  .photo-modal {
+    position: fixed; inset: 0; z-index: 310;
+    background: rgba(0,0,0,0.96);
+    display: flex; align-items: center; justify-content: center;
+    visibility: hidden; opacity: 0;
+    transition: opacity .2s ease;
+    padding: 16px;
+  }
+  .photo-modal.open { visibility: visible; opacity: 1; }
+  .photo-modal img {
+    max-width: 100%; max-height: 90vh;
+    object-fit: contain;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    background: #000;
+  }
+  .photo-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(20,20,20,0.7); border: 1px solid #2a2a2a;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  .photo-modal-close svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
 
  @media (max-width: 380px) {
   .header-inner { gap: 6px; padding: 8px 8px; }
@@ -649,6 +698,7 @@
   .logo-text { font-size: 18px; }
   .session-title { font-size: 20px; }
   .seeall-title { font-size: 17px; }
+  .session-gallery-thumb { width: 160px; height: 90px; }
 }
 </style>
 </head>
@@ -683,26 +733,7 @@
     <div class="menu-section">
       <h4>EVENTS</h4>
       <div class="menu-list" id="eventMenuList">
-        <button class="menu-item event-item" data-session="ciff">
-          <span class="event-date">SEP 18 — 27, 2026</span>
-          <span class="event-name">CIFF — Cinema House Film Festival</span>
-          <span class="event-loc">Jakarta, Indonesia</span>
-        </button>
-        <button class="menu-item event-item" data-session="week">
-          <span class="event-date">OCT 02, 2026</span>
-          <span class="event-name">Example — Premiere Night</span>
-          <span class="event-loc">Grand Theatre, Jakarta</span>
-        </button>
-        <button class="menu-item event-item" data-session="golden">
-          <span class="event-date">OCT 14 — 16, 2026</span>
-          <span class="event-name">Golden Reel Awards</span>
-          <span class="event-loc">Nusantara Hall</span>
-        </button>
-        <button class="menu-item event-item" data-session="week">
-          <span class="event-date">NOV 05, 2026</span>
-          <span class="event-name">Example 5 — Cast Talk &amp; Screening</span>
-          <span class="event-loc">CHROMA Studio, Bandung</span>
-        </button>
+        <!-- Populated dynamically from Supabase sessions -->
       </div>
     </div>
   </div>
@@ -762,10 +793,7 @@
   </div>
 
   <div class="chip-row" id="eventChipRow">
-    <button class="chip" data-session="ciff">CIFF <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-    <button class="chip" data-session="nyaff">NYAFF 2026 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-    <button class="chip" data-session="week">Releasing This Week <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
-    <button class="chip" data-session="golden">Golden Reel Awards <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></button>
+    <!-- Populated dynamically from Supabase sessions -->
   </div>
 
   <section class="block">
@@ -809,7 +837,7 @@
     <p class="search-hint" id="savedEmpty" style="padding:0 16px 12px;">No saved titles yet. Tap the bookmark icon on any poster to add it here.</p>
   </section>
 
-  <section class="block">
+  <section class="block" id="popularProfilesSection">
     <div class="section-head">
       <h2><span class="bar"></span>Popular Profiles</h2>
       <a class="see-all" href="#" data-seeall="profiles">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
@@ -867,20 +895,38 @@
     <button class="session-close" id="sessionCloseBtn" aria-label="Close">&times;</button>
   </div>
   <div class="session-panel">
+    <div class="session-poster-banner hidden" id="sessionPosterBanner">
+      <img id="sessionPosterImg" src="" alt="">
+    </div>
     <div class="session-hero">
       <span class="session-kicker" id="sessionKicker"></span>
       <h2 class="session-title" id="sessionTitle"></h2>
       <p class="session-desc" id="sessionDesc"></p>
     </div>
-    <div class="session-block">
+
+    <div class="session-block hidden" id="sessionPhotosBlock">
+      <div class="section-head"><h2><span class="bar"></span>Photos</h2></div>
+      <div class="session-gallery-scroll" id="sessionPhotosScroll"></div>
+    </div>
+
+    <div class="session-block hidden" id="sessionFilmsBlock">
       <div class="section-head"><h2><span class="bar"></span>Films in this Session</h2></div>
       <div class="card-scroll" id="sessionFilms"></div>
     </div>
-    <div class="session-block">
+
+    <div class="session-block hidden" id="sessionProfilesBlock">
       <div class="section-head"><h2><span class="bar"></span>Profiles in this Session</h2></div>
       <div class="profile-scroll" id="sessionProfiles"></div>
     </div>
   </div>
+</div>
+
+<!-- PHOTO LIGHTBOX -->
+<div class="photo-modal" id="photoModal">
+  <button class="photo-modal-close" id="photoModalClose" aria-label="Close">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <img id="photoModalImg" src="" alt="">
 </div>
 
 <footer class="bottom-bar">
@@ -1004,48 +1050,10 @@
   (function(){
 
     let titles = [];
-
-    const profiles = [
-      { name:"Gathur D. Kafka", role:"CEO",              initials:"GK", cls:"p1" },
-      { name:"Logan Romanov",       role:"CTO & Director",   initials:"LR", cls:"p2" },
-      { name:"Example",             role:"Actor",            initials:"EX", cls:"p3" },
-      { name:"Example",             role:"Actress",          initials:"EX", cls:"p4" },
-      { name:"Example",             role:"Screenwriter",     initials:"EX", cls:"p5" },
-      { name:"Example",             role:"Director",         initials:"EX", cls:"p1" }
-    ];
+    let profiles = [];   // from DB
+    let sessions = [];   // from DB
 
     const CATEGORIES = ["Film", "Movie", "Series", "Theater", "Short Movie"];
-
-    const SESSIONS = {
-      ciff: {
-        kicker: "SEP 25 — 27, 2026 · JAKARTA, INDONESIA",
-        title: "Chroma International Film Festival",
-        desc: "The Chroma International Film Festival (CIFF) official launch in Jakarta for premieres, retrospectives and industry conversations. Screenings run across four venues, accompanied by masterclasses, a co-production market, and nightly Q&A sessions with attending filmmakers.",
-        films: [],
-        profiles: [0, 1, 2, 5]
-      },
-      nyaff: {
-        kicker: "OCT 08 — 12, 2026 · Korean Cultural Center New York",
-        title: "New York Film Festival 2026",
-        desc: "A city-wide celebration of independent cinema, the New York Film Festival 2026 showcases bold new work from first- and second-time directors. The programme spans fiction, documentary and experimental shorts, screened in repurposed theatres, rooftops and open-air courtyards across the capital. Audience awards are decided entirely by public vote at the end of the closing night.",
-        films: [],
-        profiles: [2, 3, 4]
-      },
-      week: {
-        kicker: "SEP 14 — 20, 2026 · NOW SHOWING",
-        title: "Releasing This Week",
-        desc: "Everything landing on CHROMA and in theatres over the next seven days — gathered in one place. Fresh seasons, festival favourites and long-awaited premieres, refreshed every Monday morning. Save a title to your list and we'll notify you the moment it goes live.",
-        films: [],
-        profiles: [1, 2, 5]
-      },
-      golden: {
-        kicker: "Des 1, 2027 · Lincoln Center",
-        title: "Golden Reel Awards 2027",
-        desc: "The Golden Reel Awards honour outstanding achievement in directing, writing, performance and craft across the CHROMA network. Nominees are selected by the Critics Circle and voted on by members of the industry. The three-night ceremony closes with the announcement of Best Picture, decided by a combined industry and audience vote.",
-        films: [],
-        profiles: [0, 1, 3, 4]
-      }
-    };
 
     /* ---------- Utility ---------- */
     function starSVG(filled) {
@@ -1067,6 +1075,18 @@
         .replace(/'/g, '&#39;');
     }
 
+    function makeInitials(name) {
+      if (!name) return '??';
+      const parts = String(name).trim().split(/\s+/);
+      if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+
+    function splitGenres(raw) {
+      if (!raw) return [];
+      return String(raw).split(',').map(function(g){ return g.trim(); }).filter(Boolean);
+    }
+
     function normalizeRow(r) {
       let posterFile = r.poster;
       if (!posterFile && r.poster_num != null) posterFile = 'poster' + r.poster_num + '.png';
@@ -1077,6 +1097,7 @@
         title:     r.title || '',
         slug:      r.slug || '',
         genre:     r.genre || '',
+        genres:    splitGenres(r.genre),
         type:      r.type || '',
         year:      r.year || '',
         rating:    Number(r.rating) || 0,
@@ -1111,22 +1132,30 @@
     }
 
     function profileCardHTML(p) {
+      const initials = p.initials || makeInitials(p.name);
+      const photoInner = p.photo
+        ? '<img src="' + escapeHtml(p.photo) + '" alt="' + escapeHtml(p.name) + '" ' +
+            'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' + escapeHtml(initials) + '\';">'
+        : escapeHtml(initials);
       return '<div class="profile-card">' +
-        '<div class="profile-photo ' + p.cls + '">' + p.initials + '</div>' +
-        '<div class="profile-name">' + p.name + '</div>' +
-        '<div class="profile-role">' + p.role + '</div>' +
+        '<div class="profile-photo">' + photoInner + '</div>' +
+        '<div class="profile-name">' + escapeHtml(p.name) + '</div>' +
+        '<div class="profile-role">' + escapeHtml(p.role || '') + '</div>' +
       '</div>';
     }
 
     /* ---------- Render basic sections ---------- */
     function renderProfiles(container, list) {
       if (!container) return;
+      if (!list || list.length === 0) {
+        container.innerHTML = '<p class="search-hint" style="padding:0 16px;">No profiles yet.</p>';
+        return;
+      }
       container.innerHTML = list.map(profileCardHTML).join('');
     }
 
     function renderNewNow() {
       const list = titles.filter(function(t) { return t.is_new; });
-      // Urutkan: tahun terbaru dulu
       list.sort(function(a, b) { return (Number(b.year) || 0) - (Number(a.year) || 0); });
       const el = document.getElementById('newNowShowing');
       if (!el) return;
@@ -1137,7 +1166,6 @@
 
     function renderTrending() {
       const list = titles.filter(function(t) { return t.is_trending; });
-      // Urutkan: rating tertinggi dulu
       list.sort(function(a, b) { return b.rating - a.rating; });
       const el = document.getElementById('trendingWeek');
       if (!el) return;
@@ -1148,7 +1176,6 @@
 
     function renderWhatToWatch() {
       const list = titles.filter(function(t) { return t.is_what_to_watch; });
-      // Urutkan: tahun terbaru dulu
       list.sort(function(a, b) { return (Number(b.year) || 0) - (Number(a.year) || 0); });
       const el = document.getElementById('whatToWatch');
       if (!el) return;
@@ -1159,7 +1186,6 @@
 
     function renderTopBoxOffice() {
       const list = titles.filter(function(t) { return t.is_top_box_office; });
-      // Urutkan: rating tertinggi dulu
       list.sort(function(a, b) { return b.rating - a.rating; });
       const el = document.getElementById('topBoxOffice');
       if (!el) return;
@@ -1190,12 +1216,19 @@
         });
       }
 
+      // GENRES — split by comma
       const genreMenuList = document.getElementById('genreMenuList');
       if (genreMenuList) {
         genreMenuList.innerHTML = '';
-        const genres = [...new Set(titles.map(function(t){ return t.genre; }).filter(Boolean))].sort();
+        const genreSet = new Set();
+        titles.forEach(function(t) {
+          (t.genres || []).forEach(function(g) { if (g) genreSet.add(g); });
+        });
+        const genres = [...genreSet].sort();
         genres.forEach(function(g) {
-          const count = titles.filter(function(t){ return t.genre === g; }).length;
+          const count = titles.filter(function(t) {
+            return (t.genres || []).indexOf(g) !== -1;
+          }).length;
           const item = document.createElement('button');
           item.className = 'menu-item';
           item.innerHTML = '<span>' + escapeHtml(g) + '</span><span class="count">' + count + ' titles</span>';
@@ -1208,6 +1241,52 @@
           });
           genreMenuList.appendChild(item);
         });
+      }
+    }
+
+    /* ---------- Sessions (dynamic) ---------- */
+    function renderEventChips() {
+      const chipRow = document.getElementById('eventChipRow');
+      const menuList = document.getElementById('eventMenuList');
+      if (chipRow) {
+        chipRow.innerHTML = '';
+        if (sessions.length === 0) {
+          chipRow.innerHTML = '<p class="search-hint" style="padding:0;">No events yet.</p>';
+        } else {
+          sessions.forEach(function(s) {
+            const btn = document.createElement('button');
+            btn.className = 'chip';
+            btn.dataset.session = s.slug;
+            btn.innerHTML = escapeHtml(s.title) +
+              ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg>';
+            btn.addEventListener('click', function() { openSession(s.slug); });
+            chipRow.appendChild(btn);
+          });
+        }
+      }
+      if (menuList) {
+        menuList.innerHTML = '';
+        if (sessions.length === 0) {
+          menuList.innerHTML = '<p class="search-hint" style="padding:4px 2px;">No events yet.</p>';
+        } else {
+          sessions.forEach(function(s) {
+            const item = document.createElement('button');
+            item.className = 'menu-item event-item';
+            item.dataset.session = s.slug;
+            const kickerParts = (s.kicker || '').split('·');
+            const datePart = (kickerParts[0] || '').trim();
+            const locPart = (kickerParts[1] || '').trim();
+            item.innerHTML =
+              (datePart ? '<span class="event-date">' + escapeHtml(datePart) + '</span>' : '') +
+              '<span class="event-name">' + escapeHtml(s.title) + '</span>' +
+              (locPart ? '<span class="event-loc">' + escapeHtml(locPart) + '</span>' : '');
+            item.addEventListener('click', function() {
+              if (menuOverlay) menuOverlay.classList.remove('open');
+              openSession(s.slug);
+            });
+            menuList.appendChild(item);
+          });
+        }
       }
     }
 
@@ -1436,7 +1515,6 @@
         else if (key === 'whatToWatch') list = titles.filter(function(t){ return t.is_what_to_watch; });
         else if (key === 'topBoxOffice') list = titles.filter(function(t){ return t.is_top_box_office; });
 
-        // Sorting sama kayak di home
         if (key === 'newNow' || key === 'whatToWatch') {
           list.sort(function(a, b) { return (Number(b.year) || 0) - (Number(a.year) || 0); });
         } else if (key === 'trending' || key === 'topBoxOffice') {
@@ -1486,7 +1564,10 @@
         return;
       }
       const results = titles.filter(function(t) {
-        return t.title.toLowerCase().includes(q) || t.genre.toLowerCase().includes(q);
+        const genreMatch = (t.genres || []).some(function(g) {
+          return g.toLowerCase().includes(q);
+        });
+        return t.title.toLowerCase().includes(q) || genreMatch;
       });
       searchHint.textContent = results.length
         ? results.length + ' result' + (results.length === 1 ? '' : 's') + ' for "' + query + '"'
@@ -1499,6 +1580,9 @@
       searchGrid.innerHTML = results.map(function(t) {
         const titleEsc = escapeAttr(t.title);
         const pageEsc = escapeAttr(t.page);
+        const genreTags = (t.genres || []).map(function(g) {
+          return '<span class="genre-tag">' + escapeHtml(g) + '</span>';
+        }).join('');
         return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + pageEsc + '\')">' +
           '<div class="poster">' +
             '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
@@ -1511,7 +1595,7 @@
             '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
             '<div class="card-title">' + escapeHtml(t.title) + '</div>' +
             '<div class="card-sub">' + escapeHtml(t.type) + ' · ' + t.year + '</div>' +
-            '<span class="genre-tag">' + escapeHtml(t.genre) + '</span>' +
+            genreTags +
           '</div></div>';
       }).join('');
       hydrateSavedStates();
@@ -1583,29 +1667,122 @@
       }).join('');
     }
 
-    /* ---------- Session overlay ---------- */
-    const sessionOverlay = document.getElementById('sessionOverlay');
-    const sessionCloseBtn = document.getElementById('sessionCloseBtn');
-    const sessionKicker = document.getElementById('sessionKicker');
-    const sessionTitle = document.getElementById('sessionTitle');
-    const sessionDesc = document.getElementById('sessionDesc');
-    const sessionFilms = document.getElementById('sessionFilms');
-    const sessionProfiles = document.getElementById('sessionProfiles');
+    /* =========================================================
+       SESSION OVERLAY (dynamic from DB)
+       ========================================================= */
+    const sessionOverlay   = document.getElementById('sessionOverlay');
+    const sessionCloseBtn  = document.getElementById('sessionCloseBtn');
+    const sessionKicker    = document.getElementById('sessionKicker');
+    const sessionTitle     = document.getElementById('sessionTitle');
+    const sessionDesc      = document.getElementById('sessionDesc');
+    const sessionFilms     = document.getElementById('sessionFilms');
+    const sessionProfiles  = document.getElementById('sessionProfiles');
+    const sessionPhotosScroll = document.getElementById('sessionPhotosScroll');
+    const sessionFilmsBlock = document.getElementById('sessionFilmsBlock');
+    const sessionProfilesBlock = document.getElementById('sessionProfilesBlock');
+    const sessionPhotosBlock = document.getElementById('sessionPhotosBlock');
+    const sessionPosterBanner = document.getElementById('sessionPosterBanner');
+    const sessionPosterImg = document.getElementById('sessionPosterImg');
 
-    function openSession(key) {
-      const s = SESSIONS[key];
-      if (!s || !sessionOverlay) return;
-      sessionKicker.textContent = s.kicker;
-      sessionTitle.textContent = s.title;
-      sessionDesc.textContent = s.desc;
+    async function openSession(slug) {
+      const s = sessions.find(function(x) { return x.slug === slug; });
+      if (!s || !sessionOverlay) {
+        console.warn('Session not found:', slug);
+        return;
+      }
 
-      const sample = titles.slice(0, 5);
-      sessionFilms.innerHTML = sample.map(filmCardHTML).join('');
+      sessionKicker.textContent = s.kicker || '';
+      sessionTitle.textContent = s.title || '';
+      sessionDesc.textContent = s.desc_text || '';
 
-      sessionProfiles.innerHTML = s.profiles.map(function(i) { return profileCardHTML(profiles[i]); }).join('');
+      // Poster banner
+      if (s.poster) {
+        sessionPosterImg.src = s.poster;
+        sessionPosterBanner.classList.remove('hidden');
+      } else {
+        sessionPosterImg.src = '';
+        sessionPosterBanner.classList.add('hidden');
+      }
+
+      // Reset blocks
+      sessionFilms.innerHTML = '';
+      sessionProfiles.innerHTML = '';
+      sessionPhotosScroll.innerHTML = '';
+      sessionFilmsBlock.classList.add('hidden');
+      sessionProfilesBlock.classList.add('hidden');
+      sessionPhotosBlock.classList.add('hidden');
+
       sessionOverlay.classList.add('open');
       sessionOverlay.scrollTop = 0;
       document.body.style.overflow = 'hidden';
+
+      /* ---- Load session_photos ---- */
+      if (supabaseClient) {
+        try {
+          const { data } = await supabaseClient
+            .from('session_photos')
+            .select('photo, photo_order')
+            .eq('session_id', s.id)
+            .order('photo_order', { ascending: true });
+          if (data && data.length) {
+            sessionPhotosBlock.classList.remove('hidden');
+            sessionPhotosScroll.innerHTML = data.map(function (p) {
+              return '<div class="session-gallery-thumb" data-url="' + escapeHtml(p.photo) + '">' +
+                '<img src="' + escapeHtml(p.photo) + '" alt="" ' +
+                  'onerror="this.style.display=\'none\';">' +
+              '</div>';
+            }).join('');
+
+            sessionPhotosScroll.querySelectorAll('.session-gallery-thumb').forEach(function (el) {
+              el.addEventListener('click', function () {
+                const url = el.dataset.url;
+                if (url) openPhotoModal(url);
+              });
+            });
+          }
+        } catch (e) { console.warn('Load session_photos failed:', e); }
+      }
+
+      /* ---- Load session_titles (films) ---- */
+      if (supabaseClient) {
+        try {
+          const { data } = await supabaseClient
+            .from('session_titles')
+            .select('title_id, sort_order, titles(id, title, slug, genre, type, year, rating, poster, poster_num, page)')
+            .eq('session_id', s.id)
+            .order('sort_order', { ascending: true });
+          if (data && data.length) {
+            const items = data
+              .map(function (r) { return r.titles ? normalizeRow(r.titles) : null; })
+              .filter(Boolean);
+            if (items.length) {
+              sessionFilmsBlock.classList.remove('hidden');
+              sessionFilms.innerHTML = items.map(filmCardHTML).join('');
+            }
+          }
+        } catch (e) { console.warn('Load session_titles failed:', e); }
+      }
+
+      /* ---- Load session_profiles ---- */
+      if (supabaseClient) {
+        try {
+          const { data } = await supabaseClient
+            .from('session_profiles')
+            .select('profile_id, sort_order, profiles(id, name, role, initials, photo)')
+            .eq('session_id', s.id)
+            .order('sort_order', { ascending: true });
+          if (data && data.length) {
+            const items = data
+              .map(function (r) { return r.profiles; })
+              .filter(Boolean);
+            if (items.length) {
+              sessionProfilesBlock.classList.remove('hidden');
+              sessionProfiles.innerHTML = items.map(profileCardHTML).join('');
+            }
+          }
+        } catch (e) { console.warn('Load session_profiles failed:', e); }
+      }
+
       hydrateSavedStates();
     }
 
@@ -1622,25 +1799,39 @@
       });
     }
     document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closeSession();
+      if (e.key === 'Escape') {
+        if (sessionOverlay.classList.contains('open')) closeSession();
+        if (photoModal && photoModal.classList.contains('open')) closePhotoModal();
+      }
     });
 
-    document.querySelectorAll('[data-session]').forEach(function(el) {
-      el.addEventListener('click', function() {
-        if (menuOverlay) menuOverlay.classList.remove('open');
-        openSession(el.dataset.session);
+    /* ---------- PHOTO LIGHTBOX ---------- */
+    const photoModal = document.getElementById('photoModal');
+    const photoModalImg = document.getElementById('photoModalImg');
+    const photoModalClose = document.getElementById('photoModalClose');
+
+    function openPhotoModal(url) {
+      if (!photoModal || !photoModalImg) return;
+      photoModalImg.src = url;
+      photoModal.classList.add('open');
+    }
+    function closePhotoModal() {
+      if (!photoModal) return;
+      photoModal.classList.remove('open');
+      photoModalImg.src = '';
+    }
+    if (photoModalClose) photoModalClose.addEventListener('click', closePhotoModal);
+    if (photoModal) {
+      photoModal.addEventListener('click', function (e) {
+        if (e.target === photoModal) closePhotoModal();
       });
-    });
+    }
 
     /* =========================================================
        LOAD DATA FROM SUPABASE
        ========================================================= */
     async function loadTitles() {
-      if (!supabaseClient) {
-        console.warn('Supabase not configured — titles list empty');
-        titles = [];
-        return;
-      }
+      if (!supabaseClient) { titles = []; return; }
       try {
         const { data, error } = await supabaseClient
           .from('titles')
@@ -1654,9 +1845,45 @@
       }
     }
 
+    async function loadProfiles() {
+      if (!supabaseClient) { profiles = []; return; }
+      try {
+        const { data, error } = await supabaseClient
+          .from('profiles')
+          .select('id, name, slug, role, initials, photo, is_popular, sort_order')
+          .eq('is_popular', true)
+          .order('sort_order', { ascending: true })
+          .order('name', { ascending: true });
+        if (error) throw error;
+        profiles = data || [];
+      } catch (e) {
+        console.warn('Load profiles failed:', e);
+        profiles = [];
+      }
+    }
+
+    async function loadSessions() {
+      if (!supabaseClient) { sessions = []; return; }
+      try {
+        const { data, error } = await supabaseClient
+          .from('sessions')
+          .select('*')
+          .eq('is_active', true)
+          .order('created_at', { ascending: false });
+        if (error) throw error;
+        sessions = data || [];
+      } catch (e) {
+        console.warn('Load sessions failed:', e);
+        sessions = [];
+      }
+    }
+
     async function init() {
+      await Promise.all([loadTitles(), loadProfiles(), loadSessions()]);
+
       renderProfiles(document.getElementById('popularProfiles'), profiles);
-      await loadTitles();
+      renderEventChips();
+
       renderNewNow();
       renderTrending();
       renderWhatToWatch();
