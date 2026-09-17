@@ -29,7 +29,7 @@
   .back-link { font-size: 12px; color: #9a9a95; text-decoration: none; }
   .back-link:hover { color: #f2c94c; }
 
-  .tabs { display: flex; gap: 6px; margin-bottom: 20px; }
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
   .tab {
     padding: 8px 14px; border-radius: 999px;
     background: #141414; border: 1px solid #2a2a2a;
@@ -184,6 +184,7 @@
   .msg.error { color: #ff7a7a; }
   .msg.success { color: #7aff9e; }
 
+  /* ---------- LIST ---------- */
   .list-row {
     display: flex; align-items: center; gap: 12px;
     padding: 12px 0; border-bottom: 1px solid #2a2a2a;
@@ -225,6 +226,292 @@
   .list-actions button.del:hover { background: rgba(220,60,60,0.08); }
 
   .empty { color: #9a9a95; font-size: 13px; padding: 8px 0; }
+
+  /* ---------- CAST EDITOR ---------- */
+  .cast-section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; gap: 10px; flex-wrap: wrap;
+  }
+  .cast-section-head h3 {
+    font-size: 13px; font-weight: 700; color: #f5f5f2;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .cast-section-head h3::before {
+    content: ''; width: 4px; height: 14px;
+    background: #f2c94c; border-radius: 2px;
+  }
+  .add-cast-btn {
+    padding: 7px 14px; font-size: 12px; font-weight: 700;
+    border-radius: 999px;
+    background: rgba(242,201,76,0.1);
+    border: 1px solid rgba(242,201,76,0.4);
+    color: #f2c94c; cursor: pointer; font-family: inherit;
+    transition: background .15s;
+  }
+  .add-cast-btn:hover { background: rgba(242,201,76,0.2); }
+
+  .cast-rows { display: flex; flex-direction: column; gap: 12px; }
+
+  .cast-row {
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 70px 1fr auto;
+    gap: 12px;
+    align-items: flex-start;
+    position: relative;
+  }
+  @media (max-width: 600px) {
+    .cast-row { grid-template-columns: 60px 1fr auto; }
+  }
+
+  .cast-photo-wrap {
+    width: 70px; height: 70px;
+    border-radius: 50%;
+    border: 1px solid #2a2a2a;
+    background: #141414;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  @media (max-width: 600px) {
+    .cast-photo-wrap { width: 60px; height: 60px; }
+  }
+  .cast-photo-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .cast-photo-wrap .cast-photo-initials {
+    font-family: 'Archivo Black';
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+  }
+  .cast-photo-wrap .cast-photo-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.6);
+    color: #f2c94c;
+    font-size: 9px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .15s;
+    text-align: center; padding: 4px;
+    line-height: 1.1;
+  }
+  .cast-photo-wrap:hover .cast-photo-overlay { opacity: 1; }
+  .cast-photo-wrap input[type="file"] {
+    display: none;
+  }
+
+  .cast-fields {
+    display: flex; flex-direction: column; gap: 8px;
+    min-width: 0;
+  }
+  .cast-input-wrap {
+    position: relative;
+  }
+  .cast-input-wrap input {
+    width: 100%; background: #141414;
+    border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 8px 12px; color: #f5f5f2;
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    outline: none; transition: border-color .15s;
+  }
+  .cast-input-wrap input:focus { border-color: #f2c94c; }
+  .cast-input-wrap .cast-badge-linked {
+    position: absolute; right: 10px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 9px; font-weight: 800;
+    color: #7aff9e;
+    background: rgba(122,255,158,0.12);
+    border: 1px solid rgba(122,255,158,0.35);
+    padding: 2px 6px; border-radius: 3px;
+    pointer-events: none;
+  }
+
+  .cast-suggestions {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: #1a1a1a;
+    border: 1px solid #2a2a2a;
+    border-radius: 8px;
+    max-height: 200px; overflow-y: auto;
+    z-index: 30;
+    display: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  }
+  .cast-suggestions.show { display: block; }
+  .cast-suggestion {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background .12s;
+    border-bottom: 1px solid #222;
+  }
+  .cast-suggestion:last-child { border-bottom: none; }
+  .cast-suggestion:hover, .cast-suggestion.active {
+    background: rgba(242,201,76,0.1);
+  }
+  .cast-suggestion-photo {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo Black';
+    font-size: 10px;
+    color: rgba(255,255,255,0.6);
+  }
+  .cast-suggestion-photo img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .cast-suggestion-name {
+    font-size: 13px; font-weight: 600;
+    flex: 1; min-width: 0;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .cast-suggestion-role {
+    font-size: 10px; color: #9a9a95;
+  }
+  .cast-suggestion-hint {
+    padding: 8px 12px;
+    font-size: 11px; color: #9a9a95;
+    text-align: center;
+  }
+
+  .cast-role-input {
+    width: 100%; background: #141414;
+    border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 7px 12px; color: #f5f5f2;
+    font-family: 'Inter', sans-serif; font-size: 12px;
+    outline: none; transition: border-color .15s;
+  }
+  .cast-role-input:focus { border-color: #f2c94c; }
+
+  .cast-remove-btn {
+    background: rgba(220,60,60,0.1);
+    border: 1px solid rgba(220,60,60,0.4);
+    color: #ff7a7a;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer; font-family: inherit;
+    font-size: 16px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background .15s;
+    align-self: center;
+  }
+  .cast-remove-btn:hover { background: rgba(220,60,60,0.2); }
+
+  .cast-empty {
+    padding: 16px;
+    text-align: center;
+    color: #9a9a95;
+    font-size: 12px;
+    border: 1px dashed #2a2a2a;
+    border-radius: 10px;
+  }
+
+  /* ---------- PHOTOS EDITOR ---------- */
+  .photos-section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; gap: 10px; flex-wrap: wrap;
+  }
+  .photos-section-head h3 {
+    font-size: 13px; font-weight: 700; color: #f5f5f2;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .photos-section-head h3::before {
+    content: ''; width: 4px; height: 14px;
+    background: #f2c94c; border-radius: 2px;
+  }
+  .photos-section-head .photos-count {
+    font-size: 11px; color: #9a9a95; margin-left: 4px;
+  }
+  .add-photo-btn {
+    padding: 7px 14px; font-size: 12px; font-weight: 700;
+    border-radius: 999px;
+    background: rgba(242,201,76,0.1);
+    border: 1px solid rgba(242,201,76,0.4);
+    color: #f2c94c; cursor: pointer; font-family: inherit;
+    transition: background .15s;
+  }
+  .add-photo-btn:hover:not(:disabled) { background: rgba(242,201,76,0.2); }
+  .add-photo-btn:disabled {
+    opacity: 0.35; cursor: not-allowed;
+  }
+
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 600px) {
+    .photos-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .photo-slot {
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    background: #0a0a0a;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: border-color .15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .photo-slot:hover { border-color: #f2c94c; }
+  .photo-slot img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .photo-slot .photo-placeholder {
+    color: #555;
+    font-size: 22px;
+    font-weight: 300;
+  }
+  .photo-slot .photo-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.65);
+    color: #f2c94c;
+    font-size: 10px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .15s;
+    text-align: center; padding: 6px;
+    line-height: 1.2;
+  }
+  .photo-slot:hover .photo-overlay { opacity: 1; }
+  .photo-slot input[type="file"] {
+    display: none;
+  }
+  .photo-slot .photo-remove {
+    position: absolute; top: 6px; right: 6px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(10,10,10,0.8);
+    border: 1px solid rgba(220,60,60,0.6);
+    color: #ff7a7a;
+    font-size: 14px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .15s, background .15s;
+  }
+  .photo-slot:hover .photo-remove { opacity: 1; }
+  .photo-slot .photo-remove:hover { background: rgba(220,60,60,0.3); }
+
+  .photos-empty {
+    padding: 16px;
+    text-align: center;
+    color: #9a9a95;
+    font-size: 12px;
+    border: 1px dashed #2a2a2a;
+    border-radius: 10px;
+    grid-column: 1 / -1;
+  }
 </style>
 </head>
 <body>
@@ -238,8 +525,10 @@
   <div class="tabs">
     <button class="tab active" data-tab="list">All Titles</button>
     <button class="tab" data-tab="form">Add / Edit</button>
+    <button class="tab" data-tab="cast-list">All Cast</button>
   </div>
 
+  <!-- ============ TAB: LIST ============ -->
   <div id="tabList">
     <div class="card">
       <h2>All Titles (<span id="listCount">0</span>)</h2>
@@ -249,6 +538,7 @@
     </div>
   </div>
 
+  <!-- ============ TAB: FORM ============ -->
   <div id="tabForm" style="display:none;">
     <div class="card">
       <h2 id="formTitle">Add New Title</h2>
@@ -359,11 +649,46 @@
         <label><input type="checkbox" id="f_is_top_box_office"> Show in "Top Box Office"</label>
       </div>
 
+      <!-- ===== CAST SECTION ===== -->
+      <div style="margin-top: 22px; padding-top: 18px; border-top: 1px solid #2a2a2a;">
+        <div class="cast-section-head">
+          <h3>Cast</h3>
+          <button type="button" class="add-cast-btn" id="addCastBtn">+ Add Cast</button>
+        </div>
+        <div class="cast-rows" id="castRows"></div>
+        <div class="cast-empty" id="castEmpty">Belum ada cast. Klik "+ Add Cast" untuk menambahkan.</div>
+      </div>
+
+      <!-- ===== PHOTOS SECTION ===== -->
+      <div style="margin-top: 22px; padding-top: 18px; border-top: 1px solid #2a2a2a;">
+        <div class="photos-section-head">
+          <h3>Photos <span class="photos-count" id="photosCount">(0 / 4)</span></h3>
+          <button type="button" class="add-photo-btn" id="addPhotoBtn">+ Add Photo</button>
+        </div>
+        <p class="empty" style="font-size:11px; margin-bottom:10px;">
+          Landscape 16:9 (rekomendasi 1280×720px, max 2MB). Maksimal 4 foto per film.
+        </p>
+        <div class="photos-grid" id="photosGrid"></div>
+      </div>
+
       <div class="btn-row">
         <button class="btn btn-primary" id="saveBtn">Save Title</button>
         <button class="btn" id="cancelBtn" style="display:none;">Cancel Edit</button>
       </div>
       <div class="msg" id="formMsg"></div>
+    </div>
+  </div>
+
+  <!-- ============ TAB: CAST LIST ============ -->
+  <div id="tabCastList" style="display:none;">
+    <div class="card">
+      <h2>All Cast Members (<span id="castListCount">0</span>)</h2>
+      <p class="empty" style="margin-bottom:12px; font-size:11px;">
+        Klik Delete untuk hapus cast dari database (relasi ke film + foto juga ikut terhapus).
+      </p>
+      <div id="castListContainer">
+        <p class="empty">Loading...</p>
+      </div>
     </div>
   </div>
 
@@ -378,15 +703,20 @@
 
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const MAX_POSTER_BYTES = 5 * 1024 * 1024; // 5MB
+  const MAX_POSTER_BYTES     = 5 * 1024 * 1024; // 5MB
+  const MAX_CAST_PHOTO_BYTES = 2 * 1024 * 1024; // 2MB
+  const MAX_TITLE_PHOTO_BYTES = 2 * 1024 * 1024; // 2MB
+  const MAX_TITLE_PHOTOS = 4;
 
   /* ---------- Tab switching ---------- */
   function showTab(name) {
     document.querySelectorAll('.tab').forEach(function (x) {
       x.classList.toggle('active', x.dataset.tab === name);
     });
-    document.getElementById('tabList').style.display = name === 'list' ? 'block' : 'none';
-    document.getElementById('tabForm').style.display = name === 'form' ? 'block' : 'none';
+    document.getElementById('tabList').style.display     = name === 'list' ? 'block' : 'none';
+    document.getElementById('tabForm').style.display     = name === 'form' ? 'block' : 'none';
+    document.getElementById('tabCastList').style.display = name === 'cast-list' ? 'block' : 'none';
+    if (name === 'cast-list') loadCastList();
   }
 
   document.querySelectorAll('.tab').forEach(function (t) {
@@ -426,12 +756,35 @@
     progressFill:      document.getElementById('uploadProgressFill')
   };
 
-  const formMsg = document.getElementById('formMsg');
-  const formTitle = document.getElementById('formTitle');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const saveBtn = document.getElementById('saveBtn');
+  const formMsg       = document.getElementById('formMsg');
+  const formTitle     = document.getElementById('formTitle');
+  const cancelBtn     = document.getElementById('cancelBtn');
+  const saveBtn       = document.getElementById('saveBtn');
   const listContainer = document.getElementById('listContainer');
-  const listCount = document.getElementById('listCount');
+  const listCount     = document.getElementById('listCount');
+  const castRows      = document.getElementById('castRows');
+  const castEmpty     = document.getElementById('castEmpty');
+  const addCastBtn    = document.getElementById('addCastBtn');
+  const photosGrid    = document.getElementById('photosGrid');
+  const photosCount   = document.getElementById('photosCount');
+  const addPhotoBtn   = document.getElementById('addPhotoBtn');
+
+  /* ---------- Cache semua cast (autocomplete) ---------- */
+  let allCast = [];
+
+  async function loadAllCast() {
+    try {
+      const { data, error } = await sb
+        .from('cast_members')
+        .select('id, name, slug, initials, photo')
+        .order('name', { ascending: true });
+      if (error) throw error;
+      allCast = data || [];
+    } catch (e) {
+      console.warn('Load cast failed:', e);
+      allCast = [];
+    }
+  }
 
   /* ---------- Utility ---------- */
   function autoSlug(str) {
@@ -456,6 +809,13 @@
     return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
   }
 
+  function makeInitials(name) {
+    if (!name) return '??';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
   function posterSrc(t) {
     if (t.poster) return t.poster;
     if (t.poster_num != null) return 'poster' + t.poster_num + '.png';
@@ -467,7 +827,9 @@
     if (!F.id.value) F.slug.value = autoSlug(F.title.value);
   });
 
-  /* ---------- Poster preview saat pilih file ---------- */
+  /* =========================================================
+     POSTER PREVIEW
+     ========================================================= */
   F.poster_file.addEventListener('change', function (e) {
     const file = e.target.files[0];
     if (!file) return;
@@ -506,7 +868,6 @@
     reader.readAsDataURL(file);
   });
 
-  /* ---------- Remove poster ---------- */
   F.removePoster.addEventListener('click', function () {
     F.poster_file.value = '';
     F.poster.value = '';
@@ -516,7 +877,9 @@
     formMsg.className = 'msg';
   });
 
-  /* ---------- Upload ke Supabase Storage ---------- */
+  /* =========================================================
+     UPLOAD POSTER ke Supabase Storage
+     ========================================================= */
   async function uploadPoster(file) {
     const ext = (file.name.split('.').pop() || 'png').toLowerCase();
     const fileName = 'poster_' + Date.now() + '_' +
@@ -554,26 +917,343 @@
     return urlData.publicUrl;
   }
 
+  /* =========================================================
+     UPLOAD FOTO CAST
+     ========================================================= */
+  async function uploadCastPhoto(file) {
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const fileName = 'cast_' + Date.now() + '_' +
+                     Math.random().toString(36).slice(2, 8) + '.' + ext;
+
+    const { data, error } = await sb.storage
+      .from('cast-photos')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type
+      });
+
+    if (error) throw error;
+
+    const { data: urlData } = sb.storage
+      .from('cast-photos')
+      .getPublicUrl(fileName);
+
+    return urlData.publicUrl;
+  }
+
+  /* =========================================================
+     UPLOAD FOTO TITLE (galeri)
+     ========================================================= */
+  async function uploadTitlePhoto(file) {
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const fileName = 'title_' + Date.now() + '_' +
+                     Math.random().toString(36).slice(2, 8) + '.' + ext;
+
+    const { data, error } = await sb.storage
+      .from('title-photos')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type
+      });
+
+    if (error) throw error;
+
+    const { data: urlData } = sb.storage
+      .from('title-photos')
+      .getPublicUrl(fileName);
+
+    return urlData.publicUrl;
+  }
+
   /* ---------- Ambil path dari URL ---------- */
-  function posterPathFromUrl(url) {
+  function storagePathFromUrl(url, bucket) {
     if (!url) return null;
-    const marker = '/storage/v1/object/public/posters/';
+    const marker = '/storage/v1/object/public/' + bucket + '/';
     const idx = url.indexOf(marker);
     if (idx === -1) return null;
     return decodeURIComponent(url.substring(idx + marker.length));
   }
 
-  async function deleteOldPoster(oldUrl) {
-    const path = posterPathFromUrl(oldUrl);
+  async function deleteOldStorageFile(oldUrl, bucket) {
+    const path = storagePathFromUrl(oldUrl, bucket);
     if (!path) return;
     try {
-      await sb.storage.from('posters').remove([path]);
+      await sb.storage.from(bucket).remove([path]);
     } catch (e) {
-      console.warn('Delete old poster failed:', e);
+      console.warn('Delete old file failed:', e);
     }
   }
 
-  /* ---------- Load list ---------- */
+  /* =========================================================
+     CAST EDITOR
+     ========================================================= */
+  let castList = [];
+
+  function renderCastRows() {
+    if (castList.length === 0) {
+      castRows.innerHTML = '';
+      castEmpty.style.display = 'block';
+      return;
+    }
+    castEmpty.style.display = 'none';
+
+    castRows.innerHTML = castList.map(function (c, i) {
+      const photoUrl = c.photoPreviewUrl || c.photo || '';
+      const initials = makeInitials(c.name || '');
+      const photoContent = photoUrl
+        ? '<img src="' + escapeHtml(photoUrl) + '" alt="">'
+        : '<span class="cast-photo-initials">' + escapeHtml(initials) + '</span>';
+
+      const linkedBadge = c.castId
+        ? '<span class="cast-badge-linked">LINKED</span>'
+        : '';
+
+      return '' +
+        '<div class="cast-row" data-idx="' + i + '">' +
+          '<label class="cast-photo-wrap" title="Klik untuk upload foto (1:1, max 2MB)">' +
+            photoContent +
+            '<div class="cast-photo-overlay">UPLOAD<br>FOTO</div>' +
+            '<input type="file" class="cast-photo-input" accept="image/jpeg,image/jpg,image/png,image/webp">' +
+          '</label>' +
+          '<div class="cast-fields">' +
+            '<div class="cast-input-wrap">' +
+              '<input type="text" class="cast-name-input" placeholder="Nama cast (ketik untuk cari)" value="' + escapeHtml(c.name || '') + '">' +
+              linkedBadge +
+              '<div class="cast-suggestions"></div>' +
+            '</div>' +
+            '<input type="text" class="cast-role-input" placeholder="Role (misal Lead, Supporting, Cameo)" value="' + escapeHtml(c.role || '') + '">' +
+          '</div>' +
+          '<button type="button" class="cast-remove-btn" title="Hapus dari daftar">&times;</button>' +
+        '</div>';
+    }).join('');
+
+    castRows.querySelectorAll('.cast-row').forEach(function (row) {
+      const idx = parseInt(row.dataset.idx, 10);
+      const nameInput = row.querySelector('.cast-name-input');
+      const roleInput = row.querySelector('.cast-role-input');
+      const removeBtn = row.querySelector('.cast-remove-btn');
+      const photoLabel = row.querySelector('.cast-photo-wrap');
+      const photoInput = row.querySelector('.cast-photo-input');
+      const suggestions = row.querySelector('.cast-suggestions');
+
+      nameInput.addEventListener('input', function () {
+        castList[idx].name = nameInput.value;
+        if (castList[idx].castId) {
+          const match = allCast.find(function (x) { return x.id === castList[idx].castId; });
+          if (!match || match.name !== nameInput.value) {
+            castList[idx].castId = '';
+            const badge = row.querySelector('.cast-badge-linked');
+            if (badge) badge.remove();
+          }
+        }
+        if (!castList[idx].photo && !castList[idx].photoPreviewUrl) {
+          const inits = makeInitials(nameInput.value);
+          const span = photoLabel.querySelector('.cast-photo-initials');
+          if (span) span.textContent = inits;
+        }
+        showSuggestions(row, suggestions, nameInput.value);
+      });
+
+      nameInput.addEventListener('focus', function () {
+        showSuggestions(row, suggestions, nameInput.value);
+      });
+      nameInput.addEventListener('blur', function () {
+        setTimeout(function () { suggestions.classList.remove('show'); }, 180);
+      });
+
+      roleInput.addEventListener('input', function () {
+        castList[idx].role = roleInput.value;
+      });
+
+      removeBtn.addEventListener('click', function () {
+        castList.splice(idx, 1);
+        renderCastRows();
+      });
+
+      photoLabel.addEventListener('click', function (e) {
+        if (e.target === photoInput) return;
+        e.preventDefault();
+        photoInput.click();
+      });
+      photoInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+          alert('File harus berupa gambar.');
+          photoInput.value = '';
+          return;
+        }
+        if (file.size > MAX_CAST_PHOTO_BYTES) {
+          alert('Foto terlalu besar (max 2MB). File kamu: ' + humanSize(file.size));
+          photoInput.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          castList[idx].photoFile = file;
+          castList[idx].photoPreviewUrl = ev.target.result;
+          renderCastRows();
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  }
+
+  function showSuggestions(row, container, query) {
+    const q = (query || '').trim().toLowerCase();
+    if (q.length < 1) {
+      container.classList.remove('show');
+      container.innerHTML = '';
+      return;
+    }
+    const matches = allCast.filter(function (c) {
+      return c.name.toLowerCase().includes(q);
+    }).slice(0, 8);
+
+    if (matches.length === 0) {
+      container.innerHTML = '<div class="cast-suggestion-hint">Cast baru — akan dibuat saat Save</div>';
+      container.classList.add('show');
+      return;
+    }
+
+    container.innerHTML = matches.map(function (c) {
+      const inits = c.initials || makeInitials(c.name);
+      const photo = c.photo
+        ? '<img src="' + escapeHtml(c.photo) + '" alt="">'
+        : escapeHtml(inits);
+      return '<div class="cast-suggestion" data-id="' + c.id + '" data-name="' + escapeHtml(c.name) + '" data-photo="' + escapeHtml(c.photo || '') + '" data-initials="' + escapeHtml(inits) + '">' +
+        '<div class="cast-suggestion-photo">' + photo + '</div>' +
+        '<div class="cast-suggestion-name">' + escapeHtml(c.name) + '</div>' +
+        '<div class="cast-suggestion-role">Pilih</div>' +
+      '</div>';
+    }).join('');
+    container.classList.add('show');
+
+    container.querySelectorAll('.cast-suggestion').forEach(function (el) {
+      el.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        const idx = parseInt(row.dataset.idx, 10);
+        castList[idx].castId = el.dataset.id;
+        castList[idx].name = el.dataset.name;
+        castList[idx].photo = el.dataset.photo || '';
+        castList[idx].photoFile = null;
+        castList[idx].photoPreviewUrl = '';
+        renderCastRows();
+      });
+    });
+  }
+
+  addCastBtn.addEventListener('click', function () {
+    castList.push({
+      castId: '',
+      name: '',
+      role: '',
+      photo: '',
+      photoFile: null,
+      photoPreviewUrl: ''
+    });
+    renderCastRows();
+    const inputs = castRows.querySelectorAll('.cast-name-input');
+    const last = inputs[inputs.length - 1];
+    if (last) last.focus();
+  });
+
+  /* =========================================================
+     PHOTOS EDITOR (max 4, landscape 16:9)
+     ========================================================= */
+  let photoList = []; // { photo (url), file (File|null), previewUrl }
+
+  function renderPhotos() {
+    const count = photoList.length;
+    photosCount.textContent = '(' + count + ' / ' + MAX_TITLE_PHOTOS + ')';
+    addPhotoBtn.disabled = count >= MAX_TITLE_PHOTOS;
+
+    if (count === 0) {
+      photosGrid.innerHTML = '<div class="photos-empty">Belum ada foto. Klik "+ Add Photo" untuk menambahkan (max 4).</div>';
+      return;
+    }
+
+    photosGrid.innerHTML = photoList.map(function (p, i) {
+      const url = p.previewUrl || p.photo || '';
+      const inner = url
+        ? '<img src="' + escapeHtml(url) + '" alt="">'
+        : '<div class="photo-placeholder">+</div>';
+
+      return '' +
+        '<div class="photo-slot" data-idx="' + i + '" title="Klik untuk upload foto (16:9, max 2MB)">' +
+          inner +
+          '<div class="photo-overlay">' + (url ? 'GANTI FOTO' : 'UPLOAD FOTO') + '</div>' +
+          '<input type="file" class="photo-file-input" accept="image/jpeg,image/jpg,image/png,image/webp">' +
+          '<div class="photo-remove" data-idx="' + i + '" title="Hapus foto">&times;</div>' +
+        '</div>';
+    }).join('');
+
+    photosGrid.querySelectorAll('.photo-slot').forEach(function (slot) {
+      const idx = parseInt(slot.dataset.idx, 10);
+      const fileInput = slot.querySelector('.photo-file-input');
+      const removeBtn = slot.querySelector('.photo-remove');
+
+      slot.addEventListener('click', function (e) {
+        if (e.target === removeBtn || removeBtn.contains(e.target)) return;
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+          alert('File harus berupa gambar.');
+          fileInput.value = '';
+          return;
+        }
+        if (file.size > MAX_TITLE_PHOTO_BYTES) {
+          alert('Foto terlalu besar (max 2MB). File kamu: ' + humanSize(file.size));
+          fileInput.value = '';
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          photoList[idx].file = file;
+          photoList[idx].previewUrl = ev.target.result;
+          renderPhotos();
+        };
+        reader.readAsDataURL(file);
+      });
+
+      removeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        photoList.splice(idx, 1);
+        renderPhotos();
+      });
+    });
+  }
+
+  addPhotoBtn.addEventListener('click', function () {
+    if (photoList.length >= MAX_TITLE_PHOTOS) return;
+    photoList.push({
+      photo: '',
+      file: null,
+      previewUrl: ''
+    });
+    renderPhotos();
+    // Auto klik slot terakhir buat pilih file langsung
+    const slots = photosGrid.querySelectorAll('.photo-slot');
+    const last = slots[slots.length - 1];
+    if (last) {
+      const inp = last.querySelector('.photo-file-input');
+      if (inp) inp.click();
+    }
+  });
+
+  /* =========================================================
+     LOAD & RENDER TITLE LIST
+     ========================================================= */
   async function loadTitles() {
     listContainer.innerHTML = '<p class="empty">Loading...</p>';
     try {
@@ -633,8 +1313,23 @@
           if (!confirm('Delete this title? Cannot be undone.')) return;
           const row = data.find(function (x) { return x.id === btn.dataset.id; });
           try {
+            // Hapus poster dari storage
             if (row && row.poster) {
-              await deleteOldPoster(row.poster);
+              await deleteOldStorageFile(row.poster, 'posters');
+            }
+            // Hapus foto galeri dari storage
+            if (row && row.id) {
+              try {
+                const { data: photos } = await sb
+                  .from('title_photos')
+                  .select('photo')
+                  .eq('title_id', row.id);
+                if (photos && photos.length) {
+                  for (const p of photos) {
+                    await deleteOldStorageFile(p.photo, 'title-photos');
+                  }
+                }
+              } catch (e) { console.warn('Delete title_photos files failed:', e); }
             }
             const { error } = await sb.from('titles').delete().eq('id', btn.dataset.id);
             if (error) throw error;
@@ -649,8 +1344,10 @@
     }
   }
 
-  /* ---------- Fill form (edit) ---------- */
-  function fillForm(t) {
+  /* =========================================================
+     FILL FORM (EDIT)
+     ========================================================= */
+  async function fillForm(t) {
     F.id.value = t.id || '';
     F.title.value = t.title || '';
     F.slug.value = t.slug || '';
@@ -685,6 +1382,52 @@
       F.previewImg.src = '';
     }
 
+    // Load cast
+    castList = [];
+    try {
+      const { data, error } = await sb
+        .from('title_cast')
+        .select('cast_id, role, cast_order, cast_members(id, name, photo, initials)')
+        .eq('title_id', t.id)
+        .order('cast_order', { ascending: true });
+      if (error) throw error;
+      castList = (data || []).map(function (r) {
+        const cm = r.cast_members || {};
+        return {
+          castId: r.cast_id,
+          name: cm.name || '',
+          role: r.role || '',
+          photo: cm.photo || '',
+          photoFile: null,
+          photoPreviewUrl: ''
+        };
+      });
+    } catch (e) {
+      console.warn('Load title_cast failed:', e);
+    }
+    renderCastRows();
+
+    // Load photos
+    photoList = [];
+    try {
+      const { data, error } = await sb
+        .from('title_photos')
+        .select('photo, photo_order')
+        .eq('title_id', t.id)
+        .order('photo_order', { ascending: true });
+      if (error) throw error;
+      photoList = (data || []).map(function (r) {
+        return {
+          photo: r.photo || '',
+          file: null,
+          previewUrl: ''
+        };
+      });
+    } catch (e) {
+      console.warn('Load title_photos failed:', e);
+    }
+    renderPhotos();
+
     formTitle.textContent = 'Edit Title — ' + t.title;
     cancelBtn.style.display = 'inline-flex';
     formMsg.textContent = '';
@@ -693,7 +1436,9 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  /* ---------- Reset form ---------- */
+  /* =========================================================
+     RESET FORM
+     ========================================================= */
   function resetForm() {
     F.id.value = '';
     F.title.value = '';
@@ -722,6 +1467,12 @@
     F.previewName.textContent = '';
     F.previewStatus.textContent = '';
 
+    castList = [];
+    renderCastRows();
+
+    photoList = [];
+    renderPhotos();
+
     formTitle.textContent = 'Add New Title';
     cancelBtn.style.display = 'none';
     formMsg.textContent = '';
@@ -733,7 +1484,9 @@
     showTab('list');
   });
 
-  /* ---------- SAVE ---------- */
+  /* =========================================================
+     SAVE TITLE + CAST + PHOTOS
+     ========================================================= */
   saveBtn.addEventListener('click', async function () {
     formMsg.textContent = '';
     formMsg.className = 'msg';
@@ -741,6 +1494,22 @@
     if (!F.title.value.trim()) { formMsg.textContent = 'Title is required.'; formMsg.classList.add('error'); return; }
     if (!F.slug.value.trim())  { formMsg.textContent = 'Slug is required.'; formMsg.classList.add('error'); return; }
     if (!F.genre.value.trim()) { formMsg.textContent = 'Genre is required.'; formMsg.classList.add('error'); return; }
+
+    // Validasi cast
+    for (let i = 0; i < castList.length; i++) {
+      const c = castList[i];
+      if ((c.name || '').trim() === '' && (c.role || '').trim() === '' && !c.photoFile) {
+        continue;
+      }
+      if ((c.name || '').trim() === '') {
+        formMsg.textContent = 'Baris cast #' + (i + 1) + ' belum diisi namanya.';
+        formMsg.classList.add('error');
+        return;
+      }
+    }
+
+    // Validasi photo: kalau ada slot yang kosong (gak ada url & gak ada file) → skip
+    // (kita biarkan slot kosong gak di-upload)
 
     const fileInput = F.poster_file.files[0];
     const oldPosterUrl = F.poster.value.trim() || null;
@@ -750,11 +1519,13 @@
     formMsg.textContent = 'Saving...';
 
     try {
+      /* -------- 1. Upload poster -------- */
       if (fileInput) {
         formMsg.textContent = 'Uploading poster...';
         posterUrl = await uploadPoster(fileInput);
       }
 
+      /* -------- 2. Insert/update title -------- */
       const payload = {
         title:              F.title.value.trim(),
         slug:               F.slug.value.trim(),
@@ -783,26 +1554,125 @@
         throw new Error('Rating must be 0–10.');
       }
 
+      let titleId = F.id.value;
+
       if (F.id.value) {
         if (fileInput && oldPosterUrl && oldPosterUrl !== posterUrl) {
-          await deleteOldPoster(oldPosterUrl);
+          await deleteOldStorageFile(oldPosterUrl, 'posters');
         }
         if (!fileInput && !posterUrl && oldPosterUrl) {
-          await deleteOldPoster(oldPosterUrl);
+          await deleteOldStorageFile(oldPosterUrl, 'posters');
         }
         const { error } = await sb.from('titles').update(payload).eq('id', F.id.value);
         if (error) throw error;
-        formMsg.textContent = 'Updated ✓';
-        formMsg.classList.add('success');
       } else {
-        const { error } = await sb.from('titles').insert(payload);
+        const { data, error } = await sb.from('titles').insert(payload).select('id').single();
         if (error) throw error;
-        formMsg.textContent = 'Created ✓';
-        formMsg.classList.add('success');
+        titleId = data.id;
       }
+
+      /* -------- 3. CAST -------- */
+      formMsg.textContent = 'Saving cast...';
+
+      if (F.id.value) {
+        await sb.from('title_cast').delete().eq('title_id', titleId);
+      }
+
+      const finalCastIds = [];
+      for (let i = 0; i < castList.length; i++) {
+        const c = castList[i];
+        const name = (c.name || '').trim();
+        if (!name) continue;
+
+        let castId = c.castId;
+        let photoUrl = c.photo || '';
+
+        if (c.photoFile) {
+          formMsg.textContent = 'Uploading foto cast "' + name + '"...';
+          const newPhoto = await uploadCastPhoto(c.photoFile);
+          if (c.photo && c.photo !== newPhoto) {
+            await deleteOldStorageFile(c.photo, 'cast-photos');
+          }
+          photoUrl = newPhoto;
+        }
+
+        if (castId) {
+          if (photoUrl && photoUrl !== c.photo) {
+            await sb.from('cast_members')
+              .update({ photo: photoUrl, updated_at: new Date().toISOString() })
+              .eq('id', castId);
+          }
+        } else {
+          const castSlug = autoSlug(name) + '-' + Math.random().toString(36).slice(2, 6);
+          const { data, error } = await sb.from('cast_members')
+            .insert({
+              name: name,
+              slug: castSlug,
+              initials: makeInitials(name),
+              photo: photoUrl || null
+            })
+            .select('id')
+            .single();
+          if (error) throw error;
+          castId = data.id;
+
+          allCast.push({
+            id: castId,
+            name: name,
+            slug: castSlug,
+            initials: makeInitials(name),
+            photo: photoUrl || ''
+          });
+        }
+
+        if (finalCastIds.indexOf(castId) === -1) {
+          finalCastIds.push(castId);
+          await sb.from('title_cast').insert({
+            title_id: titleId,
+            cast_id: castId,
+            role: (c.role || '').trim() || null,
+            cast_order: i
+          });
+        }
+      }
+
+      /* -------- 4. PHOTOS -------- */
+      formMsg.textContent = 'Saving photos...';
+
+      if (F.id.value) {
+        await sb.from('title_photos').delete().eq('title_id', titleId);
+      }
+
+      let photoOrder = 0;
+      for (let i = 0; i < photoList.length; i++) {
+        const p = photoList[i];
+        let url = p.photo || '';
+
+        if (p.file) {
+          formMsg.textContent = 'Uploading foto galeri #' + (i + 1) + '...';
+          const newUrl = await uploadTitlePhoto(p.file);
+          if (p.photo && p.photo !== newUrl) {
+            await deleteOldStorageFile(p.photo, 'title-photos');
+          }
+          url = newUrl;
+        }
+
+        if (!url) continue; // skip slot kosong
+
+        await sb.from('title_photos').insert({
+          title_id: titleId,
+          photo: url,
+          photo_order: photoOrder
+        });
+        photoOrder++;
+      }
+
+      formMsg.textContent = (F.id.value ? 'Updated' : 'Created') + ' ✓';
+      formMsg.classList.add('success');
 
       resetForm();
       await loadTitles();
+      await loadAllCast();
       setTimeout(function () { showTab('list'); }, 500);
     } catch (e) {
       console.error(e);
@@ -813,9 +1683,76 @@
     }
   });
 
-  /* ---------- Init ---------- */
+  /* =========================================================
+     CAST LIST TAB
+     ========================================================= */
+  const castListContainer = document.getElementById('castListContainer');
+  const castListCount = document.getElementById('castListCount');
+
+  async function loadCastList() {
+    castListContainer.innerHTML = '<p class="empty">Loading...</p>';
+    try {
+      const { data, error } = await sb
+        .from('cast_members')
+        .select('id, name, slug, initials, photo, created_at')
+        .order('name', { ascending: true });
+      if (error) throw error;
+
+      castListCount.textContent = data.length;
+
+      if (data.length === 0) {
+        castListContainer.innerHTML = '<p class="empty">Belum ada cast. Tambahkan lewat tab "Add / Edit" saat membuat film.</p>';
+        return;
+      }
+
+      castListContainer.innerHTML = data.map(function (c) {
+        const inits = c.initials || makeInitials(c.name);
+        const photoHTML = c.photo
+          ? '<img src="' + escapeHtml(c.photo) + '" alt="" onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' + escapeHtml(inits) + '\';">'
+          : escapeHtml(inits);
+
+        return '<div class="list-row">' +
+          '<div class="list-thumb" style="border-radius:50%; width:42px; height:42px;">' +
+            photoHTML +
+          '</div>' +
+          '<div class="list-info">' +
+            '<div class="list-title">' + escapeHtml(c.name) + '</div>' +
+            '<div class="list-sub">' + escapeHtml(c.slug || '') + '</div>' +
+          '</div>' +
+          '<div class="list-actions">' +
+            '<button class="del" data-id="' + c.id + '" data-photo="' + escapeHtml(c.photo || '') + '">Delete</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      castListContainer.querySelectorAll('button.del').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Hapus cast ini? Relasi ke semua film juga akan terhapus.')) return;
+          try {
+            if (btn.dataset.photo) {
+              await deleteOldStorageFile(btn.dataset.photo, 'cast-photos');
+            }
+            const { error } = await sb.from('cast_members').delete().eq('id', btn.dataset.id);
+            if (error) throw error;
+            await loadAllCast();
+            loadCastList();
+          } catch (e) { alert('Delete failed: ' + e.message); }
+        });
+      });
+
+    } catch (e) {
+      console.error(e);
+      castListContainer.innerHTML = '<p class="empty" style="color:#ff7a7a;">Failed: ' + escapeHtml(e.message) + '</p>';
+    }
+  }
+
+  /* =========================================================
+     INIT
+     ========================================================= */
   resetForm();
-  loadTitles();
+  loadAllCast().then(function () {
+    loadTitles();
+  });
 
 })();
 </script>
