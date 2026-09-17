@@ -386,7 +386,6 @@
     padding: 2px 6px; border-radius: 4px;
     z-index: 2;
   }
-  /* Label di poster DIHAPUS — judul cuma muncul di bawah */
 
   .card-meta { padding-top: 8px; }
   .rating {
@@ -1127,6 +1126,8 @@
 
     function renderNewNow() {
       const list = titles.filter(function(t) { return t.is_new; });
+      // Urutkan: tahun terbaru dulu
+      list.sort(function(a, b) { return (Number(b.year) || 0) - (Number(a.year) || 0); });
       const el = document.getElementById('newNowShowing');
       if (!el) return;
       el.innerHTML = list.length
@@ -1136,6 +1137,8 @@
 
     function renderTrending() {
       const list = titles.filter(function(t) { return t.is_trending; });
+      // Urutkan: rating tertinggi dulu
+      list.sort(function(a, b) { return b.rating - a.rating; });
       const el = document.getElementById('trendingWeek');
       if (!el) return;
       el.innerHTML = list.length
@@ -1145,6 +1148,8 @@
 
     function renderWhatToWatch() {
       const list = titles.filter(function(t) { return t.is_what_to_watch; });
+      // Urutkan: tahun terbaru dulu
+      list.sort(function(a, b) { return (Number(b.year) || 0) - (Number(a.year) || 0); });
       const el = document.getElementById('whatToWatch');
       if (!el) return;
       el.innerHTML = list.length
@@ -1154,6 +1159,8 @@
 
     function renderTopBoxOffice() {
       const list = titles.filter(function(t) { return t.is_top_box_office; });
+      // Urutkan: rating tertinggi dulu
+      list.sort(function(a, b) { return b.rating - a.rating; });
       const el = document.getElementById('topBoxOffice');
       if (!el) return;
       el.innerHTML = list.length
@@ -1318,7 +1325,6 @@
         return;
       }
 
-      // Coba HEAD request biar akurat kalau di-host di server
       fetch(pg, { method: 'HEAD' })
         .then(function(res) {
           if (res.ok) {
@@ -1332,7 +1338,6 @@
           }
         })
         .catch(function() {
-          // Fallback (misal file:// atau CORS): langsung buka
           try {
             sessionStorage.setItem('chroma_selected', JSON.stringify(title));
             sessionStorage.setItem('chroma_page', pg);
@@ -1430,6 +1435,14 @@
         else if (key === 'trending') list = titles.filter(function(t){ return t.is_trending; });
         else if (key === 'whatToWatch') list = titles.filter(function(t){ return t.is_what_to_watch; });
         else if (key === 'topBoxOffice') list = titles.filter(function(t){ return t.is_top_box_office; });
+
+        // Sorting sama kayak di home
+        if (key === 'newNow' || key === 'whatToWatch') {
+          list.sort(function(a, b) { return (Number(b.year) || 0) - (Number(a.year) || 0); });
+        } else if (key === 'trending' || key === 'topBoxOffice') {
+          list.sort(function(a, b) { return b.rating - a.rating; });
+        }
+
         seeAllCount.textContent = list.length + ' titles';
         if (list.length === 0) {
           seeAllGrid.classList.add('hidden');
