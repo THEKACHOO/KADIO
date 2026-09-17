@@ -386,14 +386,8 @@
     padding: 2px 6px; border-radius: 4px;
     z-index: 2;
   }
-  .poster .label {
-    position: absolute; bottom: 8px; left: 8px; right: 8px;
-    font-family: 'Archivo Black';
-    font-size: 12px; line-height: 1.1;
-    color: rgba(255,255,255,0.88);
-    text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-    z-index: 2;
-  }
+  /* Label di poster DIHAPUS — judul cuma muncul di bawah */
+
   .card-meta { padding-top: 8px; }
   .rating {
     display: flex; align-items: center; gap: 4px;
@@ -758,7 +752,6 @@
       </div>
     </div>
 
-    <!-- Tombol navigasi hero — hanya tampil di desktop -->
     <button class="hero-arrow prev" id="heroPrev" aria-label="Previous slide">
       <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
     </button>
@@ -790,6 +783,22 @@
       <a class="see-all" href="#" data-seeall="trending">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
     </div>
     <div class="card-scroll" id="trendingWeek"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <h2><span class="bar"></span>What to Watch</h2>
+      <a class="see-all" href="#" data-seeall="whatToWatch">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
+    </div>
+    <div class="card-scroll" id="whatToWatch"></div>
+  </section>
+
+  <section class="block">
+    <div class="section-head">
+      <h2><span class="bar"></span>Top Box Office</h2>
+      <a class="see-all" href="#" data-seeall="topBoxOffice">See all <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg></a>
+    </div>
+    <div class="card-scroll" id="topBoxOffice"></div>
   </section>
 
   <section class="block" id="savedSection">
@@ -918,7 +927,7 @@
   const USER_ID = getLocalUserId();
 
   /* =========================================================
-     HERO SLIDER — hardcode 2 video, dengan tombol desktop
+     HERO SLIDER
      ========================================================= */
   (function initHeroSlider() {
     const slidesEl = document.getElementById('heroSlides');
@@ -1060,7 +1069,6 @@
     }
 
     function normalizeRow(r) {
-      // Ambil nama file poster; fallback ke poster_num lama kalau ada
       let posterFile = r.poster;
       if (!posterFile && r.poster_num != null) posterFile = 'poster' + r.poster_num + '.png';
       if (!posterFile) posterFile = 'poster1.png';
@@ -1075,24 +1083,25 @@
         rating:    Number(r.rating) || 0,
         poster:    posterFile,
         cls:       '',
-        page:      r.page || 'example.html',
+        page:      r.page || '',
         is_new:    !!r.is_new,
-        is_trending: !!r.is_trending
+        is_trending: !!r.is_trending,
+        is_what_to_watch:  !!r.is_what_to_watch,
+        is_top_box_office: !!r.is_top_box_office
       };
     }
 
     /* ---------- HTML builders ---------- */
     function filmCardHTML(t) {
       const titleEsc = escapeAttr(t.title);
-      const label = escapeHtml(String(t.title).toUpperCase());
-      return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
+      const pageEsc = escapeAttr(t.page);
+      return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + pageEsc + '\')">' +
         '<div class="poster">' +
           '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
             'onerror="this.style.display=\'none\';">' +
           '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
             '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
           '</div>' +
-          '<div class="label">' + label + '</div>' +
         '</div>' +
         '<div class="card-meta">' +
           '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
@@ -1128,6 +1137,24 @@
     function renderTrending() {
       const list = titles.filter(function(t) { return t.is_trending; });
       const el = document.getElementById('trendingWeek');
+      if (!el) return;
+      el.innerHTML = list.length
+        ? list.map(filmCardHTML).join('')
+        : '<p class="search-hint">No titles in this section yet.</p>';
+    }
+
+    function renderWhatToWatch() {
+      const list = titles.filter(function(t) { return t.is_what_to_watch; });
+      const el = document.getElementById('whatToWatch');
+      if (!el) return;
+      el.innerHTML = list.length
+        ? list.map(filmCardHTML).join('')
+        : '<p class="search-hint">No titles in this section yet.</p>';
+    }
+
+    function renderTopBoxOffice() {
+      const list = titles.filter(function(t) { return t.is_top_box_office; });
+      const el = document.getElementById('topBoxOffice');
       if (!el) return;
       el.innerHTML = list.length
         ? list.map(filmCardHTML).join('')
@@ -1249,13 +1276,69 @@
       });
     }
 
-    /* ---------- Navigate to detail ---------- */
+    /* ---------- Navigate to detail + Coming Soon ---------- */
+    function showComingSoon(title) {
+      const existing = document.getElementById('comingSoonToast');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.id = 'comingSoonToast';
+      toast.innerHTML =
+        '<div style="font-weight:800; font-size:14px; margin-bottom:4px; color:#f2c94c;">Coming Soon</div>' +
+        '<div style="font-size:12px; color:#9a9a95; line-height:1.4;">' +
+          '<strong style="color:#f5f5f2;">' + escapeHtml(title) + '</strong> — halaman detail belum tersedia. Pantau terus ya!' +
+        '</div>';
+      toast.style.cssText =
+        'position:fixed; bottom:80px; left:50%; transform:translateX(-50%) translateY(20px);' +
+        'background:#1a1a1a; border:1px solid #f2c94c; border-radius:12px;' +
+        'padding:14px 18px; max-width:340px; width:calc(100% - 32px); z-index:200;' +
+        'box-shadow:0 12px 40px rgba(0,0,0,0.6); text-align:center;' +
+        'opacity:0; transition:opacity .25s, transform .25s;';
+
+      document.body.appendChild(toast);
+      requestAnimationFrame(function() {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateX(-50%) translateY(0)';
+      });
+
+      setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(-50%) translateY(20px)';
+        setTimeout(function() { toast.remove(); }, 300);
+      }, 3200);
+    }
+    window.showComingSoon = showComingSoon;
+
     function goToDetail(title, page) {
-      try {
-        sessionStorage.setItem('chroma_selected', JSON.stringify(title));
-        sessionStorage.setItem('chroma_page', page || 'example.html');
-      } catch(e) {}
-      window.location.href = page || 'example.html';
+      const pg = (page || '').trim();
+      const isPlaceholder = !pg || pg === 'example.html' || pg === '#' || pg === 'null' || pg === 'undefined';
+
+      if (isPlaceholder) {
+        showComingSoon(title);
+        return;
+      }
+
+      // Coba HEAD request biar akurat kalau di-host di server
+      fetch(pg, { method: 'HEAD' })
+        .then(function(res) {
+          if (res.ok) {
+            try {
+              sessionStorage.setItem('chroma_selected', JSON.stringify(title));
+              sessionStorage.setItem('chroma_page', pg);
+            } catch(e) {}
+            window.location.href = pg;
+          } else {
+            showComingSoon(title);
+          }
+        })
+        .catch(function() {
+          // Fallback (misal file:// atau CORS): langsung buka
+          try {
+            sessionStorage.setItem('chroma_selected', JSON.stringify(title));
+            sessionStorage.setItem('chroma_page', pg);
+          } catch(e) {}
+          window.location.href = pg;
+        });
     }
     window.goToDetail = goToDetail;
 
@@ -1306,10 +1389,12 @@
     const seeAllBack = document.getElementById('seeAllBack');
 
     const SEEALL_META = {
-      newNow:   { title: "New & Now Showing" },
-      trending: { title: "Trending This Week" },
-      saved:    { title: "Your List" },
-      profiles: { title: "Popular Profiles" }
+      newNow:       { title: "New & Now Showing" },
+      trending:     { title: "Trending This Week" },
+      whatToWatch:  { title: "What to Watch" },
+      topBoxOffice: { title: "Top Box Office" },
+      saved:        { title: "Your List" },
+      profiles:     { title: "Popular Profiles" }
     };
 
     function openSeeAll(key) {
@@ -1340,9 +1425,11 @@
           seeAllGrid.innerHTML = list.map(filmCardHTML).join('');
         }
       } else {
-        const list = key === 'newNow'
-          ? titles.filter(function(t){ return t.is_new; })
-          : titles.filter(function(t){ return t.is_trending; });
+        let list = [];
+        if (key === 'newNow') list = titles.filter(function(t){ return t.is_new; });
+        else if (key === 'trending') list = titles.filter(function(t){ return t.is_trending; });
+        else if (key === 'whatToWatch') list = titles.filter(function(t){ return t.is_what_to_watch; });
+        else if (key === 'topBoxOffice') list = titles.filter(function(t){ return t.is_top_box_office; });
         seeAllCount.textContent = list.length + ' titles';
         if (list.length === 0) {
           seeAllGrid.classList.add('hidden');
@@ -1398,14 +1485,14 @@
       }
       searchGrid.innerHTML = results.map(function(t) {
         const titleEsc = escapeAttr(t.title);
-        return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
+        const pageEsc = escapeAttr(t.page);
+        return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + pageEsc + '\')">' +
           '<div class="poster">' +
             '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
               'onerror="this.style.display=\'none\';">' +
             '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
             '</div>' +
-            '<div class="label">' + escapeHtml(String(t.title).toUpperCase()) + '</div>' +
           '</div>' +
           '<div class="card-meta">' +
             '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
@@ -1429,14 +1516,14 @@
       }
       searchGrid.innerHTML = results.map(function(t) {
         const titleEsc = escapeAttr(t.title);
-        return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
+        const pageEsc = escapeAttr(t.page);
+        return '<div class="card" onclick="goToDetail(\'' + titleEsc + '\', \'' + pageEsc + '\')">' +
           '<div class="poster">' +
             '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
               'onerror="this.style.display=\'none\';">' +
             '<div class="save" data-title="' + escapeHtml(t.title) + '" onclick="event.stopPropagation(); toggleSave(this);">' +
               '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M6 4h12v16l-6-4-6 4V4z"/></svg>' +
             '</div>' +
-            '<div class="label">' + escapeHtml(String(t.title).toUpperCase()) + '</div>' +
           '</div>' +
           '<div class="card-meta">' +
             '<div class="rating">' + starSVG(true) + t.rating.toFixed(1) + '</div>' +
@@ -1467,7 +1554,8 @@
       if (!rankList) return;
       rankList.innerHTML = sorted.map(function(t, i) {
         const titleEsc = escapeAttr(t.title);
-        return '<div class="rank-row" onclick="goToDetail(\'' + titleEsc + '\', \'' + escapeAttr(t.page) + '\')">' +
+        const pageEsc = escapeAttr(t.page);
+        return '<div class="rank-row" onclick="goToDetail(\'' + titleEsc + '\', \'' + pageEsc + '\')">' +
           '<div class="rank-num">' + (i+1) + '</div>' +
           '<div class="rank-thumb">' +
             '<img src="' + escapeHtml(t.poster) + '" alt="' + escapeHtml(t.title) + '" ' +
@@ -1558,6 +1646,8 @@
       await loadTitles();
       renderNewNow();
       renderTrending();
+      renderWhatToWatch();
+      renderTopBoxOffice();
       renderMenus();
       renderRatings();
       await hydrateSavedStates();
