@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHROMA — Admin VIP</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;500;600;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #0a0a0a; color: #f5f5f2;
+    font-family: 'Inter', sans-serif;
+    padding: 20px 16px 60px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  .top {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 24px; gap: 12px;
+  }
+  .brand {
+    font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+    color: #f5f5f2; letter-spacing: 4px;
+  }
+  .brand small {
+    color: #9a9a95; font-size: 11px; margin-left: 10px;
+    letter-spacing: 0; font-family: 'Inter'; font-weight: 500;
+    border-left: 1px solid #2a2a2a; padding-left: 10px;
+  }
+  .back-link { font-size: 12px; color: #9a9a95; text-decoration: none; }
+  .back-link:hover { color: #f5f5f2; }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab {
+    padding: 8px 14px; border-radius: 999px;
+    background: #141414; border: 1px solid #2a2a2a;
+    font-size: 12px; font-weight: 700; color: #c9c9c4;
+    cursor: pointer; transition: background .15s, border-color .15s, color .15s;
+    font-family: inherit;
+  }
+  .tab:hover { border-color: #4a4a4a; }
+  .tab.active { background: #f5f5f2; color: #0a0a0a; border-color: #f5f5f2; }
+
+  .card {
+    background: #101010; border: 1px solid #2a2a2a;
+    border-radius: 12px; padding: 18px;
+    margin-bottom: 18px;
+  }
+  .card h2 {
+    font-size: 14px; font-weight: 700; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card h2::before {
+    content: ''; width: 4px; height: 14px;
+    background: #f5f5f2; border-radius: 2px;
+  }
+
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block; font-size: 11px; color: #9a9a95;
+    margin-bottom: 4px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .field input, .field select, .field textarea {
+    width: 100%; background: #0a0a0a;
+    border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 9px 12px; color: #f5f5f2;
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    outline: none; transition: border-color .15s;
+  }
+  .field input[type="file"] {
+    padding: 7px 10px; cursor: pointer;
+    font-size: 12px;
+  }
+  .field input[type="file"]::file-selector-button {
+    background: #1b1b1b; border: 1px solid #2a2a2a;
+    color: #f5f5f2; font-family: inherit;
+    padding: 6px 12px; border-radius: 6px;
+    cursor: pointer; font-size: 12px; font-weight: 600;
+    margin-right: 10px;
+    transition: border-color .15s;
+  }
+  .field input[type="file"]::file-selector-button:hover {
+    border-color: #666;
+  }
+  .field input::placeholder, .field textarea::placeholder {
+    color: #555;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus {
+    border-color: #f5f5f2;
+  }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field select { cursor: pointer; }
+
+  /* ---------- PREVIEW BOXES ---------- */
+  .preview-box {
+    display: none;
+    margin-top: 12px;
+    padding: 10px;
+    background: #0a0a0a;
+    border: 1px dashed #2a2a2a;
+    border-radius: 10px;
+    align-items: center;
+    gap: 12px;
+  }
+  .preview-box.show { display: flex; }
+  .preview-box img {
+    object-fit: cover; border-radius: 8px;
+    border: 1px solid #2a2a2a;
+    background: #141414;
+    flex-shrink: 0;
+  }
+  .preview-box.banner-style img { width: 160px; height: 90px; }
+  .preview-box.profile-style img { width: 72px; height: 72px; border-radius: 50%; }
+  .preview-box .info {
+    flex: 1; min-width: 0;
+    font-size: 11px; color: #9a9a95;
+    line-height: 1.5;
+  }
+  .preview-box .info strong {
+    display: block; color: #f5f5f2;
+    font-size: 12px; margin-bottom: 3px;
+    word-break: break-all;
+  }
+  .preview-box .remove-btn {
+    background: rgba(220,60,60,0.1);
+    border: 1px solid rgba(220,60,60,0.4);
+    color: #ff7a7a;
+    font-size: 11px; font-weight: 600;
+    padding: 5px 10px; border-radius: 6px;
+    cursor: pointer; font-family: inherit;
+    transition: background .15s;
+    align-self: flex-start;
+    flex-shrink: 0;
+  }
+  .preview-box .remove-btn:hover {
+    background: rgba(220,60,60,0.2);
+  }
+
+  /* ---------- PROGRESS BAR ---------- */
+  .progress-bar {
+    width: 100%; height: 3px;
+    background: #1b1b1b; border-radius: 2px;
+    overflow: hidden; margin-top: 8px;
+    display: none;
+  }
+  .progress-bar.show { display: block; }
+  .progress-bar .fill {
+    height: 100%; background: #f5f5f2;
+    width: 0%; transition: width .2s;
+  }
+
+  .check-row {
+    display: flex; gap: 16px; margin: 12px 0;
+    flex-wrap: wrap;
+  }
+  .check-row label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #c9c9c4; font-weight: 600;
+    cursor: pointer;
+  }
+  .check-row input[type="checkbox"] {
+    width: 16px; height: 16px; accent-color: #f5f5f2;
+    cursor: pointer;
+  }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  @media (max-width: 600px) {
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 18px; border-radius: 999px;
+    font-size: 13px; font-weight: 700; cursor: pointer;
+    border: 1px solid #2a2a2a; background: #141414; color: #f5f5f2;
+    font-family: inherit; transition: background .15s, border-color .15s;
+  }
+  .btn:hover { background: #1b1b1b; border-color: #4a4a4a; }
+  .btn-primary { background: #f5f5f2; color: #0a0a0a; border-color: #f5f5f2; }
+  .btn-primary:hover { background: #d5d5d2; border-color: #d5d5d2; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+
+  .msg { font-size: 12px; margin-top: 10px; min-height: 16px; color: #c9c9c4; }
+  .msg.error { color: #ff7a7a; }
+  .msg.success { color: #7aff9e; }
+
+  /* ---------- LIST ---------- */
+  .list-row {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 0; border-bottom: 1px solid #2a2a2a;
+  }
+  .list-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .list-thumb {
+    width: 42px; height: 58px; border-radius: 6px;
+    background: #1a1a1a; border: 1px solid #2a2a2a;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    font-family: 'Archivo Black'; font-size: 10px; color: #6b6b66;
+    overflow: hidden; position: relative;
+  }
+  .list-thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .list-thumb.round { border-radius: 50%; width: 42px; height: 42px; }
+
+  .list-info { flex: 1; min-width: 0; }
+  .list-title { font-size: 13.5px; font-weight: 700; margin-bottom: 3px; }
+  .list-sub { font-size: 11px; color: #9a9a95; }
+  .list-badges { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
+  .badge {
+    font-size: 9px; font-weight: 800; padding: 2px 6px; border-radius: 3px;
+    letter-spacing: 0.3px;
+    background: rgba(245,245,242,0.1); color: #c9c9c4;
+    border: 1px solid rgba(245,245,242,0.25);
+  }
+  .badge.dark { background: rgba(0,0,0,0.5); color: #9a9a95; border-color: #2a2a2a; }
+
+  .list-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  .list-actions button {
+    padding: 6px 12px; font-size: 11px; border-radius: 6px;
+    border: 1px solid #2a2a2a; background: #141414; color: #f5f5f2;
+    cursor: pointer; font-weight: 600; font-family: inherit;
+    transition: border-color .15s, background .15s;
+  }
+  .list-actions button.edit { border-color: #4a4a4a; }
+  .list-actions button.edit:hover { background: #1f1f1f; }
+  .list-actions button.del { border-color: rgba(220,60,60,0.4); color: #ff7a7a; }
+  .list-actions button.del:hover { background: rgba(220,60,60,0.08); }
+
+  .empty { color: #9a9a95; font-size: 13px; padding: 8px 0; }
+
+  /* ---------- SUB HEAD ---------- */
+  .sub-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px; gap: 10px; flex-wrap: wrap;
+  }
+  .sub-head h3 {
+    font-size: 13px; font-weight: 700; color: #f5f5f2;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sub-head h3::before {
+    content: ''; width: 4px; height: 14px;
+    background: #f5f5f2; border-radius: 2px;
+  }
+  .sub-head .sub-count {
+    font-size: 11px; color: #9a9a95; margin-left: 4px;
+  }
+  .sub-head button {
+    padding: 7px 14px; font-size: 12px; font-weight: 700;
+    border-radius: 999px;
+    background: #1b1b1b;
+    border: 1px solid #4a4a4a;
+    color: #f5f5f2; cursor: pointer; font-family: inherit;
+    transition: background .15s, border-color .15s;
+  }
+  .sub-head button:hover:not(:disabled) { background: #2a2a2a; border-color: #666; }
+  .sub-head button:disabled { opacity: 0.35; cursor: not-allowed; }
+
+  /* ---------- PHOTOS GRID ---------- */
+  .photos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  @media (max-width: 600px) {
+    .photos-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  .photo-slot {
+    aspect-ratio: 16 / 9;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    background: #0a0a0a;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: border-color .15s;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .photo-slot:hover { border-color: #f5f5f2; }
+  .photo-slot img { width: 100%; height: 100%; object-fit: cover; }
+  .photo-slot .photo-placeholder {
+    color: #555;
+    font-size: 22px;
+    font-weight: 300;
+  }
+  .photo-slot .photo-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.65);
+    color: #f5f5f2;
+    font-size: 10px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .15s;
+    text-align: center; padding: 6px;
+    line-height: 1.2;
+  }
+  .photo-slot:hover .photo-overlay { opacity: 1; }
+  .photo-slot input[type="file"] { display: none; }
+  .photo-slot .photo-remove {
+    position: absolute; top: 6px; right: 6px;
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: rgba(10,10,10,0.8);
+    border: 1px solid rgba(220,60,60,0.6);
+    color: #ff7a7a;
+    font-size: 14px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity .15s, background .15s;
+  }
+  .photo-slot:hover .photo-remove { opacity: 1; }
+  .photo-slot .photo-remove:hover { background: rgba(220,60,60,0.3); }
+
+  .photos-empty {
+    padding: 16px;
+    text-align: center;
+    color: #9a9a95;
+    font-size: 12px;
+    border: 1px dashed #2a2a2a;
+    border-radius: 10px;
+    grid-column: 1 / -1;
+  }
+
+  /* ---------- RELATION ROWS ---------- */
+  .rows { display: flex; flex-direction: column; gap: 10px; }
+  .rel-row {
+    background: #0a0a0a;
+    border: 1px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 12px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: center;
+  }
+  .rel-input-wrap {
+    display: flex; flex-direction: column; gap: 8px;
+    min-width: 0;
+  }
+  .rel-search-input, .rel-select-input {
+    width: 100%; background: #141414;
+    border: 1px solid #2a2a2a; border-radius: 8px;
+    padding: 8px 12px; color: #f5f5f2;
+    font-family: 'Inter', sans-serif; font-size: 13px;
+    outline: none; transition: border-color .15s;
+  }
+  .rel-search-input:focus, .rel-select-input:focus { border-color: #f5f5f2; }
+  .rel-select-input { cursor: pointer; }
+  .rel-search-input::placeholder { color: #555; }
+
+  .row-remove-btn {
+    background: rgba(220,60,60,0.1);
+    border: 1px solid rgba(220,60,60,0.4);
+    color: #ff7a7a;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer; font-family: inherit;
+    font-size: 16px; line-height: 1;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: background .15s;
+  }
+  .row-remove-btn:hover { background: rgba(220,60,60,0.2); }
+
+  .rows-empty {
+    padding: 16px;
+    text-align: center;
+    color: #9a9a95;
+    font-size: 12px;
+    border: 1px dashed #2a2a2a;
+    border-radius: 10px;
+  }
+
+  .section-divider {
+    margin-top: 22px; padding-top: 18px;
+    border-top: 1px solid #2a2a2a;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="top">
+    <div class="brand">CHROMA<small>ADMIN VIP</small></div>
+    <a href="index.html" class="back-link">← Back to site</a>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="profiles">Profiles</button>
+    <button class="tab" data-tab="sessions">Sessions</button>
+  </div>
+
+  <!-- =================================================== -->
+  <!-- TAB: PROFILES -->
+  <!-- =================================================== -->
+  <div id="tabProfiles">
+    <div class="card">
+      <h2>All Profiles (<span id="profileListCount">0</span>)</h2>
+      <div class="btn-row" style="margin-top: 0; margin-bottom: 16px;">
+        <button class="btn btn-primary" id="addProfileBtn">+ Add Profile</button>
+      </div>
+      <div id="profileListContainer">
+        <p class="empty">Loading...</p>
+      </div>
+    </div>
+
+    <div class="card" id="profileFormCard" style="display:none;">
+      <h2 id="profileFormTitle">Add New Profile</h2>
+      <input type="hidden" id="p_id">
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="p_name">Name *</label>
+          <input type="text" id="p_name" placeholder="Logan Romanov" required>
+        </div>
+        <div class="field">
+          <label for="p_slug">Slug * (auto from name)</label>
+          <input type="text" id="p_slug" placeholder="logan-romanov" required>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="p_role">Role</label>
+          <input type="text" id="p_role" placeholder="CEO / Actor / Director">
+        </div>
+        <div class="field">
+          <label for="p_initials">Initials (fallback)</label>
+          <input type="text" id="p_initials" placeholder="LR" maxlength="3">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="p_photo_file">Profile Photo — Square 1:1 (recommended 500×500px, max 2MB)</label>
+        <input type="file" id="p_photo_file" accept="image/jpeg,image/jpg,image/png,image/webp">
+        <input type="hidden" id="p_photo">
+        <div class="progress-bar" id="pUploadProgress">
+          <div class="fill" id="pUploadProgressFill"></div>
+        </div>
+        <div class="preview-box profile-style" id="pPhotoPreviewWrap">
+          <img id="pPhotoPreview" alt="Profile preview">
+          <div class="info">
+            <strong id="pPhotoInfoName">Photo</strong>
+            <span id="pPhotoInfoStatus">Current photo</span>
+          </div>
+          <button type="button" class="remove-btn" id="removePPhotoBtn">Remove</button>
+        </div>
+      </div>
+
+      <div class="check-row">
+        <label><input type="checkbox" id="p_is_popular" checked> Show in "Popular Profiles"</label>
+      </div>
+
+      <div class="field">
+        <label for="p_sort_order">Sort Order (optional, lower = first)</label>
+        <input type="number" id="p_sort_order" placeholder="0">
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="saveProfileBtn">Save Profile</button>
+        <button class="btn" id="cancelProfileBtn">Cancel</button>
+      </div>
+      <div class="msg" id="profileFormMsg"></div>
+    </div>
+  </div>
+
+  <!-- =================================================== -->
+  <!-- TAB: SESSIONS -->
+  <!-- =================================================== -->
+  <div id="tabSessions" style="display:none;">
+    <div class="card">
+      <h2>All Sessions (<span id="sessionListCount">0</span>)</h2>
+      <div class="btn-row" style="margin-top: 0; margin-bottom: 16px;">
+        <button class="btn btn-primary" id="addSessionBtn">+ Add Session</button>
+      </div>
+      <div id="sessionListContainer">
+        <p class="empty">Loading...</p>
+      </div>
+    </div>
+
+    <div class="card" id="sessionFormCard" style="display:none;">
+      <h2 id="sessionFormTitle">Add New Session</h2>
+      <input type="hidden" id="s_id">
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="s_slug">Slug * (e.g. ciff, golden)</label>
+          <input type="text" id="s_slug" placeholder="ciff" required>
+        </div>
+        <div class="field">
+          <label for="s_title">Title *</label>
+          <input type="text" id="s_title" placeholder="Chroma International Film Festival" required>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="s_kicker">Kicker (small text above title)</label>
+        <input type="text" id="s_kicker" placeholder="SEP 25 — 27, 2026 · JAKARTA, INDONESIA">
+      </div>
+
+      <div class="field">
+        <label for="s_desc_text">Description</label>
+        <textarea id="s_desc_text" placeholder="The Chroma International Film Festival official launch..."></textarea>
+      </div>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="s_sort_order">Sort Order (optional)</label>
+          <input type="number" id="s_sort_order" placeholder="0">
+        </div>
+        <div class="field" style="display: flex; align-items: flex-end;">
+          <div class="check-row" style="margin: 0;">
+            <label><input type="checkbox" id="s_is_active" checked> Active (visible on site)</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- SESSION POSTER -->
+      <div class="field">
+        <label for="s_poster_file">Session Poster / Banner (optional, max 5MB)</label>
+        <input type="file" id="s_poster_file" accept="image/jpeg,image/jpg,image/png,image/webp">
+        <input type="hidden" id="s_poster">
+        <div class="progress-bar" id="sUploadProgress">
+          <div class="fill" id="sUploadProgressFill"></div>
+        </div>
+        <div class="preview-box banner-style" id="sPosterPreviewWrap">
+          <img id="sPosterPreview" alt="Poster preview">
+          <div class="info">
+            <strong id="sPosterInfoName">Poster</strong>
+            <span id="sPosterInfoStatus">Current poster</span>
+          </div>
+          <button type="button" class="remove-btn" id="removeSPosterBtn">Remove</button>
+        </div>
+      </div>
+
+      <!-- SESSION PHOTOS -->
+      <div class="section-divider">
+        <div class="sub-head">
+          <h3>Session Photos <span class="sub-count" id="sPhotosCount">(0 / 6)</span></h3>
+          <button type="button" id="addSPhotoBtn">+ Add Photo</button>
+        </div>
+        <p class="empty" style="font-size:11px; margin-bottom:10px;">
+          Landscape 16:9 (recommended 1280×720px, max 2MB). Up to 6 photos.
+        </p>
+        <div class="photos-grid" id="sPhotosGrid"></div>
+      </div>
+
+      <!-- SESSION TITLES -->
+      <div class="section-divider">
+        <div class="sub-head">
+          <h3>Films in this Session <span class="sub-count" id="sTitlesCount">(0)</span></h3>
+          <button type="button" id="addSTitleBtn">+ Add Film</button>
+        </div>
+        <div class="rows" id="sTitlesRows"></div>
+        <div class="rows-empty" id="sTitlesEmpty">No films yet. Click "+ Add Film" to add one.</div>
+      </div>
+
+      <!-- SESSION PROFILES -->
+      <div class="section-divider">
+        <div class="sub-head">
+          <h3>Profiles in this Session <span class="sub-count" id="sProfilesCount">(0)</span></h3>
+          <button type="button" id="addSProfileBtn">+ Add Profile</button>
+        </div>
+        <div class="rows" id="sProfilesRows"></div>
+        <div class="rows-empty" id="sProfilesEmpty">No profiles yet. Click "+ Add Profile" to add one.</div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" id="saveSessionBtn">Save Session</button>
+        <button class="btn" id="cancelSessionBtn">Cancel</button>
+      </div>
+      <div class="msg" id="sessionFormMsg"></div>
+    </div>
+  </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function () {
+
+  const SUPABASE_URL = 'https://euepdfhxyuomaqkpnrit.supabase.co';
+  const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1ZXBkZmh4eXVvbWFxa3Bucml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0OTg3ODUsImV4cCI6MjEwNTA3NDc4NX0.N4bvYVFxxbXAk0XcBgaooC7SiSopAZrgXRCtw9oJc84';
+
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const MAX_PROFILE_PHOTO_BYTES  = 2 * 1024 * 1024; // 2MB
+  const MAX_SESSION_POSTER_BYTES = 5 * 1024 * 1024; // 5MB
+  const MAX_SESSION_PHOTO_BYTES  = 2 * 1024 * 1024; // 2MB
+  const MAX_SESSION_PHOTOS = 6;
+
+  /* =========================================================
+     TAB SWITCHING
+     ========================================================= */
+  function showTab(name) {
+    document.querySelectorAll('.tab').forEach(function (x) {
+      x.classList.toggle('active', x.dataset.tab === name);
+    });
+    document.getElementById('tabProfiles').style.display = name === 'profiles' ? 'block' : 'none';
+    document.getElementById('tabSessions').style.display = name === 'sessions' ? 'block' : 'none';
+
+    if (name === 'profiles') loadProfileList();
+    if (name === 'sessions') loadSessionList();
+  }
+
+  document.querySelectorAll('.tab').forEach(function (t) {
+    t.addEventListener('click', function () { showTab(t.dataset.tab); });
+  });
+
+  /* =========================================================
+     UTILITIES
+     ========================================================= */
+  function autoSlug(str) {
+    return str.toLowerCase().trim()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  }
+
+  function escapeHtml(str) {
+    if (str == null) return '';
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function humanSize(bytes) {
+    if (!bytes) return '0 B';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
+  function makeInitials(name) {
+    if (!name) return '??';
+    const parts = name.trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  function storagePathFromUrl(url, bucket) {
+    if (!url) return null;
+    const marker = '/storage/v1/object/public/' + bucket + '/';
+    const idx = url.indexOf(marker);
+    if (idx === -1) return null;
+    return decodeURIComponent(url.substring(idx + marker.length));
+  }
+
+  async function deleteOldStorageFile(oldUrl, bucket) {
+    const path = storagePathFromUrl(oldUrl, bucket);
+    if (!path) return;
+    try {
+      await sb.storage.from(bucket).remove([path]);
+    } catch (e) {
+      console.warn('Delete old file failed:', e);
+    }
+  }
+
+  async function uploadToBucket(bucket, file, prefix) {
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const fileName = (prefix || 'file') + '_' + Date.now() + '_' +
+                     Math.random().toString(36).slice(2, 8) + '.' + ext;
+    const { data, error } = await sb.storage
+      .from(bucket)
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type
+      });
+    if (error) throw error;
+
+    const { data: urlData } = sb.storage.from(bucket).getPublicUrl(fileName);
+    return urlData.publicUrl;
+  }
+
+  /* =========================================================
+     CACHE: all profiles, all titles
+     ========================================================= */
+  let allProfiles = [];
+  let allTitles   = [];
+
+  async function loadAllProfiles() {
+    try {
+      const { data, error } = await sb
+        .from('profiles')
+        .select('id, name, slug, role, initials, photo')
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true });
+      if (error) throw error;
+      allProfiles = data || [];
+    } catch (e) {
+      console.warn('Load profiles failed:', e);
+      allProfiles = [];
+    }
+  }
+
+  async function loadAllTitles() {
+    try {
+      const { data, error } = await sb
+        .from('titles')
+        .select('id, title, slug')
+        .order('title', { ascending: true });
+      if (error) throw error;
+      allTitles = data || [];
+    } catch (e) {
+      console.warn('Load titles failed:', e);
+      allTitles = [];
+    }
+  }
+
+  /* =========================================================
+     =========================================================
+     TAB: PROFILES
+     =========================================================
+     ========================================================= */
+  const profileListContainer = document.getElementById('profileListContainer');
+  const profileListCount     = document.getElementById('profileListCount');
+  const profileFormCard      = document.getElementById('profileFormCard');
+  const profileFormTitle     = document.getElementById('profileFormTitle');
+  const addProfileBtn        = document.getElementById('addProfileBtn');
+  const saveProfileBtn       = document.getElementById('saveProfileBtn');
+  const cancelProfileBtn     = document.getElementById('cancelProfileBtn');
+  const profileFormMsg       = document.getElementById('profileFormMsg');
+
+  const P = {
+    id:            document.getElementById('p_id'),
+    name:          document.getElementById('p_name'),
+    slug:          document.getElementById('p_slug'),
+    role:          document.getElementById('p_role'),
+    initials:      document.getElementById('p_initials'),
+    photo:         document.getElementById('p_photo'),
+    photo_file:    document.getElementById('p_photo_file'),
+    is_popular:    document.getElementById('p_is_popular'),
+    sort_order:    document.getElementById('p_sort_order'),
+    previewWrap:   document.getElementById('pPhotoPreviewWrap'),
+    previewImg:    document.getElementById('pPhotoPreview'),
+    previewName:   document.getElementById('pPhotoInfoName'),
+    previewStatus: document.getElementById('pPhotoInfoStatus'),
+    removePhoto:   document.getElementById('removePPhotoBtn'),
+    progressWrap:  document.getElementById('pUploadProgress'),
+    progressFill:  document.getElementById('pUploadProgressFill')
+  };
+
+  P.name.addEventListener('input', function () {
+    if (!P.id.value) P.slug.value = autoSlug(P.name.value);
+    if (!P.initials.value) P.initials.value = makeInitials(P.name.value);
+  });
+
+  P.photo_file.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { alert('File must be an image.'); P.photo_file.value = ''; return; }
+    if (file.size > MAX_PROFILE_PHOTO_BYTES) { alert('Photo too large (max 2MB). Your file: ' + humanSize(file.size)); P.photo_file.value = ''; return; }
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      P.previewImg.src = ev.target.result;
+      P.previewName.textContent = file.name;
+      P.previewStatus.textContent = humanSize(file.size);
+      P.previewWrap.classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  P.removePhoto.addEventListener('click', function () {
+    P.photo_file.value = '';
+    P.photo.value = '';
+    P.previewWrap.classList.remove('show');
+    P.previewImg.src = '';
+  });
+
+  function resetProfileForm() {
+    P.id.value = '';
+    P.name.value = '';
+    P.slug.value = '';
+    P.role.value = '';
+    P.initials.value = '';
+    P.photo.value = '';
+    P.photo_file.value = '';
+    P.is_popular.checked = true;
+    P.sort_order.value = '';
+    P.previewWrap.classList.remove('show');
+    P.previewImg.src = '';
+    profileFormTitle.textContent = 'Add New Profile';
+    profileFormMsg.textContent = '';
+    profileFormMsg.className = 'msg';
+  }
+
+  function openProfileForm(p) {
+    if (p) {
+      P.id.value = p.id || '';
+      P.name.value = p.name || '';
+      P.slug.value = p.slug || '';
+      P.role.value = p.role || '';
+      P.initials.value = p.initials || '';
+      P.photo.value = p.photo || '';
+      P.photo_file.value = '';
+      P.is_popular.checked = p.is_popular !== false;
+      P.sort_order.value = p.sort_order != null ? p.sort_order : '';
+
+      if (p.photo) {
+        P.previewImg.src = p.photo;
+        P.previewName.textContent = p.photo.split('/').pop() || p.photo;
+        P.previewStatus.textContent = 'Current photo';
+        P.previewWrap.classList.add('show');
+      } else {
+        P.previewWrap.classList.remove('show');
+        P.previewImg.src = '';
+      }
+      profileFormTitle.textContent = 'Edit Profile — ' + p.name;
+    } else {
+      resetProfileForm();
+    }
+    profileFormCard.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  addProfileBtn.addEventListener('click', function () { openProfileForm(null); });
+  cancelProfileBtn.addEventListener('click', function () {
+    resetProfileForm();
+    profileFormCard.style.display = 'none';
+  });
+
+  async function loadProfileList() {
+    profileListContainer.innerHTML = '<p class="empty">Loading...</p>';
+    try {
+      const { data, error } = await sb
+        .from('profiles')
+        .select('*')
+        .order('sort_order', { ascending: true })
+        .order('name', { ascending: true });
+      if (error) throw error;
+
+      profileListCount.textContent = data.length;
+
+      if (data.length === 0) {
+        profileListContainer.innerHTML = '<p class="empty">No profiles yet. Click "+ Add Profile".</p>';
+        return;
+      }
+
+      profileListContainer.innerHTML = data.map(function (p) {
+        const inits = p.initials || makeInitials(p.name);
+        const photoHTML = p.photo
+          ? '<img src="' + escapeHtml(p.photo) + '" alt="">'
+          : escapeHtml(inits);
+        const badges = [];
+        if (p.is_popular) badges.push('<span class="badge">POPULAR</span>');
+        return '<div class="list-row">' +
+          '<div class="list-thumb round">' + photoHTML + '</div>' +
+          '<div class="list-info">' +
+            '<div class="list-title">' + escapeHtml(p.name) + '</div>' +
+            '<div class="list-sub">' + escapeHtml(p.role || '') + (p.slug ? ' · ' + escapeHtml(p.slug) : '') + '</div>' +
+            (badges.length ? '<div class="list-badges">' + badges.join('') + '</div>' : '') +
+          '</div>' +
+          '<div class="list-actions">' +
+            '<button class="edit" data-id="' + p.id + '">Edit</button>' +
+            '<button class="del" data-id="' + p.id + '" data-photo="' + escapeHtml(p.photo || '') + '">Delete</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      profileListContainer.querySelectorAll('button.edit').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const row = data.find(function (x) { return x.id === btn.dataset.id; });
+          if (row) openProfileForm(row);
+        });
+      });
+
+      profileListContainer.querySelectorAll('button.del').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Delete this profile? Relations to sessions will also be removed.')) return;
+          try {
+            if (btn.dataset.photo) {
+              await deleteOldStorageFile(btn.dataset.photo, 'profile-photos');
+            }
+            const { error } = await sb.from('profiles').delete().eq('id', btn.dataset.id);
+            if (error) throw error;
+            await loadAllProfiles();
+            loadProfileList();
+          } catch (e) { alert('Delete failed: ' + e.message); }
+        });
+      });
+    } catch (e) {
+      console.error(e);
+      profileListContainer.innerHTML = '<p class="empty" style="color:#ff7a7a;">Failed: ' + escapeHtml(e.message) + '</p>';
+    }
+  }
+
+  saveProfileBtn.addEventListener('click', async function () {
+    profileFormMsg.textContent = '';
+    profileFormMsg.className = 'msg';
+
+    if (!P.name.value.trim()) { profileFormMsg.textContent = 'Name is required.'; profileFormMsg.classList.add('error'); return; }
+    if (!P.slug.value.trim()) { profileFormMsg.textContent = 'Slug is required.'; profileFormMsg.classList.add('error'); return; }
+
+    saveProfileBtn.disabled = true;
+    profileFormMsg.textContent = 'Saving...';
+
+    try {
+      const fileInput = P.photo_file.files[0];
+      const oldPhotoUrl = P.photo.value.trim() || null;
+      let photoUrl = oldPhotoUrl;
+
+      if (fileInput) {
+        profileFormMsg.textContent = 'Uploading photo...';
+        P.progressWrap.classList.add('show');
+        P.progressFill.style.width = '30%';
+        photoUrl = await uploadToBucket('profile-photos', fileInput, 'profile');
+        P.progressFill.style.width = '100%';
+        setTimeout(function () {
+          P.progressWrap.classList.remove('show');
+          P.progressFill.style.width = '0%';
+        }, 400);
+      }
+
+      const payload = {
+        name:       P.name.value.trim(),
+        slug:       P.slug.value.trim(),
+        role:       P.role.value.trim() || null,
+        initials:   P.initials.value.trim() || makeInitials(P.name.value),
+        photo:      photoUrl,
+        is_popular: P.is_popular.checked,
+        sort_order: P.sort_order.value ? parseInt(P.sort_order.value, 10) : 0,
+        updated_at: new Date().toISOString()
+      };
+
+      if (P.id.value) {
+        if (fileInput && oldPhotoUrl && oldPhotoUrl !== photoUrl) {
+          await deleteOldStorageFile(oldPhotoUrl, 'profile-photos');
+        }
+        if (!fileInput && !photoUrl && oldPhotoUrl) {
+          await deleteOldStorageFile(oldPhotoUrl, 'profile-photos');
+        }
+        const { error } = await sb.from('profiles').update(payload).eq('id', P.id.value);
+        if (error) throw error;
+      } else {
+        const { error } = await sb.from('profiles').insert(payload);
+        if (error) throw error;
+      }
+
+      profileFormMsg.textContent = (P.id.value ? 'Updated' : 'Created') + ' ✓';
+      profileFormMsg.classList.add('success');
+
+      resetProfileForm();
+      profileFormCard.style.display = 'none';
+      await loadAllProfiles();
+      loadProfileList();
+    } catch (e) {
+      console.error(e);
+      profileFormMsg.textContent = 'Failed: ' + e.message;
+      profileFormMsg.classList.add('error');
+    } finally {
+      saveProfileBtn.disabled = false;
+    }
+  });
+
+  /* =========================================================
+     =========================================================
+     TAB: SESSIONS
+     =========================================================
+     ========================================================= */
+  const sessionListContainer = document.getElementById('sessionListContainer');
+  const sessionListCount     = document.getElementById('sessionListCount');
+  const sessionFormCard      = document.getElementById('sessionFormCard');
+  const sessionFormTitle     = document.getElementById('sessionFormTitle');
+  const addSessionBtn        = document.getElementById('addSessionBtn');
+  const saveSessionBtn       = document.getElementById('saveSessionBtn');
+  const cancelSessionBtn     = document.getElementById('cancelSessionBtn');
+  const sessionFormMsg       = document.getElementById('sessionFormMsg');
+
+  const S = {
+    id:            document.getElementById('s_id'),
+    slug:          document.getElementById('s_slug'),
+    title:         document.getElementById('s_title'),
+    kicker:        document.getElementById('s_kicker'),
+    desc_text:     document.getElementById('s_desc_text'),
+    is_active:     document.getElementById('s_is_active'),
+    sort_order:    document.getElementById('s_sort_order'),
+    poster:        document.getElementById('s_poster'),
+    poster_file:   document.getElementById('s_poster_file'),
+    previewWrap:   document.getElementById('sPosterPreviewWrap'),
+    previewImg:    document.getElementById('sPosterPreview'),
+    previewName:   document.getElementById('sPosterInfoName'),
+    previewStatus: document.getElementById('sPosterInfoStatus'),
+    removePoster:  document.getElementById('removeSPosterBtn'),
+    progressWrap:  document.getElementById('sUploadProgress'),
+    progressFill:  document.getElementById('sUploadProgressFill')
+  };
+
+  const sPhotosGrid    = document.getElementById('sPhotosGrid');
+  const sPhotosCount   = document.getElementById('sPhotosCount');
+  const addSPhotoBtn   = document.getElementById('addSPhotoBtn');
+
+  const sTitlesRows    = document.getElementById('sTitlesRows');
+  const sTitlesEmpty   = document.getElementById('sTitlesEmpty');
+  const sTitlesCount   = document.getElementById('sTitlesCount');
+  const addSTitleBtn   = document.getElementById('addSTitleBtn');
+
+  const sProfilesRows  = document.getElementById('sProfilesRows');
+  const sProfilesEmpty = document.getElementById('sProfilesEmpty');
+  const sProfilesCount = document.getElementById('sProfilesCount');
+  const addSProfileBtn = document.getElementById('addSProfileBtn');
+
+  S.title.addEventListener('input', function () {
+    if (!S.id.value && !S.slug.value) S.slug.value = autoSlug(S.title.value);
+  });
+
+  S.poster_file.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) { alert('File must be an image.'); S.poster_file.value = ''; return; }
+    if (file.size > MAX_SESSION_POSTER_BYTES) { alert('Poster too large (max 5MB). Your file: ' + humanSize(file.size)); S.poster_file.value = ''; return; }
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      S.previewImg.src = ev.target.result;
+      S.previewName.textContent = file.name;
+      S.previewStatus.textContent = humanSize(file.size);
+      S.previewWrap.classList.add('show');
+    };
+    reader.readAsDataURL(file);
+  });
+
+  S.removePoster.addEventListener('click', function () {
+    S.poster_file.value = '';
+    S.poster.value = '';
+    S.previewWrap.classList.remove('show');
+    S.previewImg.src = '';
+  });
+
+  /* ---------- SESSION PHOTOS (max 6) ---------- */
+  let sPhotoList = [];
+
+  function renderSessionPhotos() {
+    const count = sPhotoList.length;
+    sPhotosCount.textContent = '(' + count + ' / ' + MAX_SESSION_PHOTOS + ')';
+    addSPhotoBtn.disabled = count >= MAX_SESSION_PHOTOS;
+
+    if (count === 0) {
+      sPhotosGrid.innerHTML = '<div class="photos-empty">No photos yet. Click "+ Add Photo" (max 6).</div>';
+      return;
+    }
+
+    sPhotosGrid.innerHTML = sPhotoList.map(function (p, i) {
+      const url = p.previewUrl || p.photo || '';
+      const inner = url
+        ? '<img src="' + escapeHtml(url) + '" alt="">'
+        : '<div class="photo-placeholder">+</div>';
+      return '' +
+        '<div class="photo-slot" data-idx="' + i + '">' +
+          inner +
+          '<div class="photo-overlay">' + (url ? 'CHANGE' : 'UPLOAD') + '</div>' +
+          '<input type="file" class="s-photo-file-input" accept="image/jpeg,image/jpg,image/png,image/webp">' +
+          '<div class="s-photo-remove" data-idx="' + i + '" title="Remove">&times;</div>' +
+        '</div>';
+    }).join('');
+
+    sPhotosGrid.querySelectorAll('.photo-slot').forEach(function (slot) {
+      const idx = parseInt(slot.dataset.idx, 10);
+      const fileInput = slot.querySelector('.s-photo-file-input');
+      const removeBtn = slot.querySelector('.s-photo-remove');
+
+      slot.addEventListener('click', function (e) {
+        if (e.target === removeBtn || removeBtn.contains(e.target)) return;
+        fileInput.click();
+      });
+
+      fileInput.addEventListener('change', function (e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { alert('File must be an image.'); fileInput.value = ''; return; }
+        if (file.size > MAX_SESSION_PHOTO_BYTES) { alert('Photo too large (max 2MB).'); fileInput.value = ''; return; }
+        const reader = new FileReader();
+        reader.onload = function (ev) {
+          sPhotoList[idx].file = file;
+          sPhotoList[idx].previewUrl = ev.target.result;
+          renderSessionPhotos();
+        };
+        reader.readAsDataURL(file);
+      });
+
+      removeBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        sPhotoList.splice(idx, 1);
+        renderSessionPhotos();
+      });
+    });
+  }
+
+  addSPhotoBtn.addEventListener('click', function () {
+    if (sPhotoList.length >= MAX_SESSION_PHOTOS) return;
+    sPhotoList.push({ photo: '', file: null, previewUrl: '' });
+    renderSessionPhotos();
+    const slots = sPhotosGrid.querySelectorAll('.photo-slot');
+    if (slots.length) {
+      const inp = slots[slots.length - 1].querySelector('.s-photo-file-input');
+      if (inp) inp.click();
+    }
+  });
+
+  /* ---------- SESSION TITLES (with search) ---------- */
+  let sTitleList = []; // [{title_id, title}]
+
+  function renderSessionTitles() {
+    sTitlesCount.textContent = '(' + sTitleList.length + ')';
+    if (sTitleList.length === 0) {
+      sTitlesRows.innerHTML = '';
+      sTitlesEmpty.style.display = 'block';
+      return;
+    }
+    sTitlesEmpty.style.display = 'none';
+
+    sTitlesRows.innerHTML = sTitleList.map(function (t, i) {
+      return '' +
+        '<div class="rel-row" data-idx="' + i + '">' +
+          '<div class="rel-input-wrap">' +
+            '<input type="text" class="rel-search-input s-title-search" placeholder="Search film..." value="">' +
+            '<select class="rel-select-input s-title-select">' +
+              '<option value="">— Select a film —</option>' +
+              allTitles.map(function (tt) {
+                return '<option value="' + tt.id + '"' + (tt.id === t.title_id ? ' selected' : '') + '>' +
+                  escapeHtml(tt.title) + '</option>';
+              }).join('') +
+            '</select>' +
+          '</div>' +
+          '<button type="button" class="row-remove-btn" title="Remove">&times;</button>' +
+        '</div>';
+    }).join('');
+
+    sTitlesRows.querySelectorAll('.rel-row').forEach(function (row) {
+      const idx = parseInt(row.dataset.idx, 10);
+      const sel = row.querySelector('.s-title-select');
+      const searchInp = row.querySelector('.s-title-search');
+      const removeBtn = row.querySelector('.row-remove-btn');
+
+      searchInp.addEventListener('input', function () {
+        const q = searchInp.value.trim().toLowerCase();
+        const filtered = q.length
+          ? allTitles.filter(function (x) { return x.title.toLowerCase().includes(q); })
+          : allTitles;
+        sel.innerHTML = '<option value="">— Select a film —</option>' +
+          filtered.map(function (tt) {
+            return '<option value="' + tt.id + '"' + (tt.id === sTitleList[idx].title_id ? ' selected' : '') + '>' +
+              escapeHtml(tt.title) + '</option>';
+          }).join('');
+      });
+
+      sel.addEventListener('change', function () {
+        sTitleList[idx].title_id = sel.value;
+        const found = allTitles.find(function (x) { return x.id === sel.value; });
+        sTitleList[idx].title = found ? found.title : '';
+      });
+
+      removeBtn.addEventListener('click', function () {
+        sTitleList.splice(idx, 1);
+        renderSessionTitles();
+      });
+    });
+  }
+
+  addSTitleBtn.addEventListener('click', function () {
+    sTitleList.push({ title_id: '', title: '' });
+    renderSessionTitles();
+  });
+
+  /* ---------- SESSION PROFILES ---------- */
+  let sProfileList = []; // [{profile_id, name}]
+
+  function renderSessionProfiles() {
+    sProfilesCount.textContent = '(' + sProfileList.length + ')';
+    if (sProfileList.length === 0) {
+      sProfilesRows.innerHTML = '';
+      sProfilesEmpty.style.display = 'block';
+      return;
+    }
+    sProfilesEmpty.style.display = 'none';
+
+    sProfilesRows.innerHTML = sProfileList.map(function (p, i) {
+      return '' +
+        '<div class="rel-row" data-idx="' + i + '">' +
+          '<div class="rel-input-wrap">' +
+            '<select class="rel-select-input s-profile-select">' +
+              '<option value="">— Select a profile —</option>' +
+              allProfiles.map(function (pp) {
+                return '<option value="' + pp.id + '"' + (pp.id === p.profile_id ? ' selected' : '') + '>' +
+                  escapeHtml(pp.name) + (pp.role ? ' (' + escapeHtml(pp.role) + ')' : '') +
+                '</option>';
+              }).join('') +
+            '</select>' +
+          '</div>' +
+          '<button type="button" class="row-remove-btn" title="Remove">&times;</button>' +
+        '</div>';
+    }).join('');
+
+    sProfilesRows.querySelectorAll('.rel-row').forEach(function (row) {
+      const idx = parseInt(row.dataset.idx, 10);
+      const sel = row.querySelector('.s-profile-select');
+      const removeBtn = row.querySelector('.row-remove-btn');
+
+      sel.addEventListener('change', function () {
+        sProfileList[idx].profile_id = sel.value;
+        const found = allProfiles.find(function (x) { return x.id === sel.value; });
+        sProfileList[idx].name = found ? found.name : '';
+      });
+
+      removeBtn.addEventListener('click', function () {
+        sProfileList.splice(idx, 1);
+        renderSessionProfiles();
+      });
+    });
+  }
+
+  addSProfileBtn.addEventListener('click', function () {
+    sProfileList.push({ profile_id: '', name: '' });
+    renderSessionProfiles();
+  });
+
+  /* ---------- RESET / OPEN SESSION FORM ---------- */
+  function resetSessionForm() {
+    S.id.value = '';
+    S.slug.value = '';
+    S.title.value = '';
+    S.kicker.value = '';
+    S.desc_text.value = '';
+    S.is_active.checked = true;
+    S.sort_order.value = '';
+    S.poster.value = '';
+    S.poster_file.value = '';
+    S.previewWrap.classList.remove('show');
+    S.previewImg.src = '';
+
+    sPhotoList = [];
+    renderSessionPhotos();
+
+    sTitleList = [];
+    renderSessionTitles();
+
+    sProfileList = [];
+    renderSessionProfiles();
+
+    sessionFormTitle.textContent = 'Add New Session';
+    sessionFormMsg.textContent = '';
+    sessionFormMsg.className = 'msg';
+  }
+
+  async function openSessionForm(sess) {
+    resetSessionForm();
+    if (!sess) {
+      sessionFormCard.style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    S.id.value = sess.id || '';
+    S.slug.value = sess.slug || '';
+    S.title.value = sess.title || '';
+    S.kicker.value = sess.kicker || '';
+    S.desc_text.value = sess.desc_text || '';
+    S.is_active.checked = sess.is_active !== false;
+    S.sort_order.value = sess.sort_order != null ? sess.sort_order : '';
+    S.poster.value = sess.poster || '';
+    S.poster_file.value = '';
+
+    if (sess.poster) {
+      S.previewImg.src = sess.poster;
+      S.previewName.textContent = sess.poster.split('/').pop() || sess.poster;
+      S.previewStatus.textContent = 'Current poster';
+      S.previewWrap.classList.add('show');
+    }
+
+    // Load session photos
+    try {
+      const { data } = await sb
+        .from('session_photos')
+        .select('photo, photo_order')
+        .eq('session_id', sess.id)
+        .order('photo_order', { ascending: true });
+      sPhotoList = (data || []).map(function (r) {
+        return { photo: r.photo || '', file: null, previewUrl: '' };
+      });
+    } catch (e) { console.warn('Load session_photos failed:', e); }
+    renderSessionPhotos();
+
+    // Load session titles
+    try {
+      const { data } = await sb
+        .from('session_titles')
+        .select('title_id, sort_order, titles(id, title)')
+        .eq('session_id', sess.id)
+        .order('sort_order', { ascending: true });
+      sTitleList = (data || []).map(function (r) {
+        const t = r.titles || {};
+        return { title_id: r.title_id, title: t.title || '' };
+      });
+    } catch (e) { console.warn('Load session_titles failed:', e); }
+    renderSessionTitles();
+
+    // Load session profiles
+    try {
+      const { data } = await sb
+        .from('session_profiles')
+        .select('profile_id, sort_order, profiles(id, name, role)')
+        .eq('session_id', sess.id)
+        .order('sort_order', { ascending: true });
+      sProfileList = (data || []).map(function (r) {
+        const p = r.profiles || {};
+        return { profile_id: r.profile_id, name: p.name || '' };
+      });
+    } catch (e) { console.warn('Load session_profiles failed:', e); }
+    renderSessionProfiles();
+
+    sessionFormTitle.textContent = 'Edit Session — ' + sess.title;
+    sessionFormCard.style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  addSessionBtn.addEventListener('click', function () { openSessionForm(null); });
+  cancelSessionBtn.addEventListener('click', function () {
+    resetSessionForm();
+    sessionFormCard.style.display = 'none';
+  });
+
+  /* ---------- SESSION LIST ---------- */
+  async function loadSessionList() {
+    sessionListContainer.innerHTML = '<p class="empty">Loading...</p>';
+    try {
+      const { data, error } = await sb
+        .from('sessions')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+
+      sessionListCount.textContent = data.length;
+
+      if (data.length === 0) {
+        sessionListContainer.innerHTML = '<p class="empty">No sessions yet. Click "+ Add Session".</p>';
+        return;
+      }
+
+      sessionListContainer.innerHTML = data.map(function (s) {
+        const badges = [];
+        if (s.is_active) badges.push('<span class="badge">ACTIVE</span>');
+        else badges.push('<span class="badge dark">INACTIVE</span>');
+        const posterHTML = s.poster
+          ? '<img src="' + escapeHtml(s.poster) + '" alt="">'
+          : 'IMG';
+        const createdStr = s.created_at
+          ? new Date(s.created_at).toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' })
+          : '';
+        return '<div class="list-row">' +
+          '<div class="list-thumb">' + posterHTML + '</div>' +
+          '<div class="list-info">' +
+            '<div class="list-title">' + escapeHtml(s.title) + '</div>' +
+            '<div class="list-sub">' + escapeHtml(s.slug) + ' · ' + escapeHtml(s.kicker || '') + (createdStr ? ' · ' + createdStr : '') + '</div>' +
+            (badges.length ? '<div class="list-badges">' + badges.join('') + '</div>' : '') +
+          '</div>' +
+          '<div class="list-actions">' +
+            '<button class="edit" data-id="' + s.id + '">Edit</button>' +
+            '<button class="del" data-id="' + s.id + '" data-poster="' + escapeHtml(s.poster || '') + '">Delete</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      sessionListContainer.querySelectorAll('button.edit').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const row = data.find(function (x) { return x.id === btn.dataset.id; });
+          if (row) openSessionForm(row);
+        });
+      });
+
+      sessionListContainer.querySelectorAll('button.del').forEach(function (btn) {
+        btn.addEventListener('click', async function () {
+          if (!confirm('Delete this session? Relations and photos will also be removed.')) return;
+          try {
+            if (btn.dataset.poster) {
+              await deleteOldStorageFile(btn.dataset.poster, 'session-posters');
+            }
+            try {
+              const { data: photos } = await sb
+                .from('session_photos')
+                .select('photo')
+                .eq('session_id', btn.dataset.id);
+              if (photos && photos.length) {
+                for (const p of photos) {
+                  await deleteOldStorageFile(p.photo, 'session-photos');
+                }
+              }
+            } catch (e) { console.warn('Delete session photos failed:', e); }
+            const { error } = await sb.from('sessions').delete().eq('id', btn.dataset.id);
+            if (error) throw error;
+            loadSessionList();
+          } catch (e) { alert('Delete failed: ' + e.message); }
+        });
+      });
+    } catch (e) {
+      console.error(e);
+      sessionListContainer.innerHTML = '<p class="empty" style="color:#ff7a7a;">Failed: ' + escapeHtml(e.message) + '</p>';
+    }
+  }
+
+  saveSessionBtn.addEventListener('click', async function () {
+    sessionFormMsg.textContent = '';
+    sessionFormMsg.className = 'msg';
+
+    if (!S.slug.value.trim())  { sessionFormMsg.textContent = 'Slug is required.'; sessionFormMsg.classList.add('error'); return; }
+    if (!S.title.value.trim()) { sessionFormMsg.textContent = 'Title is required.'; sessionFormMsg.classList.add('error'); return; }
+
+    saveSessionBtn.disabled = true;
+    sessionFormMsg.textContent = 'Saving...';
+
+    try {
+      /* 1. Poster upload */
+      const fileInput = S.poster_file.files[0];
+      const oldPoster = S.poster.value.trim() || null;
+      let posterUrl = oldPoster;
+
+      if (fileInput) {
+        sessionFormMsg.textContent = 'Uploading poster...';
+        S.progressWrap.classList.add('show');
+        S.progressFill.style.width = '30%';
+        posterUrl = await uploadToBucket('session-posters', fileInput, 'session');
+        S.progressFill.style.width = '100%';
+        setTimeout(function () {
+          S.progressWrap.classList.remove('show');
+          S.progressFill.style.width = '0%';
+        }, 400);
+      }
+
+      const payload = {
+        slug:       S.slug.value.trim(),
+        title:      S.title.value.trim(),
+        kicker:     S.kicker.value.trim() || null,
+        desc_text:  S.desc_text.value.trim() || null,
+        poster:     posterUrl,
+        is_active:  S.is_active.checked,
+        sort_order: S.sort_order.value ? parseInt(S.sort_order.value, 10) : 0,
+        updated_at: new Date().toISOString()
+      };
+
+      let sessionId = S.id.value;
+
+      if (S.id.value) {
+        if (fileInput && oldPoster && oldPoster !== posterUrl) {
+          await deleteOldStorageFile(oldPoster, 'session-posters');
+        }
+        if (!fileInput && !posterUrl && oldPoster) {
+          await deleteOldStorageFile(oldPoster, 'session-posters');
+        }
+        const { error } = await sb.from('sessions').update(payload).eq('id', S.id.value);
+        if (error) throw error;
+      } else {
+        const { data, error } = await sb.from('sessions').insert(payload).select('id').single();
+        if (error) throw error;
+        sessionId = data.id;
+      }
+
+      /* 2. Photos */
+      sessionFormMsg.textContent = 'Saving photos...';
+      if (S.id.value) {
+        await sb.from('session_photos').delete().eq('session_id', sessionId);
+      }
+      let order = 0;
+      for (let i = 0; i < sPhotoList.length; i++) {
+        const p = sPhotoList[i];
+        let url = p.photo || '';
+        if (p.file) {
+          sessionFormMsg.textContent = 'Uploading photo #' + (i + 1) + '...';
+          const newUrl = await uploadToBucket('session-photos', p.file, 'sphoto');
+          if (p.photo && p.photo !== newUrl) {
+            await deleteOldStorageFile(p.photo, 'session-photos');
+          }
+          url = newUrl;
+        }
+        if (!url) continue;
+        await sb.from('session_photos').insert({
+          session_id: sessionId,
+          photo: url,
+          photo_order: order
+        });
+        order++;
+      }
+
+      /* 3. Titles */
+      sessionFormMsg.textContent = 'Saving films...';
+      if (S.id.value) {
+        await sb.from('session_titles').delete().eq('session_id', sessionId);
+      }
+      let tOrder = 0;
+      const seenTitles = [];
+      for (let i = 0; i < sTitleList.length; i++) {
+        const t = sTitleList[i];
+        if (!t.title_id) continue;
+        if (seenTitles.indexOf(t.title_id) !== -1) continue;
+        seenTitles.push(t.title_id);
+        await sb.from('session_titles').insert({
+          session_id: sessionId,
+          title_id: t.title_id,
+          sort_order: tOrder
+        });
+        tOrder++;
+      }
+
+      /* 4. Profiles */
+      sessionFormMsg.textContent = 'Saving profiles...';
+      if (S.id.value) {
+        await sb.from('session_profiles').delete().eq('session_id', sessionId);
+      }
+      let pOrder = 0;
+      const seenProfiles = [];
+      for (let i = 0; i < sProfileList.length; i++) {
+        const p = sProfileList[i];
+        if (!p.profile_id) continue;
+        if (seenProfiles.indexOf(p.profile_id) !== -1) continue;
+        seenProfiles.push(p.profile_id);
+        await sb.from('session_profiles').insert({
+          session_id: sessionId,
+          profile_id: p.profile_id,
+          sort_order: pOrder
+        });
+        pOrder++;
+      }
+
+      sessionFormMsg.textContent = (S.id.value ? 'Updated' : 'Created') + ' ✓';
+      sessionFormMsg.classList.add('success');
+
+      resetSessionForm();
+      sessionFormCard.style.display = 'none';
+      loadSessionList();
+    } catch (e) {
+      console.error(e);
+      sessionFormMsg.textContent = 'Failed: ' + e.message;
+      sessionFormMsg.classList.add('error');
+    } finally {
+      saveSessionBtn.disabled = false;
+    }
+  });
+
+  /* =========================================================
+     INIT
+     ========================================================= */
+  resetProfileForm();
+  resetSessionForm();
+  Promise.all([loadAllProfiles(), loadAllTitles()])
+    .then(function () {
+      loadProfileList();
+    });
+
+})();
+</script>
+</body>
+</html>
