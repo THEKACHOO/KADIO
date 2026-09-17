@@ -59,7 +59,7 @@
     aspect-ratio: 16 / 9;
     max-height: 70vh;
     overflow: visible;
-    background: #101014;
+    background: #000; /* black placeholder */
   }
   .backdrop video {
     position: absolute; top: 50%; left: 50%;
@@ -162,11 +162,6 @@
   .card:active { transform: scale(0.98); }
   .poster { width: 140px; height: 200px; border-radius: 10px; position: relative; overflow: hidden; border: 1px solid #2a2a2a; background: #1a1a1a; }
   .poster img { width: 100%; height: 100%; object-fit: cover; }
-  .poster .label {
-    position: absolute; bottom: 8px; left: 8px; right: 8px;
-    font-family: 'Archivo Black'; font-size: 12px; line-height: 1.1;
-    color: rgba(255,255,255,0.88); text-shadow: 0 2px 8px rgba(0,0,0,0.6); z-index: 2;
-  }
   .card-meta { padding-top: 8px; }
   .rating { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; margin-bottom: 2px; color: #f5f5f2; }
   .rating svg { width: 13px; height: 13px; fill: none; stroke: #f5f5f2; stroke-width: 2; flex-shrink: 0; }
@@ -180,14 +175,13 @@
     width: 72px; height: 72px; border-radius: 50%; margin: 0 auto 8px;
     border: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: center;
     font-family: 'Archivo Black'; font-size: 18px; color: rgba(255,255,255,0.85);
+    overflow: hidden;
+    background: #1a1a1a;
+    position: relative;
   }
+  .profile-photo img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .profile-name { font-size: 12px; font-weight: 700; line-height: 1.2; }
   .profile-role { font-size: 10px; color: #9a9a95; margin-top: 1px; }
-  .p1 { background: linear-gradient(150deg,#7a5a1f,#1a1a1a); }
-  .p2 { background: linear-gradient(150deg,#1f5a4f,#1a1a1a); }
-  .p3 { background: linear-gradient(150deg,#5a1f4a,#1a1a1a); }
-  .p4 { background: linear-gradient(150deg,#1f3a5a,#1a1a1a); }
-  .p5 { background: linear-gradient(150deg,#5a2f1f,#1a1a1a); }
 
   .gallery-scroll {
     display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 8px;
@@ -201,6 +195,8 @@
     transition: transform .12s ease;
   }
   .gallery-thumb:active { transform: scale(0.97); }
+  .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
   .gallery-dots { display: flex; gap: 6px; padding: 2px 16px 4px; }
   .gallery-dots span {
     width: 5px; height: 5px; border-radius: 50%;
@@ -319,6 +315,32 @@
   }
   .video-modal-close svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
 
+  .photo-modal {
+    position: fixed; inset: 0; z-index: 310;
+    background: rgba(0,0,0,0.96);
+    display: flex; align-items: center; justify-content: center;
+    visibility: hidden; opacity: 0;
+    transition: opacity .2s ease;
+    padding: 16px;
+  }
+  .photo-modal.open { visibility: visible; opacity: 1; }
+  .photo-modal img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    background: #000;
+  }
+  .photo-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(20,20,20,0.7); border: 1px solid #2a2a2a;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  .photo-modal-close svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
+
   @media (min-width: 720px) {
     .card { width: 160px; }
     .poster { width: 160px; height: 230px; }
@@ -356,10 +378,9 @@
   </div>
 </header>
 
+<!-- Backdrop: video src="#" -> black background, no video element shown -->
 <div class="backdrop" id="backdrop">
-  <video id="heroVideo"
-    src="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4"
-    autoplay muted loop playsinline preload="auto"></video>
+  <!-- Video removed, black background is set in CSS -->
   <div class="backdrop-shade"></div>
 </div>
 
@@ -402,12 +423,12 @@
   </div>
 </div>
 
-<section class="block">
+<section class="block" id="castSection">
   <div class="section-head"><h2><span class="bar"></span>Cast &amp; Crew</h2></div>
   <div class="profile-scroll" id="castScroll"></div>
 </section>
 
-<section class="block">
+<section class="block" id="photosSection" style="display:none;">
   <div class="section-head"><h2><span class="bar"></span>Photos</h2></div>
   <div class="gallery-scroll" id="galleryScroll"></div>
   <div class="gallery-dots" id="galleryDots"></div>
@@ -440,7 +461,7 @@
   </div>
 </section>
 
-<section class="block">
+<section class="block" id="similarSection" style="display:none;">
   <div class="section-head"><h2><span class="bar"></span>More Like This</h2></div>
   <div class="card-scroll" id="similarScroll"></div>
 </section>
@@ -455,13 +476,26 @@
     <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </button>
   <video id="modalVideo" controls playsinline preload="metadata"
-    src="https://res.cloudinary.com/dt5yn0xqh/video/upload/vidssave.com_The_Frog___Official_Trailer___Netflix_ENG_SUB_720P.mp4"></video>
+    src="#"></video>
+</div>
+
+<div class="photo-modal" id="photoModal">
+  <button class="photo-modal-close" id="photoModalClose" aria-label="Close">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <img id="photoModalImg" src="" alt="">
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function () {
+
+  /* =========================================================
+     ⚙️  CHANGE THIS LINE FOR EACH NEW FILE
+     ========================================================= */
   const TITLE_NAME = 'Lost In Translation!';
+  /* ========================================================= */
+
   const SUPABASE_URL = 'https://euepdfhxyuomaqkpnrit.supabase.co';
   const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImV1ZXBkZmh4eXVvbWFxa3Bucml0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk0OTg3ODUsImV4cCI6MjEwNTA3NDc4NX0.N4bvYVFxxbXAk0XcBgaooC7SiSopAZrgXRCtw9oJc84';
   let supabaseClient = null;
@@ -485,21 +519,16 @@
   let BASE_VOTES = 12836;
   let BASE_SCORE = 7.8;
   let userRating = 0;
+
   const T = {
-    title: '', genre: '', type: '', year: '',
+    id: '', title: '', genre: '', type: '', year: '',
     rating: 0, votes: 12836,
     poster: 'LIT.png',
     runtime: '', contentRating: '', tag: '',
     synopsis: '', director: '', writers: '',
-    cast: []
+    cast: [],
+    photos: []
   };
-
-  const CAST = [
-    { name: "Cast One",   cls: "p1" },
-    { name: "Cast Two",   cls: "p2" },
-    { name: "Cast Three", cls: "p3" },
-    { name: "Cast Four",  cls: "p4" }
-  ];
 
   function starSVG(filled) {
     return filled
@@ -513,6 +542,13 @@
       .replace(/&/g, '&amp;').replace(/</g, '&lt;')
       .replace(/>/g, '&gt;').replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
+  }
+
+  function makeInitials(name) {
+    if (!name) return '??';
+    const parts = String(name).trim().split(/\s+/);
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   }
 
   const starsWrap = document.getElementById('yourRateStars');
@@ -531,10 +567,17 @@
   const reviewFormMsg = document.getElementById('reviewFormMsg');
   const reviewSubmit = document.getElementById('reviewSubmit');
   const similarScroll = document.getElementById('similarScroll');
+  const castScroll = document.getElementById('castScroll');
+  const galleryScroll = document.getElementById('galleryScroll');
+  const galleryDots = document.getElementById('galleryDots');
 
+  /* =========================================================
+     LOAD TITLE + CAST + PHOTOS FROM SUPABASE
+     ========================================================= */
   async function loadTitle() {
     if (!supabaseClient) return;
     try {
+      // 1. Get title
       const { data, error } = await supabaseClient
         .from('titles')
         .select('*')
@@ -548,6 +591,7 @@
         return;
       }
 
+      T.id             = data.id;
       T.title          = data.title || TITLE_NAME;
       T.genre          = data.genre || '';
       T.type           = data.type || '';
@@ -561,17 +605,66 @@
       T.synopsis       = data.synopsis || '';
       T.director       = data.director || '';
       T.writers        = data.writers || '';
-      T.cast           = CAST;
 
       BASE_SCORE = T.rating;
       BASE_VOTES = T.votes;
 
+      // 2. Get cast
+      try {
+        const { data: castData, error: castErr } = await supabaseClient
+          .from('title_cast')
+          .select('role, cast_order, cast_members(id, name, photo, initials)')
+          .eq('title_id', data.id)
+          .order('cast_order', { ascending: true });
+        if (castErr) throw castErr;
+        T.cast = (castData || []).map(function (r) {
+          const cm = r.cast_members || {};
+          return {
+            id: cm.id || '',
+            name: cm.name || '',
+            role: r.role || 'Actor',
+            photo: cm.photo || '',
+            initials: cm.initials || makeInitials(cm.name)
+          };
+        });
+      } catch (e) {
+        console.warn('Load cast failed:', e);
+        T.cast = [];
+      }
+
+      // 3. Get photos
+      try {
+        const { data: photoData, error: photoErr } = await supabaseClient
+          .from('title_photos')
+          .select('photo, photo_order')
+          .eq('title_id', data.id)
+          .order('photo_order', { ascending: true });
+        if (photoErr) throw photoErr;
+        T.photos = (photoData || []).map(function (r) { return r.photo; });
+      } catch (e) {
+        console.warn('Load photos failed:', e);
+        T.photos = [];
+      }
+
+      // Show/hide sections based on data availability
+      if (T.photos && T.photos.length > 0) {
+        document.getElementById('photosSection').style.display = 'block';
+      } else {
+        document.getElementById('photosSection').style.display = 'none';
+      }
+
       renderHero();
+      renderCast();
+      renderGallery();
+
     } catch (e) {
       console.warn('Load title failed:', e);
     }
   }
 
+  /* =========================================================
+     RENDER HERO
+     ========================================================= */
   function renderHero() {
     document.title = T.title + ' — CHROMA';
 
@@ -594,23 +687,115 @@
       (T.director ? '<b>Director</b> ' + escapeHtml(T.director) + '<br>' : '') +
       (T.writers ? '<b>Writers</b> ' + escapeHtml(T.writers) + '<br>' : '') +
       (T.genre ? '<b>Genre</b> ' + escapeHtml(T.genre) : '');
+  }
 
-    const castScroll = document.getElementById('castScroll');
+  /* =========================================================
+     RENDER CAST (from DB)
+     ========================================================= */
+  function renderCast() {
+    if (!castScroll) return;
+
+    if (!T.cast || T.cast.length === 0) {
+      castScroll.innerHTML = '<p class="review-empty" style="padding:0 16px;">Cast not yet available.</p>';
+      return;
+    }
+
     castScroll.innerHTML = T.cast.map(function (c) {
-      const initials = c.name.split(' ').map(function (w) { return w[0]; }).join('').slice(0, 2);
+      const initials = c.initials || makeInitials(c.name);
+      const inner = c.photo
+        ? '<img src="' + escapeHtml(c.photo) + '" alt="' + escapeHtml(c.name) + '" ' +
+            'onerror="this.style.display=\'none\'; this.parentElement.textContent=\'' + escapeHtml(initials) + '\';">'
+        : escapeHtml(initials);
       return '<div class="profile-card">' +
-        '<div class="profile-photo ' + c.cls + '">' + initials + '</div>' +
-        '<div class="profile-name">' + c.name + '</div>' +
-        '<div class="profile-role">Actor</div>' +
+        '<div class="profile-photo">' + inner + '</div>' +
+        '<div class="profile-name">' + escapeHtml(c.name) + '</div>' +
+        '<div class="profile-role">' + escapeHtml(c.role || 'Actor') + '</div>' +
       '</div>';
-    }).join('');
-
-    const galleryScroll = document.getElementById('galleryScroll');
-    galleryScroll.innerHTML = [1,2,3,4,5,6].map(function () {
-      return '<div class="gallery-thumb"></div>';
     }).join('');
   }
 
+  /* =========================================================
+     RENDER GALLERY (from DB)
+     ========================================================= */
+  function renderGallery() {
+    if (!galleryScroll) return;
+
+    if (!T.photos || T.photos.length === 0) {
+      galleryScroll.innerHTML = '<p class="review-empty" style="padding:0 16px;">No photos yet.</p>';
+      if (galleryDots) galleryDots.innerHTML = '';
+      return;
+    }
+
+    galleryScroll.innerHTML = T.photos.map(function (url) {
+      return '<div class="gallery-thumb" data-url="' + escapeHtml(url) + '">' +
+        '<img src="' + escapeHtml(url) + '" alt="" ' +
+          'onerror="this.style.display=\'none\';">' +
+      '</div>';
+    }).join('');
+
+    if (galleryDots) {
+      galleryDots.innerHTML = T.photos.map(function (_, i) {
+        return '<span' + (i === 0 ? ' class="on"' : '') + '></span>';
+      }).join('');
+    }
+
+    // Scroll → update dots
+    let scrollTimer = null;
+    galleryScroll.addEventListener('scroll', function () {
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(function () {
+        const thumbs = galleryScroll.querySelectorAll('.gallery-thumb');
+        if (!thumbs.length || !galleryDots) return;
+        const scrollLeft = galleryScroll.scrollLeft;
+        const thumbWidth = thumbs[0].offsetWidth + 10;
+        const idx = Math.round(scrollLeft / thumbWidth);
+        galleryDots.querySelectorAll('span').forEach(function (s, i) {
+          s.classList.toggle('on', i === idx);
+        });
+      }, 60);
+    });
+
+    // Click photo → open lightbox
+    galleryScroll.addEventListener('click', function (e) {
+      const thumb = e.target.closest('.gallery-thumb');
+      if (!thumb) return;
+      const url = thumb.dataset.url;
+      if (!url) return;
+      openPhotoModal(url);
+    });
+  }
+
+  /* =========================================================
+     PHOTO MODAL
+     ========================================================= */
+  const photoModal = document.getElementById('photoModal');
+  const photoModalImg = document.getElementById('photoModalImg');
+  const photoModalClose = document.getElementById('photoModalClose');
+
+  function openPhotoModal(url) {
+    if (!photoModal || !photoModalImg) return;
+    photoModalImg.src = url;
+    photoModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closePhotoModal() {
+    if (!photoModal) return;
+    photoModal.classList.remove('open');
+    document.body.style.overflow = '';
+    photoModalImg.src = '';
+  }
+
+  if (photoModalClose) photoModalClose.addEventListener('click', closePhotoModal);
+  if (photoModal) {
+    photoModal.addEventListener('click', function (e) {
+      if (e.target === photoModal) closePhotoModal();
+    });
+  }
+
+  /* =========================================================
+     RATING
+     ========================================================= */
   const starButtons = [];
   for (let i = 1; i <= 5; i++) {
     const b = document.createElement('button');
@@ -732,6 +917,9 @@
     }
   }
 
+  /* =========================================================
+     SAVE / ADD TO LIST
+     ========================================================= */
   let isSaved = false;
 
   function paintAddListBtn() {
@@ -799,16 +987,18 @@
   saveBtn.addEventListener('click', toggleSave);
   addListBtn.addEventListener('click', toggleSave);
 
+  /* =========================================================
+     PLAY TRAILER (modal video with src="#")
+     ========================================================= */
   const videoModal = document.getElementById('videoModal');
   const modalVideo = document.getElementById('modalVideo');
   const playTrailerBtn = document.getElementById('playTrailerBtn');
   const videoModalClose = document.getElementById('videoModalClose');
-  const heroVideo = document.getElementById('heroVideo');
 
   playTrailerBtn.addEventListener('click', function () {
     videoModal.classList.add('open');
     document.body.style.overflow = 'hidden';
-    try { heroVideo.pause(); } catch(e) {}
+    // Hero video doesn't exist, but keep the logic clean
     modalVideo.currentTime = 0;
     const p = modalVideo.play();
     if (p && p.catch) p.catch(function(){});
@@ -818,16 +1008,21 @@
     videoModal.classList.remove('open');
     document.body.style.overflow = '';
     try { modalVideo.pause(); } catch(e) {}
-    try { heroVideo.play(); } catch(e) {}
   }
   videoModalClose.addEventListener('click', closeVideoModal);
   videoModal.addEventListener('click', function (e) {
     if (e.target === videoModal) closeVideoModal();
   });
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && videoModal.classList.contains('open')) closeVideoModal();
+    if (e.key === 'Escape') {
+      if (videoModal.classList.contains('open')) closeVideoModal();
+      if (photoModal && photoModal.classList.contains('open')) closePhotoModal();
+    }
   });
 
+  /* =========================================================
+     REVIEWS
+     ========================================================= */
   function reviewCardHTML(r) {
     const initials = (r.name || 'A').split(' ').map(function(w){return w[0];}).join('').slice(0,2).toUpperCase();
     const starCount = Math.round((r.stars || 0) / 2);
@@ -912,9 +1107,11 @@
     }
   });
 
+  /* =========================================================
+     MORE LIKE THIS
+     ========================================================= */
   async function loadMoreLikeThis() {
     if (!supabaseClient) {
-      similarScroll.innerHTML = '<p class="review-empty">Supabase not configured.</p>';
       return;
     }
     try {
@@ -928,9 +1125,12 @@
       if (error) throw error;
 
       if (!data || data.length === 0) {
-        similarScroll.innerHTML = '<p class="review-empty">No similar titles in this genre yet.</p>';
+        document.getElementById('similarSection').style.display = 'none';
         return;
       }
+
+      // Show section if we have data
+      document.getElementById('similarSection').style.display = 'block';
 
       similarScroll.innerHTML = data.map(function (s) {
         const posterFile = s.poster || ('poster' + (s.poster_num || 1) + '.png');
@@ -938,7 +1138,6 @@
           '<div class="poster">' +
             '<img src="' + escapeHtml(posterFile) + '" alt="' + escapeHtml(s.title) + '" ' +
               'onerror="this.style.display=\'none\';">' +
-            '<div class="label">' + escapeHtml(String(s.title).toUpperCase()) + '</div>' +
           '</div>' +
           '<div class="card-meta">' +
             '<div class="rating">' + starSVG(true) + Number(s.rating || 0).toFixed(1) + '</div>' +
@@ -954,10 +1153,13 @@
       });
     } catch (e) {
       console.warn('Load More Like This failed:', e);
-      similarScroll.innerHTML = '<p class="review-empty">Failed to load.</p>';
+      document.getElementById('similarSection').style.display = 'none';
     }
   }
 
+  /* =========================================================
+     INIT
+     ========================================================= */
   async function init() {
     await loadTitle();
     loadUserRating();
