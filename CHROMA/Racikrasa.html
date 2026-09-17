@@ -378,9 +378,11 @@
   </div>
 </header>
 
-<!-- Backdrop: video src="#" -> black background, no video element shown -->
+<!-- Backdrop: NOW WITH VIDEO -->
 <div class="backdrop" id="backdrop">
-  <!-- Video removed, black background is set in CSS -->
+  <video id="backdropVideo" autoplay muted loop playsinline preload="auto"
+    poster="Racikrasa.jpg"
+    src="https://res.cloudinary.com/dt5yn0xqh/video/upload/v1789658603/RacikRasa.mp4"></video>
   <div class="backdrop-shade"></div>
 </div>
 
@@ -476,7 +478,7 @@
     <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </button>
   <video id="modalVideo" controls playsinline preload="metadata"
-    src="#"></video>
+    src="https://res.cloudinary.com/dt5yn0xqh/video/upload/v1789658603/RacikRasa.mp4"></video>
 </div>
 
 <div class="photo-modal" id="photoModal">
@@ -988,16 +990,18 @@
   addListBtn.addEventListener('click', toggleSave);
 
   /* =========================================================
-     PLAY TRAILER (modal video with src="#")
+     PLAY TRAILER (modal video with Cloudinary src)
      ========================================================= */
   const videoModal = document.getElementById('videoModal');
   const modalVideo = document.getElementById('modalVideo');
   const playTrailerBtn = document.getElementById('playTrailerBtn');
   const videoModalClose = document.getElementById('videoModalClose');
+  const backdropVideo = document.getElementById('backdropVideo');
 
   playTrailerBtn.addEventListener('click', function () {
     videoModal.classList.add('open');
     document.body.style.overflow = 'hidden';
+    if (backdropVideo) backdropVideo.pause();
     modalVideo.currentTime = 0;
     const p = modalVideo.play();
     if (p && p.catch) p.catch(function(){});
@@ -1007,6 +1011,7 @@
     videoModal.classList.remove('open');
     document.body.style.overflow = '';
     try { modalVideo.pause(); } catch(e) {}
+    if (backdropVideo) backdropVideo.play().catch(function(){});
   }
   videoModalClose.addEventListener('click', closeVideoModal);
   videoModal.addEventListener('click', function (e) {
@@ -1174,4 +1179,4 @@
 </script>
 
 </body>
-</html>
+ </html>
