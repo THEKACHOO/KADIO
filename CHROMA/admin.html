@@ -66,6 +66,21 @@
     font-family: 'Inter', sans-serif; font-size: 13px;
     outline: none; transition: border-color .15s;
   }
+  .field input[type="file"] {
+    padding: 7px 10px; cursor: pointer;
+    font-size: 12px;
+  }
+  .field input[type="file"]::file-selector-button {
+    background: #1b1b1b; border: 1px solid #2a2a2a;
+    color: #f5f5f2; font-family: inherit;
+    padding: 6px 12px; border-radius: 6px;
+    cursor: pointer; font-size: 12px; font-weight: 600;
+    margin-right: 10px;
+    transition: border-color .15s;
+  }
+  .field input[type="file"]::file-selector-button:hover {
+    border-color: #f2c94c;
+  }
   .field input::placeholder, .field textarea::placeholder {
     color: #555;
   }
@@ -74,6 +89,63 @@
   }
   .field textarea { resize: vertical; min-height: 70px; }
   .field select { cursor: pointer; }
+
+  /* ---------- POSTER PREVIEW ---------- */
+  .poster-preview {
+    display: none;
+    margin-top: 12px;
+    padding: 10px;
+    background: #0a0a0a;
+    border: 1px dashed #2a2a2a;
+    border-radius: 10px;
+    align-items: center;
+    gap: 12px;
+  }
+  .poster-preview.show { display: flex; }
+  .poster-preview img {
+    width: 90px; height: 130px;
+    object-fit: cover; border-radius: 8px;
+    border: 1px solid #2a2a2a;
+    background: #141414;
+    flex-shrink: 0;
+  }
+  .poster-preview .info {
+    flex: 1; min-width: 0;
+    font-size: 11px; color: #9a9a95;
+    line-height: 1.5;
+  }
+  .poster-preview .info strong {
+    display: block; color: #f5f5f2;
+    font-size: 12px; margin-bottom: 3px;
+    word-break: break-all;
+  }
+  .poster-preview .remove-btn {
+    background: rgba(220,60,60,0.1);
+    border: 1px solid rgba(220,60,60,0.4);
+    color: #ff7a7a;
+    font-size: 11px; font-weight: 600;
+    padding: 5px 10px; border-radius: 6px;
+    cursor: pointer; font-family: inherit;
+    transition: background .15s;
+    align-self: flex-start;
+    flex-shrink: 0;
+  }
+  .poster-preview .remove-btn:hover {
+    background: rgba(220,60,60,0.2);
+  }
+
+  /* ---------- PROGRESS BAR ---------- */
+  .progress-bar {
+    width: 100%; height: 3px;
+    background: #1b1b1b; border-radius: 2px;
+    overflow: hidden; margin-top: 8px;
+    display: none;
+  }
+  .progress-bar.show { display: block; }
+  .progress-bar .fill {
+    height: 100%; background: #f2c94c;
+    width: 0%; transition: width .2s;
+  }
 
   .check-row {
     display: flex; gap: 16px; margin: 12px 0;
@@ -136,6 +208,9 @@
   }
   .badge.new { background: rgba(122,255,158,0.15); color: #7aff9e; border: 1px solid rgba(122,255,158,0.35); }
   .badge.trend { background: rgba(242,201,76,0.15); color: #f2c94c; border: 1px solid rgba(242,201,76,0.35); }
+  .badge.watch { background: rgba(122,180,255,0.15); color: #7ab4ff; border: 1px solid rgba(122,180,255,0.35); }
+  .badge.box { background: rgba(255,140,200,0.15); color: #ff8cc8; border: 1px solid rgba(255,140,200,0.35); }
+  .badge.nopage { background: rgba(255,122,122,0.12); color: #ff7a7a; border: 1px solid rgba(255,122,122,0.3); }
 
   .list-actions { display: flex; gap: 6px; flex-shrink: 0; }
   .list-actions button {
@@ -199,7 +274,10 @@
           <label for="f_type">Type *</label>
           <select id="f_type" required>
             <option value="Film">Film</option>
+            <option value="Movie">Movie</option>
             <option value="Series">Series</option>
+            <option value="Theater">Theater</option>
+            <option value="Short Movie">Short Movie</option>
           </select>
         </div>
         <div class="field">
@@ -254,9 +332,22 @@
         </div>
       </div>
 
+      <!-- ===== POSTER UPLOAD ===== -->
       <div class="field">
-        <label for="f_poster">Poster File (PNG)</label>
-        <input type="text" id="f_poster" placeholder="poster1.png">
+        <label for="f_poster_file">Poster Image — Potrait 7:10 (rekomendasi 800×1140px, max 5MB)</label>
+        <input type="file" id="f_poster_file" accept="image/jpeg,image/jpg,image/png,image/webp">
+        <input type="hidden" id="f_poster">
+        <div class="progress-bar" id="uploadProgress">
+          <div class="fill" id="uploadProgressFill"></div>
+        </div>
+        <div class="poster-preview" id="posterPreviewWrap">
+          <img id="posterPreview" alt="Poster preview">
+          <div class="info">
+            <strong id="posterInfoName">Poster</strong>
+            <span id="posterInfoStatus">Current poster</span>
+          </div>
+          <button type="button" class="remove-btn" id="removePosterBtn">Remove</button>
+        </div>
       </div>
 
       <input type="hidden" id="f_cls" value="g1">
@@ -264,6 +355,8 @@
       <div class="check-row">
         <label><input type="checkbox" id="f_is_new"> Show in "New &amp; Now Showing"</label>
         <label><input type="checkbox" id="f_is_trending"> Show in "Trending This Week"</label>
+        <label><input type="checkbox" id="f_is_what_to_watch"> Show in "What to Watch"</label>
+        <label><input type="checkbox" id="f_is_top_box_office"> Show in "Top Box Office"</label>
       </div>
 
       <div class="btn-row">
@@ -285,6 +378,9 @@
 
   const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+  const MAX_POSTER_BYTES = 5 * 1024 * 1024; // 5MB
+
+  /* ---------- Tab switching ---------- */
   function showTab(name) {
     document.querySelectorAll('.tab').forEach(function (x) {
       x.classList.toggle('active', x.dataset.tab === name);
@@ -297,26 +393,37 @@
     t.addEventListener('click', function () { showTab(t.dataset.tab); });
   });
 
+  /* ---------- Field refs ---------- */
   const F = {
-    id:             document.getElementById('f_id'),
-    title:          document.getElementById('f_title'),
-    slug:           document.getElementById('f_slug'),
-    genre:          document.getElementById('f_genre'),
-    type:           document.getElementById('f_type'),
-    year:           document.getElementById('f_year'),
-    rating:         document.getElementById('f_rating'),
-    votes:          document.getElementById('f_votes'),
-    runtime:        document.getElementById('f_runtime'),
-    content_rating: document.getElementById('f_content_rating'),
-    tag:            document.getElementById('f_tag'),
-    page:           document.getElementById('f_page'),
-    synopsis:       document.getElementById('f_synopsis'),
-    director:       document.getElementById('f_director'),
-    writers:        document.getElementById('f_writers'),
-    poster:         document.getElementById('f_poster'),
-    cls:            document.getElementById('f_cls'),
-    is_new:         document.getElementById('f_is_new'),
-    is_trending:    document.getElementById('f_is_trending')
+    id:                document.getElementById('f_id'),
+    title:             document.getElementById('f_title'),
+    slug:              document.getElementById('f_slug'),
+    genre:             document.getElementById('f_genre'),
+    type:              document.getElementById('f_type'),
+    year:              document.getElementById('f_year'),
+    rating:            document.getElementById('f_rating'),
+    votes:             document.getElementById('f_votes'),
+    runtime:           document.getElementById('f_runtime'),
+    content_rating:    document.getElementById('f_content_rating'),
+    tag:               document.getElementById('f_tag'),
+    page:              document.getElementById('f_page'),
+    synopsis:          document.getElementById('f_synopsis'),
+    director:          document.getElementById('f_director'),
+    writers:           document.getElementById('f_writers'),
+    poster:            document.getElementById('f_poster'),
+    poster_file:       document.getElementById('f_poster_file'),
+    cls:               document.getElementById('f_cls'),
+    is_new:            document.getElementById('f_is_new'),
+    is_trending:       document.getElementById('f_is_trending'),
+    is_what_to_watch:  document.getElementById('f_is_what_to_watch'),
+    is_top_box_office: document.getElementById('f_is_top_box_office'),
+    previewWrap:       document.getElementById('posterPreviewWrap'),
+    previewImg:        document.getElementById('posterPreview'),
+    previewName:       document.getElementById('posterInfoName'),
+    previewStatus:     document.getElementById('posterInfoStatus'),
+    removePoster:      document.getElementById('removePosterBtn'),
+    progressWrap:      document.getElementById('uploadProgress'),
+    progressFill:      document.getElementById('uploadProgressFill')
   };
 
   const formMsg = document.getElementById('formMsg');
@@ -326,16 +433,13 @@
   const listContainer = document.getElementById('listContainer');
   const listCount = document.getElementById('listCount');
 
+  /* ---------- Utility ---------- */
   function autoSlug(str) {
     return str.toLowerCase().trim()
       .replace(/[^a-z0-9\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-');
   }
-
-  F.title.addEventListener('input', function () {
-    if (!F.id.value) F.slug.value = autoSlug(F.title.value);
-  });
 
   function escapeHtml(str) {
     if (str == null) return '';
@@ -345,13 +449,131 @@
       .replace(/'/g, '&#39;');
   }
 
+  function humanSize(bytes) {
+    if (!bytes) return '0 B';
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+
   function posterSrc(t) {
-    // pakai field poster baru, fallback ke poster_num lama kalau ada
     if (t.poster) return t.poster;
     if (t.poster_num != null) return 'poster' + t.poster_num + '.png';
     return 'poster1.png';
   }
 
+  /* ---------- Auto slug ---------- */
+  F.title.addEventListener('input', function () {
+    if (!F.id.value) F.slug.value = autoSlug(F.title.value);
+  });
+
+  /* ---------- Poster preview saat pilih file ---------- */
+  F.poster_file.addEventListener('change', function (e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      formMsg.textContent = 'File harus berupa gambar (JPG/PNG/WebP).';
+      formMsg.className = 'msg error';
+      F.poster_file.value = '';
+      return;
+    }
+    if (file.size > MAX_POSTER_BYTES) {
+      formMsg.textContent = 'Ukuran poster terlalu besar (max 5MB). File kamu: ' + humanSize(file.size);
+      formMsg.className = 'msg error';
+      F.poster_file.value = '';
+      return;
+    }
+
+    formMsg.textContent = '';
+    formMsg.className = 'msg';
+
+    const reader = new FileReader();
+    reader.onload = function (ev) {
+      const img = new Image();
+      img.onload = function () {
+        const ratio = img.width / img.height;
+        const isPortrait = ratio < 1;
+        F.previewImg.src = ev.target.result;
+        F.previewName.textContent = file.name;
+        F.previewStatus.textContent = img.width + '×' + img.height + ' · ' +
+          humanSize(file.size) +
+          (isPortrait ? '' : ' · ⚠️ bukan potrait');
+        F.previewWrap.classList.add('show');
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  /* ---------- Remove poster ---------- */
+  F.removePoster.addEventListener('click', function () {
+    F.poster_file.value = '';
+    F.poster.value = '';
+    F.previewWrap.classList.remove('show');
+    F.previewImg.src = '';
+    formMsg.textContent = 'Poster akan dihapus saat Save.';
+    formMsg.className = 'msg';
+  });
+
+  /* ---------- Upload ke Supabase Storage ---------- */
+  async function uploadPoster(file) {
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const fileName = 'poster_' + Date.now() + '_' +
+                     Math.random().toString(36).slice(2, 8) + '.' + ext;
+
+    F.progressWrap.classList.add('show');
+    F.progressFill.style.width = '20%';
+
+    const { data, error } = await sb.storage
+      .from('posters')
+      .upload(fileName, file, {
+        cacheControl: '3600',
+        upsert: false,
+        contentType: file.type
+      });
+
+    F.progressFill.style.width = '80%';
+
+    if (error) {
+      F.progressWrap.classList.remove('show');
+      F.progressFill.style.width = '0%';
+      throw error;
+    }
+
+    const { data: urlData } = sb.storage
+      .from('posters')
+      .getPublicUrl(fileName);
+
+    F.progressFill.style.width = '100%';
+    setTimeout(function () {
+      F.progressWrap.classList.remove('show');
+      F.progressFill.style.width = '0%';
+    }, 500);
+
+    return urlData.publicUrl;
+  }
+
+  /* ---------- Ambil path dari URL ---------- */
+  function posterPathFromUrl(url) {
+    if (!url) return null;
+    const marker = '/storage/v1/object/public/posters/';
+    const idx = url.indexOf(marker);
+    if (idx === -1) return null;
+    return decodeURIComponent(url.substring(idx + marker.length));
+  }
+
+  async function deleteOldPoster(oldUrl) {
+    const path = posterPathFromUrl(oldUrl);
+    if (!path) return;
+    try {
+      await sb.storage.from('posters').remove([path]);
+    } catch (e) {
+      console.warn('Delete old poster failed:', e);
+    }
+  }
+
+  /* ---------- Load list ---------- */
   async function loadTitles() {
     listContainer.innerHTML = '<p class="empty">Loading...</p>';
     try {
@@ -372,6 +594,11 @@
         const badges = [];
         if (t.is_new) badges.push('<span class="badge new">NEW</span>');
         if (t.is_trending) badges.push('<span class="badge trend">TRENDING</span>');
+        if (t.is_what_to_watch) badges.push('<span class="badge watch">WHAT TO WATCH</span>');
+        if (t.is_top_box_office) badges.push('<span class="badge box">TOP BOX OFFICE</span>');
+        if (!t.page || t.page === 'example.html' || t.page === '#') {
+          badges.push('<span class="badge nopage">NO PAGE</span>');
+        }
         const src = posterSrc(t);
         return '<div class="list-row">' +
           '<div class="list-thumb">' +
@@ -404,7 +631,11 @@
       listContainer.querySelectorAll('button.del').forEach(function (btn) {
         btn.addEventListener('click', async function () {
           if (!confirm('Delete this title? Cannot be undone.')) return;
+          const row = data.find(function (x) { return x.id === btn.dataset.id; });
           try {
+            if (row && row.poster) {
+              await deleteOldPoster(row.poster);
+            }
             const { error } = await sb.from('titles').delete().eq('id', btn.dataset.id);
             if (error) throw error;
             loadTitles();
@@ -418,6 +649,7 @@
     }
   }
 
+  /* ---------- Fill form (edit) ---------- */
   function fillForm(t) {
     F.id.value = t.id || '';
     F.title.value = t.title || '';
@@ -434,9 +666,24 @@
     F.synopsis.value = t.synopsis || '';
     F.director.value = t.director || '';
     F.writers.value = t.writers || '';
-    F.poster.value = t.poster || (t.poster_num != null ? 'poster' + t.poster_num + '.png' : '');
     F.is_new.checked = !!t.is_new;
     F.is_trending.checked = !!t.is_trending;
+    F.is_what_to_watch.checked = !!t.is_what_to_watch;
+    F.is_top_box_office.checked = !!t.is_top_box_office;
+
+    const posterVal = t.poster || (t.poster_num != null ? 'poster' + t.poster_num + '.png' : '');
+    F.poster.value = posterVal;
+    F.poster_file.value = '';
+
+    if (posterVal) {
+      F.previewImg.src = posterVal;
+      F.previewName.textContent = posterVal.split('/').pop() || posterVal;
+      F.previewStatus.textContent = 'Current poster (klik input file untuk ganti)';
+      F.previewWrap.classList.add('show');
+    } else {
+      F.previewWrap.classList.remove('show');
+      F.previewImg.src = '';
+    }
 
     formTitle.textContent = 'Edit Title — ' + t.title;
     cancelBtn.style.display = 'inline-flex';
@@ -446,6 +693,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
+  /* ---------- Reset form ---------- */
   function resetForm() {
     F.id.value = '';
     F.title.value = '';
@@ -463,8 +711,16 @@
     F.director.value = '';
     F.writers.value = '';
     F.poster.value = '';
+    F.poster_file.value = '';
     F.is_new.checked = false;
     F.is_trending.checked = false;
+    F.is_what_to_watch.checked = false;
+    F.is_top_box_office.checked = false;
+
+    F.previewWrap.classList.remove('show');
+    F.previewImg.src = '';
+    F.previewName.textContent = '';
+    F.previewStatus.textContent = '';
 
     formTitle.textContent = 'Add New Title';
     cancelBtn.style.display = 'none';
@@ -477,44 +733,63 @@
     showTab('list');
   });
 
+  /* ---------- SAVE ---------- */
   saveBtn.addEventListener('click', async function () {
     formMsg.textContent = '';
     formMsg.className = 'msg';
 
-    const payload = {
-      title:          F.title.value.trim(),
-      slug:           F.slug.value.trim(),
-      genre:          F.genre.value.trim(),
-      type:           F.type.value,
-      year:           F.year.value ? parseInt(F.year.value, 10) : null,
-      rating:         F.rating.value ? parseFloat(F.rating.value) : null,
-      votes:          F.votes.value ? parseInt(F.votes.value, 10) : null,
-      runtime:        F.runtime.value.trim() || null,
-      content_rating: F.content_rating.value.trim() || null,
-      tag:            F.tag.value.trim() || null,
-      page:           F.page.value.trim() || null,
-      synopsis:       F.synopsis.value.trim() || null,
-      director:       F.director.value.trim() || null,
-      writers:        F.writers.value.trim() || null,
-      poster:         F.poster.value.trim() || null,
-      cls:            'g1',
-      is_new:         F.is_new.checked,
-      is_trending:    F.is_trending.checked,
-      updated_at:     new Date().toISOString()
-    };
+    if (!F.title.value.trim()) { formMsg.textContent = 'Title is required.'; formMsg.classList.add('error'); return; }
+    if (!F.slug.value.trim())  { formMsg.textContent = 'Slug is required.'; formMsg.classList.add('error'); return; }
+    if (!F.genre.value.trim()) { formMsg.textContent = 'Genre is required.'; formMsg.classList.add('error'); return; }
 
-    if (!payload.title) { formMsg.textContent = 'Title is required.'; formMsg.classList.add('error'); return; }
-    if (!payload.slug)  { formMsg.textContent = 'Slug is required.'; formMsg.classList.add('error'); return; }
-    if (!payload.genre) { formMsg.textContent = 'Genre is required.'; formMsg.classList.add('error'); return; }
-    if (payload.rating != null && (payload.rating < 0 || payload.rating > 10)) {
-      formMsg.textContent = 'Rating must be 0–10.'; formMsg.classList.add('error'); return;
-    }
+    const fileInput = F.poster_file.files[0];
+    const oldPosterUrl = F.poster.value.trim() || null;
+    let posterUrl = oldPosterUrl;
 
     saveBtn.disabled = true;
     formMsg.textContent = 'Saving...';
 
     try {
+      if (fileInput) {
+        formMsg.textContent = 'Uploading poster...';
+        posterUrl = await uploadPoster(fileInput);
+      }
+
+      const payload = {
+        title:              F.title.value.trim(),
+        slug:               F.slug.value.trim(),
+        genre:              F.genre.value.trim(),
+        type:               F.type.value,
+        year:               F.year.value ? parseInt(F.year.value, 10) : null,
+        rating:             F.rating.value ? parseFloat(F.rating.value) : null,
+        votes:              F.votes.value ? parseInt(F.votes.value, 10) : null,
+        runtime:            F.runtime.value.trim() || null,
+        content_rating:     F.content_rating.value.trim() || null,
+        tag:                F.tag.value.trim() || null,
+        page:               F.page.value.trim() || null,
+        synopsis:           F.synopsis.value.trim() || null,
+        director:           F.director.value.trim() || null,
+        writers:            F.writers.value.trim() || null,
+        poster:             posterUrl,
+        cls:                'g1',
+        is_new:             F.is_new.checked,
+        is_trending:        F.is_trending.checked,
+        is_what_to_watch:   F.is_what_to_watch.checked,
+        is_top_box_office:  F.is_top_box_office.checked,
+        updated_at:         new Date().toISOString()
+      };
+
+      if (payload.rating != null && (payload.rating < 0 || payload.rating > 10)) {
+        throw new Error('Rating must be 0–10.');
+      }
+
       if (F.id.value) {
+        if (fileInput && oldPosterUrl && oldPosterUrl !== posterUrl) {
+          await deleteOldPoster(oldPosterUrl);
+        }
+        if (!fileInput && !posterUrl && oldPosterUrl) {
+          await deleteOldPoster(oldPosterUrl);
+        }
         const { error } = await sb.from('titles').update(payload).eq('id', F.id.value);
         if (error) throw error;
         formMsg.textContent = 'Updated ✓';
@@ -525,6 +800,7 @@
         formMsg.textContent = 'Created ✓';
         formMsg.classList.add('success');
       }
+
       resetForm();
       await loadTitles();
       setTimeout(function () { showTab('list'); }, 500);
@@ -537,6 +813,7 @@
     }
   });
 
+  /* ---------- Init ---------- */
   resetForm();
   loadTitles();
 
