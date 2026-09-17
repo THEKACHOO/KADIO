@@ -143,6 +143,37 @@
   }
   .menu-section { margin-bottom: 22px; }
   .menu-section h4 { font-size: 10px; letter-spacing: 1px; color: #9a9a95; margin-bottom: 10px; font-weight: 700; }
+
+  /* Dropdown header */
+  .menu-section h4.menu-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    cursor: pointer; user-select: none;
+    padding: 6px 0;
+    margin-bottom: 0;
+    transition: color .15s;
+  }
+  .menu-section h4.menu-toggle:hover { color: #f2c94c; }
+  .menu-section h4.menu-toggle .chev {
+    width: 10px; height: 10px;
+    transition: transform .2s ease;
+    stroke: currentColor; fill: none; stroke-width: 3;
+    margin-left: 6px;
+    flex-shrink: 0;
+  }
+  .menu-section h4.menu-toggle.open .chev {
+    transform: rotate(90deg);
+  }
+  .menu-section .menu-collapsible {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .3s ease;
+    margin-top: 6px;
+  }
+  .menu-section .menu-collapsible.open {
+    max-height: 600px;
+    overflow-y: auto;
+  }
+
   .menu-list { display: flex; flex-direction: column; gap: 2px; }
   .menu-item {
     display: flex; align-items: center; justify-content: space-between;
@@ -639,7 +670,6 @@
   .session-desc { font-size: 14px; line-height: 1.75; color: #c9c9c4; }
   .session-block { padding-top: 24px; }
 
-  /* session photo gallery */
   .session-gallery-scroll {
     display: flex; gap: 10px; overflow-x: auto; padding: 0 16px 8px;
     scroll-snap-type: x mandatory;
@@ -652,7 +682,6 @@
   }
   .session-gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-  /* photo lightbox */
   .photo-modal {
     position: fixed; inset: 0; z-index: 310;
     background: rgba(0,0,0,0.96);
@@ -722,14 +751,23 @@
   <div class="menu-panel">
     <button class="menu-close" id="menuCloseBtn">&times;</button>
     <div class="menu-brand">CHROMA</div>
+
     <div class="menu-section">
       <h4>CATEGORIES</h4>
       <div class="menu-list" id="categoryMenuList"></div>
     </div>
+
+    <!-- GENRES — collapsible dropdown -->
     <div class="menu-section">
-      <h4>GENRES</h4>
-      <div class="menu-list" id="genreMenuList"></div>
+      <h4 class="menu-toggle" id="genreToggle">
+        <span>GENRES</span>
+        <svg class="chev" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+      </h4>
+      <div class="menu-collapsible" id="genreCollapsible">
+        <div class="menu-list" id="genreMenuList"></div>
+      </div>
     </div>
+
     <div class="menu-section">
       <h4>EVENTS</h4>
       <div class="menu-list" id="eventMenuList">
@@ -1050,8 +1088,8 @@
   (function(){
 
     let titles = [];
-    let profiles = [];   // from DB
-    let sessions = [];   // from DB
+    let profiles = [];
+    let sessions = [];
 
     const CATEGORIES = ["Film", "Movie", "Series", "Theater", "Short Movie"];
 
@@ -1225,24 +1263,41 @@
           (t.genres || []).forEach(function(g) { if (g) genreSet.add(g); });
         });
         const genres = [...genreSet].sort();
-        genres.forEach(function(g) {
-          const count = titles.filter(function(t) {
-            return (t.genres || []).indexOf(g) !== -1;
-          }).length;
-          const item = document.createElement('button');
-          item.className = 'menu-item';
-          item.innerHTML = '<span>' + escapeHtml(g) + '</span><span class="count">' + count + ' titles</span>';
-          item.addEventListener('click', function() {
-            document.getElementById('menuOverlay').classList.remove('open');
-            goToView('search');
-            const si = document.getElementById('searchInput');
-            if (si) si.value = g;
-            runSearch(g);
+        if (genres.length === 0) {
+          genreMenuList.innerHTML = '<p class="search-hint" style="padding:4px 2px;">No genres yet.</p>';
+        } else {
+          genres.forEach(function(g) {
+            const count = titles.filter(function(t) {
+              return (t.genres || []).indexOf(g) !== -1;
+            }).length;
+            const item = document.createElement('button');
+            item.className = 'menu-item';
+            item.innerHTML = '<span>' + escapeHtml(g) + '</span><span class="count">' + count + ' titles</span>';
+            item.addEventListener('click', function() {
+              document.getElementById('menuOverlay').classList.remove('open');
+              goToView('search');
+              const si = document.getElementById('searchInput');
+              if (si) si.value = g;
+              runSearch(g);
+            });
+            genreMenuList.appendChild(item);
           });
-          genreMenuList.appendChild(item);
-        });
+        }
       }
     }
+
+    /* ---------- Genre dropdown toggle ---------- */
+    (function initGenreDropdown() {
+      const toggle = document.getElementById('genreToggle');
+      const collapsible = document.getElementById('genreCollapsible');
+      if (!toggle || !collapsible) return;
+
+      toggle.addEventListener('click', function () {
+        const isOpen = toggle.classList.contains('open');
+        toggle.classList.toggle('open', !isOpen);
+        collapsible.classList.toggle('open', !isOpen);
+      });
+    })();
 
     /* ---------- Sessions (dynamic) ---------- */
     function renderEventChips() {
@@ -1695,7 +1750,6 @@
       sessionTitle.textContent = s.title || '';
       sessionDesc.textContent = s.desc_text || '';
 
-      // Poster banner
       if (s.poster) {
         sessionPosterImg.src = s.poster;
         sessionPosterBanner.classList.remove('hidden');
@@ -1704,7 +1758,6 @@
         sessionPosterBanner.classList.add('hidden');
       }
 
-      // Reset blocks
       sessionFilms.innerHTML = '';
       sessionProfiles.innerHTML = '';
       sessionPhotosScroll.innerHTML = '';
