@@ -54,7 +54,7 @@
   .head-right { margin-left: auto; display: flex; align-items: center; gap: 4px; }
   .save-btn.active svg { fill: #f2c94c; stroke: #f2c94c; }
 
-  /* ---------- HERO / BACKDROP (BLACK, NO VIDEO) ---------- */
+  /* ---------- HERO / BACKDROP (NOW WITH VIDEO) ---------- */
   .backdrop {
     position: relative;
     width: 100%;
@@ -62,6 +62,14 @@
     max-height: 70vh;
     overflow: visible;
     background: #0a0a0a;
+  }
+  .backdrop video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
   .backdrop::after {
     content: '';
@@ -318,6 +326,34 @@
   }
   .photo-modal-close svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
 
+  /* ---------- VIDEO / TRAILER MODAL ---------- */
+  .trailer-modal {
+    position: fixed; inset: 0; z-index: 320;
+    background: rgba(0,0,0,0.96);
+    display: flex; align-items: center; justify-content: center;
+    visibility: hidden; opacity: 0;
+    transition: opacity .2s ease;
+    padding: 16px;
+  }
+  .trailer-modal.open { visibility: visible; opacity: 1; }
+  .trailer-modal video {
+    width: 100%;
+    max-width: 1000px;
+    max-height: 88vh;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    background: #000;
+    object-fit: contain;
+  }
+  .trailer-modal-close {
+    position: absolute; top: 16px; right: 16px;
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(20,20,20,0.7); border: 1px solid #2a2a2a;
+    display: flex; align-items: center; justify-content: center;
+    z-index: 3;
+  }
+  .trailer-modal-close svg { width: 18px; height: 18px; fill: none; stroke: #fff; stroke-width: 2; }
+
   /* ---------- HIDDEN UTILITY ---------- */
   .hidden-section { display: none !important; }
 
@@ -358,8 +394,12 @@
   </div>
 </header>
 
-<!-- Backdrop: pure black, no video -->
-<div class="backdrop" id="backdrop"></div>
+<!-- Backdrop: NOW WITH VIDEO -->
+<div class="backdrop" id="backdrop">
+  <video id="backdropVideo" autoplay muted loop playsinline preload="auto"
+         poster="poster1.png"
+         src="https://res.cloudinary.com/dt5yn0xqh/video/upload/v1789644551/Lazarus.mp4"></video>
+</div>
 
 <div class="title-block">
   <div class="title-row">
@@ -386,8 +426,8 @@
   </div>
 
   <div class="action-row">
-    <button class="btn btn-primary" id="playTrailerBtn" disabled>
-      <svg viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>Trailer Soon
+    <button class="btn btn-primary" id="playTrailerBtn">
+      <svg viewBox="0 0 24 24" fill="#0a0a0a"><path d="M8 5v14l11-7z"/></svg>Trailer
     </button>
     <button class="btn btn-ghost" id="addListBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg><span>Add to List</span>
@@ -458,6 +498,15 @@
     <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </button>
   <img id="photoModalImg" src="" alt="">
+</div>
+
+<!-- Video / Trailer modal -->
+<div class="trailer-modal" id="trailerModal">
+  <button class="trailer-modal-close" id="trailerModalClose" aria-label="Close">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <video id="trailerVideo" controls playsinline preload="metadata"
+         src="https://res.cloudinary.com/dt5yn0xqh/video/upload/v1789644551/Lazarus.mp4"></video>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -544,6 +593,51 @@
   const castSection = document.getElementById('castSection');
   const photosSection = document.getElementById('photosSection');
   const similarSection = document.getElementById('similarSection');
+
+  /* =========================================================
+     TRAILER / VIDEO MODAL LOGIC
+     ========================================================= */
+  const backdropVideo = document.getElementById('backdropVideo');
+  const trailerModal = document.getElementById('trailerModal');
+  const trailerVideo = document.getElementById('trailerVideo');
+  const trailerModalClose = document.getElementById('trailerModalClose');
+  const playTrailerBtn = document.getElementById('playTrailerBtn');
+
+  function openTrailer() {
+    if (!trailerModal) return;
+    trailerModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    if (backdropVideo) backdropVideo.pause();
+    if (trailerVideo) {
+      try { trailerVideo.currentTime = 0; } catch(e) {}
+      trailerVideo.play().catch(function(){});
+    }
+  }
+
+  function closeTrailer() {
+    if (!trailerModal) return;
+    trailerModal.classList.remove('open');
+    document.body.style.overflow = '';
+    if (trailerVideo) {
+      trailerVideo.pause();
+      try { trailerVideo.currentTime = 0; } catch(e) {}
+    }
+    if (backdropVideo) backdropVideo.play().catch(function(){});
+  }
+
+  if (playTrailerBtn) playTrailerBtn.addEventListener('click', openTrailer);
+  if (trailerModalClose) trailerModalClose.addEventListener('click', closeTrailer);
+  if (trailerModal) {
+    trailerModal.addEventListener('click', function (e) {
+      if (e.target === trailerModal) closeTrailer();
+    });
+  }
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      if (trailerModal && trailerModal.classList.contains('open')) closeTrailer();
+      if (photoModal && photoModal.classList.contains('open')) closePhotoModal();
+    }
+  });
 
   /* =========================================================
      LOAD TITLE + CAST + PHOTOS FROM SUPABASE
@@ -1108,4 +1202,4 @@
 </script>
 
 </body>
-</html>
+ </html>
